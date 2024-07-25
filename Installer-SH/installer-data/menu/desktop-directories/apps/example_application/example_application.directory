@@ -1,0 +1,19 @@
+[Desktop Entry]
+# -= DIRECTORY =- #
+Type=Directory
+Version=1.1
+Encoding=UTF-8
+#OnlyShowIn=
+#NotShowIn=
+NoDisplay=false
+Hidden=false
+
+Name=Example Application
+Comment=No comments...
+#GenericName=
+
+Icon=dialog-warning
+
+# - Translations:
+Name[ru]=Example Application
+Comment[ru]=Без комментариев...
