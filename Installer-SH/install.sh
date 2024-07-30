@@ -226,11 +226,27 @@ $Header
 ### -------------------
 ### Install application
 function _INSTALL_APP() {
+#	Files_User_Data=( $(ls "$Input_User_Data") )
+#	Files_Bin_Dir=( $(ls "$Input_Bin_Dir") )
+#	Files_Menu=( $(ls "$Input_Menu_Files_Dir") )
+#	Files_Menu_Dir=( $(ls "$Input_Menu_Desktop_Dir") )
+#	Files_Menu_Apps=( $(ls "$Input_Menu_Shortcuts_Dir") )
 	_CHECK_OUTPUTS
 	clear
 	echo -e "\
 $Header
  ${Bold}${F_Cyan}Installing...${F}${rBD}"
+	
+	if [ "$Install_Mode" == "System" ]; then
+		echo -e "\n Copying Application files..."
+		echo -e "\n Copying \"Bin\" files..."
+		echo -e "\n Copying \"Menu\" files..."
+	fi
+	
+	if [ "$Install_Mode" == "User" ]; then
+		echo -e "\n Copying Application files..."
+		echo -e "\n Copying \"Menu\" files..."
+	fi
 	read pause;
 }
 
