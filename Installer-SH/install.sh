@@ -136,6 +136,7 @@ fi
  ## Copy files from "Template_Menu_Files_Dir" to "/etc/xdg/menus/applications-merged/" or "/home/USER_NAME/.config/menus/applications-merged/"
  ## Copy files from "Template_Menu_Desktop_Dir" to "/usr/share/desktop-directories/apps/" or "/home/USER_NAME/.local/share/desktop-directories/apps/"
 
+all_ok=true
 
 #### -- ------------ -- ####
 #### -- END SETTINGS -- ####
@@ -150,7 +151,8 @@ function _ABORT() {
 	clear
 	echo -e "\
 $Header
-  The installation was interrupted, press Enter or close the window to exit."
+  The installation was interrupted, press Enter or close the window to exit.
+  Abort message: $1"
 	_UNMOUNT_ARCHIVE
 	read pause;	clear; exit 1 # Double clear resets styles before going to the system terminal window.
 }
@@ -164,6 +166,8 @@ $Header
 ### -------------------------
 ### Print package information
 function _PRINT_PACKAGE_INFO() {
+if [ all_ok == true ]; then
+	all_ok=false
 	echo -e "${BG_Black}"; clear; # A crutch to fill the background completely...
 	echo -e "\
 $Header
@@ -180,18 +184,17 @@ $Info_Description"
 	echo -e "\n Start the application installation process? Enter \"y\" or \"yes\" to confirm."
 	read package_info_confirm
 	if [ "$package_info_confirm" == "y" ] || [ "$package_info_confirm" == "yes" ]; then
-		_CHECK_MD5
-		_PRINT_INSTALL_SETTINGS
+		all_ok=true
 	else _ABORT; fi
+else _ABORT "STAGE Print Package Info"; fi
 }
 
 ### ---------------------------
 ### Print installation settings
 function _PRINT_INSTALL_SETTINGS() {
+if [ all_ok == true ]; then
+	all_ok=false
 	clear
-	_CHECK_OS # Check: Distro_Full_Name - Distro_Name - Distro_Version_ID
-	_MOUNT_ARCHIVE
-	_FILL_INPUT_FILES
 	echo -e "\
 $Header
  ${Bold}${F_Cyan}Installation settings:${F}${rBD}
@@ -219,41 +222,101 @@ $Header
 	echo -e "\n Start installation? Enter \"y\" or \"yes\" to confirm."
 	read install_settings_confirm
 	if [ "$install_settings_confirm" == "y" ] || [ "$install_settings_confirm" == "yes" ]; then
-		_INSTALL_APP
+		all_ok=true
 	else _ABORT; fi
+else _ABORT "STAGE Print Install Settings"; fi
 }
 
 ### -------------------
 ### Install application
 function _INSTALL_APP() {
+if [ all_ok == true ]; then
+	all_ok=false
 #	Files_User_Data=( $(ls "$Input_User_Data") )
 #	Files_Bin_Dir=( $(ls "$Input_Bin_Dir") )
 #	Files_Menu=( $(ls "$Input_Menu_Files_Dir") )
 #	Files_Menu_Dir=( $(ls "$Input_Menu_Desktop_Dir") )
 #	Files_Menu_Apps=( $(ls "$Input_Menu_Shortcuts_Dir") )
-	_CHECK_OUTPUTS
 	clear
 	echo -e "\
 $Header
  ${Bold}${F_Cyan}Installing...${F}${rBD}"
 	
+### System MODE ###
 	if [ "$Install_Mode" == "System" ]; then
+				
+		# Copy Application files
 		echo -e "\n Copying Application files..."
+		echo "Copying files to: $Out_InstallDir"
+		echo "Please wait..."
+		mkdir -p "$Out_InstallDir"
+		cp -r "$In_InstallDir/." "$Out_InstallDir"
+		echo "Set rights: $Out_InstallDir"
+		chmod -R 777 "$Out_InstallDir"
+		
+		# Prepare and copy Bin files
 		echo -e "\n Copying \"Bin\" files..."
+		mkdir "$Temp_Dir"
+		cp -rf "$In_BinDir/." "$Temp_Dir"
+		for file in "$Temp_Dir"/*; do sed -i -e "s~PATH_TO_FOLDER~$Out_InstallDir~g" "$file"; done
+		sudo cp -rf "$Temp_Dir/." "$Out_BinDir"
+		rm -r "$TempDir"
+		
+		# Prepare and copy Menu files
 		echo -e "\n Copying \"Menu\" files..."
+		mkdir "$TempDir"
+		cp -rf "$In_Menu_AppsDir/." "$TempDir"
+		for file in "$TempDir"/*; do sed -i -e "s~PATH_TO_FOLDER~$Out_InstallDir~g" "$file"; done
+		sudo cp -rf "$TempDir/." "$Out_Menu_AppsDir"
+		rm -r "$TempDir"
+		
+		sudo cp -rf "$In_Menu/." "$Out_Menu"
+		sudo cp -rf "$In_Menu_Dir/." "$Out_Menu_Dir"
+		
+		# Prepare uninstaller
+		echo "Prepare uninstaller: $Out_InstallDir/uninstall.sh"
+		cp "$UninstallerFile" "$Out_InstallDir"
+		sed -i -e "s~INSTALL_DIR_TO_BE_REPLACED~$Out_InstallDir~g" "$Out_InstallDir/uninstall.sh"
+		sed -i -e "s~BIN_DIR_TO_BE_REPLACED~$Out_BinDir~g" "$Out_InstallDir/uninstall.sh"
+		sed -i -e "s~MENU_DIR_TO_BE_REPLACED~$Out_Menu~g" "$Out_InstallDir/uninstall.sh"
+		sed -i -e "s~DDIR_DIR_TO_BE_REPLACED~$Out_Menu_Dir~g" "$Out_InstallDir/uninstall.sh"
+		sed -i -e "s~APPS_DIR_TO_BE_REPLACED~$Out_Menu_AppsDir~g" "$Out_InstallDir/uninstall.sh"
+		sed -i -e "s~USER_DIR_TO_BE_REPLACED~$Out_UserData~g" "$Out_InstallDir/uninstall.sh"
+		chmod 777 "$Out_InstallDir/uninstall.sh"
+		
+		# Copy user data
+		if [ -d "$Out_UserData/.arduino15" ]; then echo -e "$Out_UserData/.arduino15 is present. Ignore.\nPlease copy the files manually if needed."
+		else
+			echo "Copying user files to: $Out_UserData"
+			echo "Please wait..."
+			cp -r "$In_UserData/.arduino15" "$Out_UserData"
+		fi
+		
+		if [ -d "$Out_UserData/.arduinoIDE" ]; then echo -e "$Out_UserData/.arduinoIDE is present. Ignore.\nPlease copy the files manually if needed."
+		else
+			echo "Copying user files to: $Out_UserData"
+			echo "Please wait..."
+			cp -r "$In_UserData/.arduinoIDE" "$Out_UserData"
+		fi
+		
+		xfce4-panel -r
+		echo -e "\nThe installation process has ended!"
+		
 	fi
-	
+
+
+### User MODE ###
 	if [ "$Install_Mode" == "User" ]; then
 		echo -e "\n Copying Application files..."
 		echo -e "\n Copying \"Menu\" files..."
+		
 	fi
 	read pause;
+else _ABORT "STAGE Install Application"; fi
 }
 
 function _CHECK_OUTPUTS() {
-	_MOUNT_ARCHIVE
-	_FILL_INPUT_FILES
-	_PREPARE_UNINSTALLER
+if [ all_ok == true ]; then
 	read pause
 	local error=false
 	local arr_files_sorted=()
@@ -279,16 +342,19 @@ $(for file in "${!arr_files_sorted[@]}"; do echo "   ${arr_files_sorted[$file]}"
 			_INSTALL_APP
 		else _ABORT; fi
 	fi
+else _ABORT "STAGE Check Outputs"; fi
 }
 
 ### ------------------------
 ### Prepare uninstaller file
 function _PREPARE_UNINSTALLER() {
+if [ all_ok == true ]; then
 	cp -r "$Input_Uninstaller" "$Output_Install_Dir/"
 	for filename in "${!All_Files[@]}"; do
 		CurrentFile="${All_Files[$filename]}"
 		awk -i inplace '{if($0=="FilesToDelete=(") $0=$0"\n\"'"$CurrentFile"'\"";print}' "$Output_Install_Dir/uninstall.sh"
 	done
+else _ABORT "STAGE Prepare Uninstaller"; fi
 }
 
 
@@ -299,6 +365,7 @@ function _PREPARE_UNINSTALLER() {
 ###
 
 function _FILL_INPUT_FILES() {
+if [ all_ok == true ]; then
 	Files_User_Data=( $(ls "$Input_User_Data") )
 	Files_Bin_Dir=( $(ls "$Input_Bin_Dir") )
 	Files_Menu=( $(ls "$Input_Menu_Files_Dir") )
@@ -313,10 +380,13 @@ function _FILL_INPUT_FILES() {
 	for file in "${!Files_Menu_Apps[@]}"; do arr_3[$file]="$Output_Menu_AppsDir/${Files_Menu_Apps[$file]}"; done
 	
 	All_Files=("$Output_Install_Dir" "${arr_0[@]}" "${arr_1[@]}" "${arr_2[@]}" "${arr_3[@]}")
+else _ABORT "STAGE Fill Input Files"; fi
 }
 
 ### Check and compare MD5 of archive
 function _CHECK_MD5() {
+if [ all_ok == true ]; then
+	all_ok=false
 	clear
 	echo -e "\
 $Header
@@ -342,12 +412,17 @@ $Header
 
   Enter \"y\" or \"yes\" to continue installation (not recommended):"
 			read errors_confirm
-    		if [ "$errors_confirm" == "y" ] || [ "$errors_confirm" == "yes" ]; then echo "continue"; else _ABORT; fi
+    		if [ "$errors_confirm" == "y" ] || [ "$errors_confirm" == "yes" ]; then
+				echo "continue"
+				all_ok=true
+			else _ABORT; fi
 		else
+			all_ok=true
 			echo -e "\n  ${F_Green}The integrity of the installation archive has been successfully verified, press ${Bold}Enter${rBD} to continue.${F}"
 			read pause
 		fi
 	fi
+else _ABORT "STAGE Check MD5"; fi
 }
 
 ### Check Distro version and installed Service Packs
@@ -360,8 +435,10 @@ function _CHECK_OS() {
 
 ### ------------------------------------------------
 function _MOUNT_ARCHIVE() {
+if [ all_ok == true ]; then
 	if [ ! -d "$Installer_Archive_Mount_Dir" ]; then mkdir -p "$Installer_Archive_Mount_Dir"; fi
 	archivemount -o nosave "$Path_To_Script/installer_data.7z" "$Installer_Archive_Mount_Dir"
+else _ABORT "STAGE Mount Archive"; fi
 }
 
 ### ------------------------------------------------
@@ -376,94 +453,27 @@ function _UNMOUNT_ARCHIVE() {
 #### -- END FUNCTIONS -- ####
 #### ---- --------- ---- ####
 
-echo "test: $Distro_Full_Name"
-
 ## START ##
 
+_CHECK_OS # Check: Distro_Full_Name - Distro_Name - Distro_Version_ID
+
 _UNMOUNT_ARCHIVE
-_CHECK_OUTPUTS
 _PRINT_PACKAGE_INFO
+_CHECK_MD5
+
+_MOUNT_ARCHIVE
+_FILL_INPUT_FILES
+_PRINT_INSTALL_SETTINGS
+
+_CHECK_OUTPUTS
+
+_INSTALL_APP
+_PREPARE_UNINSTALLER
 
 read pause
 
 _ABORT
 
-
-
-# Run installation if confirm or "--silent"
-if [ "$Confirm" == "y" ] || [ "$Confirm" == "yes" ] || [ "$arg1" == "--silent" ]; then
-	Continue=false
-	
-	# Check Output Dir
-	if [ ! -d "$Out_InstallDir" ]; then
-	else
-		echo -e "\nInstallation directory is present:\n $Out_InstallDir"
-		echo -e "\nDo you want to rewrite files? (enter \"y\" or \"yes\" to confirm)"
-		
-		if [ "$arg1" != "--silent" ]; then read Confirm2; fi
-		if [ "$Confirm2" == "y" ] || [ "$Confirm2" == "yes" ] || [ "$arg1" == "--silent" ]; then Continue=true
-		else echo "Abort installation!"; fi	
-	fi
-	
-	if [ "$Continue" == true ]; then
-		# Copy program files
-		echo "Copying files to: $Out_InstallDir"
-		echo "Please wait..."
-		mkdir -p "$Out_InstallDir"
-		cp -r "$In_InstallDir/." "$Out_InstallDir"
-		echo "Set rights: $Out_InstallDir"
-		chmod -R 777 "$Out_InstallDir"
-		
-		# Copy user data
-		if [ -d "$Out_UserData/.arduino15" ]; then echo -e "$Out_UserData/.arduino15 is present. Ignore.\nPlease copy the files manually if needed."
-		else
-			echo "Copying user files to: $Out_UserData"
-			echo "Please wait..."
-			cp -r "$In_UserData/.arduino15" "$Out_UserData"
-		fi
-		
-		if [ -d "$Out_UserData/.arduinoIDE" ]; then echo -e "$Out_UserData/.arduinoIDE is present. Ignore.\nPlease copy the files manually if needed."
-		else
-			echo "Copying user files to: $Out_UserData"
-			echo "Please wait..."
-			cp -r "$In_UserData/.arduinoIDE" "$Out_UserData"
-		fi
-		
-		# Prepare and copy Bin shortcuts
-		mkdir "$TempDir"
-		cp -rf "$In_BinDir/." "$TempDir"
-		for file in "$TempDir"/*; do sed -i -e "s~PATH_TO_FOLDER~$Out_InstallDir~g" "$file"; done
-		sudo cp -rf "$TempDir/." "$Out_BinDir"
-		rm -r "$TempDir"
-		
-		# Prepare and copy App shortcuts
-		mkdir "$TempDir"
-		cp -rf "$In_Menu_AppsDir/." "$TempDir"
-		for file in "$TempDir"/*; do sed -i -e "s~PATH_TO_FOLDER~$Out_InstallDir~g" "$file"; done
-		sudo cp -rf "$TempDir/." "$Out_Menu_AppsDir"
-		rm -r "$TempDir"
-		
-		sudo cp -rf "$In_Menu/." "$Out_Menu"
-		sudo cp -rf "$In_Menu_Dir/." "$Out_Menu_Dir"
-		
-		# Prepare uninstaller
-		echo "Prepare uninstaller: $Out_InstallDir/uninstall.sh"
-		cp "$UninstallerFile" "$Out_InstallDir"
-		sed -i -e "s~INSTALL_DIR_TO_BE_REPLACED~$Out_InstallDir~g" "$Out_InstallDir/uninstall.sh"
-		sed -i -e "s~BIN_DIR_TO_BE_REPLACED~$Out_BinDir~g" "$Out_InstallDir/uninstall.sh"
-		sed -i -e "s~MENU_DIR_TO_BE_REPLACED~$Out_Menu~g" "$Out_InstallDir/uninstall.sh"
-		sed -i -e "s~DDIR_DIR_TO_BE_REPLACED~$Out_Menu_Dir~g" "$Out_InstallDir/uninstall.sh"
-		sed -i -e "s~APPS_DIR_TO_BE_REPLACED~$Out_Menu_AppsDir~g" "$Out_InstallDir/uninstall.sh"
-		sed -i -e "s~USER_DIR_TO_BE_REPLACED~$Out_UserData~g" "$Out_InstallDir/uninstall.sh"
-		chmod 777 "$Out_InstallDir/uninstall.sh"
-		
-		echo "Updating the \"Start\" menu without rebooting (sudo touch /etc/xdg/menus/*.menu)"
-		echo "If new items do not appear in the menu, restart the Xfce panel with the command \"xfce4-panel -r\", or reboot the system."
-		sudo touch /etc/xdg/menus/*.menu
-		
-		echo -e "\nThe installation process has ended!"
-	fi
-fi
 
 if [ "$arg1" != "--silent" ]; then
 	echo "Press Enter to exit or close this window."
