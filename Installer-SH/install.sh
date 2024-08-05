@@ -183,9 +183,8 @@ $Header
 $Info_Description"
 	echo -e "\n Start the application installation process? Enter \"y\" or \"yes\" to confirm."
 	read package_info_confirm
-	if [ "$package_info_confirm" == "y" ] || [ "$package_info_confirm" == "yes" ]; then
-		all_ok=true
-	else _ABORT; fi
+	if [ "$package_info_confirm" == "y" ] || [ "$package_info_confirm" == "yes" ]; then all_ok=true
+	else _ABORT "Interrupted by user"; fi
 else _ABORT "STAGE Print Package Info"; fi
 }
 
@@ -221,9 +220,8 @@ $Header
 	
 	echo -e "\n Start installation? Enter \"y\" or \"yes\" to confirm."
 	read install_settings_confirm
-	if [ "$install_settings_confirm" == "y" ] || [ "$install_settings_confirm" == "yes" ]; then
-		all_ok=true
-	else _ABORT; fi
+	if [ "$install_settings_confirm" == "y" ] || [ "$install_settings_confirm" == "yes" ]; then all_ok=true
+	else _ABORT "Interrupted by user"; fi
 else _ABORT "STAGE Print Install Settings"; fi
 }
 
@@ -317,6 +315,7 @@ else _ABORT "STAGE Install Application"; fi
 
 function _CHECK_OUTPUTS() {
 if [ all_ok == true ]; then
+	all_ok=false
 	read pause
 	local error=false
 	local arr_files_sorted=()
@@ -338,9 +337,8 @@ $(for file in "${!arr_files_sorted[@]}"; do echo "   ${arr_files_sorted[$file]}"
 
   Enter \"y\" or \"yes\" to continue."
 		read install_confirm;
-		if [ "$install_confirm" == "y" ] || [ "$install_confirm" == "yes" ]; then
-			_INSTALL_APP
-		else _ABORT; fi
+		if [ "$install_confirm" == "y" ] || [ "$install_confirm" == "yes" ]; then all_ok=true
+		else _ABORT "Interrupted by user"; fi
 	fi
 else _ABORT "STAGE Check Outputs"; fi
 }
@@ -412,10 +410,8 @@ $Header
 
   Enter \"y\" or \"yes\" to continue installation (not recommended):"
 			read errors_confirm
-    		if [ "$errors_confirm" == "y" ] || [ "$errors_confirm" == "yes" ]; then
-				echo "continue"
-				all_ok=true
-			else _ABORT; fi
+    		if [ "$errors_confirm" == "y" ] || [ "$errors_confirm" == "yes" ]; then all_ok=true
+			else _ABORT "Interrupted by user"; fi
 		else
 			all_ok=true
 			echo -e "\n  ${F_Green}The integrity of the installation archive has been successfully verified, press ${Bold}Enter${rBD} to continue.${F}"
@@ -430,14 +426,20 @@ function _CHECK_OS() {
 	Distro_Full_Name="Unknown"; Distro_Name="Unknown"; Distro_Version_ID="Unknown"; #SpInstalled=0
 	if [ -f /etc/os-release ]; then . /etc/os-release; Distro_Full_Name=$PRETTY_NAME; Distro_Name=$NAME; Distro_Version_ID=$VERSION_ID
 		#if [ -f "/etc/chimbalix/sp"*"-installed" ]; then for SpVer in "/etc/chimbalix/sp"*"-installed"; do SpInstalled=$(($SpInstalled+1)); done; fi
-	else if uname &>/dev/null; then DistroVersion="$(uname -sr)"; fi; fi
+	else
+		if uname &>/dev/null; then DistroVersion="$(uname -sr)"
+		else _ABORT "Unexpected error in function _CHECK_OS"; fi
+	fi
 }
 
 ### ------------------------------------------------
 function _MOUNT_ARCHIVE() {
 if [ all_ok == true ]; then
-	if [ ! -d "$Installer_Archive_Mount_Dir" ]; then mkdir -p "$Installer_Archive_Mount_Dir"; fi
-	archivemount -o nosave "$Path_To_Script/installer_data.7z" "$Installer_Archive_Mount_Dir"
+	all_ok=false
+	if [ ! -d "$Installer_Archive_Mount_Dir" ]; then
+		if ! mkdir -p "$Installer_Archive_Mount_Dir"; then _ABORT "Error creating archive mount dir."; fi; fi
+	if ! archivemount -o nosave "$Path_To_Script/installer_data.7z" "$Installer_Archive_Mount_Dir"; then _ABORT "Error mounting archive."
+	else all_ok=true; fi
 else _ABORT "STAGE Mount Archive"; fi
 }
 
@@ -447,6 +449,7 @@ function _UNMOUNT_ARCHIVE() {
 		umount "$Installer_Archive_Mount_Dir"
 		rm -r "$Installer_Archive_Mount_Dir"
 	fi
+	if [ -d "$Temp_Dir" ]; then rm -r "$Temp_Dir"; fi
 }
 
 #### ---- --------- ---- ####
