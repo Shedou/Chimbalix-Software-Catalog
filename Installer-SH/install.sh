@@ -105,6 +105,7 @@ System_Menu="/etc/xdg/menus/applications-merged"
 System_Menu_Dir="/usr/share/desktop-directories"
 System_Menu_AppsDir="/usr/share/applications/apps"
 
+Output_User_Bin_Dir="$User_Dir/.local/bin" # Works starting from Chimbalix 24.4
 Output_System_Bin_Dir="/usr/bin"
 
 Output_Install_Dir="DON'T CHANGE!"
@@ -245,28 +246,26 @@ $Header
 				
 		# Copy Application files
 		echo -e "\n Copying Application files..."
-		echo "Copying files to: $Out_InstallDir"
-		echo "Please wait..."
-		mkdir -p "$Out_InstallDir"
-		cp -r "$In_InstallDir/." "$Out_InstallDir"
-		echo "Set rights: $Out_InstallDir"
-		chmod -R 777 "$Out_InstallDir"
+		sudo mkdir -p "$Output_Install_Dir"
+		sudo cp -r "$Input_App_Dir/." "$Output_Install_Dir"
+		chmod -R $Output_App_Folder_Permissions "$Output_Install_Dir"
+		chown -R $Output_App_Folder_Owner "$Output_Install_Dir"
 		
 		# Prepare and copy Bin files
 		echo -e "\n Copying \"Bin\" files..."
 		mkdir "$Temp_Dir"
 		cp -rf "$In_BinDir/." "$Temp_Dir"
 		for file in "$Temp_Dir"/*; do sed -i -e "s~PATH_TO_FOLDER~$Out_InstallDir~g" "$file"; done
-		sudo cp -rf "$Temp_Dir/." "$Out_BinDir"
-		rm -r "$TempDir"
+		sudo cp -rf "$Temp_Dir/." "$Output_System_Bin_Dir"
+		rm -r "$Temp_Dir"
 		
 		# Prepare and copy Menu files
 		echo -e "\n Copying \"Menu\" files..."
-		mkdir "$TempDir"
-		cp -rf "$In_Menu_AppsDir/." "$TempDir"
-		for file in "$TempDir"/*; do sed -i -e "s~PATH_TO_FOLDER~$Out_InstallDir~g" "$file"; done
-		sudo cp -rf "$TempDir/." "$Out_Menu_AppsDir"
-		rm -r "$TempDir"
+		mkdir "$Temp_Dir"
+		cp -rf "$In_Menu_AppsDir/." "$Temp_Dir"
+		for file in "$Temp_Dir"/*; do sed -i -e "s~PATH_TO_FOLDER~$Out_InstallDir~g" "$file"; done
+		sudo cp -rf "$Temp_Dir/." "$Out_Menu_AppsDir"
+		rm -r "$Temp_Dir"
 		
 		sudo cp -rf "$In_Menu/." "$Out_Menu"
 		sudo cp -rf "$In_Menu_Dir/." "$Out_Menu_Dir"
@@ -347,11 +346,26 @@ else _ABORT "STAGE Check Outputs"; fi
 ### Prepare uninstaller file
 function _PREPARE_UNINSTALLER() {
 if [ all_ok == true ]; then
-	cp -r "$Input_Uninstaller" "$Output_Install_Dir/"
-	for filename in "${!All_Files[@]}"; do
-		CurrentFile="${All_Files[$filename]}"
-		awk -i inplace '{if($0=="FilesToDelete=(") $0=$0"\n\"'"$CurrentFile"'\"";print}' "$Output_Install_Dir/uninstall.sh"
-	done
+	if [ "$Install_Mode" == "System" ]; then
+		if sudo cp -r "$Input_Uninstaller" "$Output_Install_Dir/"; then
+			sudo chmod 755 "$Output_Install_Dir/uninstall.sh"
+			sudo chown root:root "$Output_Install_Dir/uninstall.sh"
+			for filename in "${!All_Files[@]}"; do
+				CurrentFile="${All_Files[$filename]}"
+				sudo awk -i inplace '{if($0=="FilesToDelete=(") $0=$0"\n\"'"$CurrentFile"'\"";print}' "$Output_Install_Dir/uninstall.sh"
+			done
+		fi
+	fi
+	
+	if [ "$Install_Mode" == "User" ]; then
+		if cp -r "$Input_Uninstaller" "$Output_Install_Dir/"; then
+			chmod 744 "$Output_Install_Dir/uninstall.sh"
+			for filename in "${!All_Files[@]}"; do
+				CurrentFile="${All_Files[$filename]}"
+				awk -i inplace '{if($0=="FilesToDelete=(") $0=$0"\n\"'"$CurrentFile"'\"";print}' "$Output_Install_Dir/uninstall.sh"
+			done
+		fi
+	fi
 else _ABORT "STAGE Prepare Uninstaller"; fi
 }
 
