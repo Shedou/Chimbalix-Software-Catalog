@@ -45,7 +45,7 @@ User_Dir=~ # Current User home directory.
 Header="${BG_Black}${F_Red}${Bold} -=: Software Installer Script for Chimbalix :=-${rBD}${F}\n"
 
 Archive_File="$Path_To_Script/installer_data.7z"
-MD5_Hash_Of_Archive="9326d5113732a04c827464a4452ebc33" # Basic archive integrity check.
+MD5_Hash_Of_Archive="bb4a9090292714807f227e979ffd873d" # Basic archive integrity check.
 
 Info_Name="Example Application"
 Info_Version="v1.2"
@@ -87,7 +87,7 @@ Temp_Dir="/tmp/$Output_App_Folder_Name""_TEMP"
 Input_App_Dir="$Installer_Archive_Mount_Dir/application"
 Input_Bin_Dir="$Installer_Archive_Mount_Dir/installer-data/bin" # Used only in "System" install mode...
 
-User_Data_Copy_Confirm=false
+User_Data_Copy_Confirm=true
 Input_User_Data="$Installer_Archive_Mount_Dir/USER_HOME" # The content will be copied to the user's home directory. Better not to use this... DO NOT USE UNLESS VERY NECESSARY!
 
 Input_Menu_Files_Dir="$Installer_Archive_Mount_Dir/installer-data/menu/applications-merged"
@@ -100,12 +100,12 @@ Input_Uninstaller="$Installer_Archive_Mount_Dir/installer-data/uninstall.sh" # U
  # Other outputs:
 User_Bin_Dir="$User_Dir/.local/bin" # Works starting from Chimbalix 24.4
 User_Menu="$User_Dir/.config/menus/applications-merged"
-User_Menu_Dir="$User_Dir/.local/share/desktop-directories"
+User_Menu_Dir="$User_Dir/.local/share/desktop-directories/apps"
 User_Menu_AppsDir="$User_Dir/.local/share/applications/apps"
 
 System_Bin_Dir="/usr/bin"
 System_Menu="/etc/xdg/menus/applications-merged"
-System_Menu_Dir="/usr/share/desktop-directories"
+System_Menu_Dir="/usr/share/desktop-directories/apps"
 System_Menu_AppsDir="/usr/share/applications/apps"
 
 
@@ -247,17 +247,17 @@ $Header
 		echo "  from: $Input_App_Dir"
 		echo "  to: $Output_Install_Dir"
 		sudo mkdir -p "$Output_Install_Dir"
-		sudo cp -rf "$Input_App_Dir/." "$Output_Install_Dir"
+		sudo cp -rf "$Input_App_Dir/". "$Output_Install_Dir"
 		echo " Set rights and owner..."
-		chmod -R $Output_App_Folder_Permissions "$Output_Install_Dir"
-		chown -R $Output_App_Folder_Owner "$Output_Install_Dir"
+		sudo chmod -R $Output_App_Folder_Permissions "$Output_Install_Dir"
+		sudo chown -R $Output_App_Folder_Owner "$Output_Install_Dir"
 		
 		# Prepare and copy Bin files
 		echo " Prepare and copy Bin files..."
 		echo "  from: $Input_Bin_Dir"
 		echo "  to: $Output_Bin_Dir"
 		mkdir "$Temp_Dir"
-		cp -rf "$Input_Bin_Dir/." "$Temp_Dir"
+		sudo cp -rf "$Input_Bin_Dir/." "$Temp_Dir"
 		for file in "$Temp_Dir"/*; do sed -i -e "s~PATH_TO_FOLDER~$Output_Install_Dir~g" "$file"; done
 		sudo cp -rf "$Temp_Dir/." "$Output_Bin_Dir"
 		rm -rf "$Temp_Dir"
@@ -267,10 +267,10 @@ $Header
 		echo "  from: $Input_Menu_Apps_Dir"
 		echo "  to: $Output_Menu_AppsDir"
 		mkdir "$Temp_Dir"
-		cp -rf "$Input_Menu_Apps_Dir/." "$Temp_Dir"
-		for file in "$Temp_Dir"/*; do grep -rl "PATH_TO_FOLDER" "$Temp_Dir" | xargs sed -i 's/PATH_TO_FOLDER/$Output_Install_Dir/g'; done
+		sudo cp -rf "$Input_Menu_Apps_Dir/." "$Temp_Dir"
+		for file in "$Temp_Dir"/*; do grep -rl "PATH_TO_FOLDER" "$Temp_Dir" | xargs sed -i "s~PATH_TO_FOLDER~$Output_Install_Dir~g"; done
 		sudo cp -rf "$Temp_Dir/." "$Output_Menu_AppsDir"
-		rm -r "$Temp_Dir"
+		sudo rm -r "$Temp_Dir"
 		echo " Copy Menu files..."
 		echo "  from: $Input_Menu_Files_Dir"
 		echo "  to: $Output_Menu"
@@ -287,11 +287,6 @@ $Header
 			echo "  to: $Output_User_Home"
 			cp -rf "$Input_User_Data/." "$Output_User_Home"
 		fi
-		
-		# Restart taskbar
-		echo "Restart taskbar..."
-		xfce4-panel -r
-		echo -e "\nThe installation process has ended!"
 	fi
 
 
@@ -322,7 +317,7 @@ $Header
 		echo "  to: $Output_Menu_AppsDir"
 		mkdir "$Temp_Dir"
 		cp -rf "$Input_Menu_Apps_Dir/." "$Temp_Dir"
-		for file in "$Temp_Dir"/*; do grep -rl "PATH_TO_FOLDER" "$Temp_Dir" | xargs sed -i 's/PATH_TO_FOLDER/$Output_Install_Dir/g'; done
+		for file in "$Temp_Dir"/*; do grep -rl "PATH_TO_FOLDER" "$Temp_Dir" | xargs sed -i "s~PATH_TO_FOLDER~$Output_Install_Dir~g"; done
 		cp -rf "$Temp_Dir/." "$Output_Menu_AppsDir"
 		rm -r "$Temp_Dir"
 		echo " Copy Menu files..."
@@ -341,20 +336,14 @@ $Header
 			echo "  to: $Output_User_Home"
 			cp -rf "$Input_User_Data/." "$Output_User_Home"
 		fi
-		
-		# Restart taskbar
-		echo "Restart taskbar..."
-		xfce4-panel -r
-		echo -e "\nThe installation process has ended!"
 	fi
-	read pause;
+	all_ok=true
 else _ABORT "STAGE Install Application"; fi
 }
 
 function _CHECK_OUTPUTS() {
 if [ $all_ok == true ]; then
 	all_ok=false
-	read pause
 	local error=false
 	local arr_files_sorted=()
 	
@@ -381,6 +370,8 @@ $(for file in "${!arr_files_sorted[@]}"; do echo "   ${arr_files_sorted[$file]}"
 		read install_confirm
 		if [ "$install_confirm" == "y" ] || [ "$install_confirm" == "yes" ]; then all_ok=true
 		else _ABORT "Interrupted by user"; fi
+	else
+		all_ok=true
 	fi
 else _ABORT "STAGE Check Outputs"; fi
 }
@@ -409,6 +400,10 @@ if [ $all_ok == true ]; then
 			done
 		fi
 	fi
+	# Restart taskbar
+	echo "Restart taskbar..."
+	xfce4-panel -r
+	echo -e "\nThe installation process has ended!"
 else _ABORT "STAGE Prepare Uninstaller"; fi
 }
 
@@ -502,7 +497,9 @@ function _MOUNT_ARCHIVE() {
 if [ $all_ok == true ]; then
 	all_ok=false
 	if [ ! -d "$Installer_Archive_Mount_Dir" ]; then
-		if ! mkdir -p "$Installer_Archive_Mount_Dir"; then _ABORT "Error creating archive mount dir."; fi; fi
+		if ! mkdir -p "$Installer_Archive_Mount_Dir"; then _ABORT "Error creating archive mount dir."; fi
+		chmod 777 "$Installer_Archive_Mount_Dir"
+	fi
 	if ! archivemount -o nosave "$Path_To_Script/installer_data.7z" "$Installer_Archive_Mount_Dir"; then _ABORT "Error mounting archive."
 	else all_ok=true; fi
 else _ABORT "STAGE Mount Archive"; fi
@@ -538,9 +535,7 @@ _CHECK_OUTPUTS
 _INSTALL_APP
 _PREPARE_UNINSTALLER
 
-read pause
-
-_ABORT
+_ABORT "Complete install"
 
 
 if [ "$arg1" != "--silent" ]; then
