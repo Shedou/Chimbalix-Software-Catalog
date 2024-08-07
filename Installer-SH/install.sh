@@ -18,7 +18,6 @@
 ## ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ##
 ## ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ##
 Path_To_Script="$( dirname "$(readlink -f "$0")")" # Current installer script directory.
-User_Dir=~ # Current User home directory.
 arg1="$1"
 # Font styles: "${Bold} BLACK TEXT ${rBD} normal text."
 Bold="\e[1m"; Dim="\e[2m"; rBD="\e[22m";
@@ -30,17 +29,18 @@ F_Red='\033[91m'; F_Green='\033[92m'; F_Yellow='\033[93m'; F_Blue='\033[94m'; F_
 BG_Black='\033[40m'; BG_DarkGray='\033[100m'; BG_Gray='\033[47m'; BG_White='\033[107m';
 BG_DarkRed='\033[41m'; BG_DarkGreen='\033[42m'; BG_DarkYellow='\033[43m'; BG_DarkBlue='\033[44m'; BG_DarkMagenta='\033[45m'; BG_DarkCyan='\033[46m';
 BG_Red='\033[101m'; BG_Green='\033[102m'; BG_Yellow='\033[103m'; BG_Blue='\033[104m'; BG_Magenta='\033[105m'; BG_Cyan='\033[106m';
-## ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ##
-## ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ##
 
+## ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ##
+## ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ##
 #### ---- -------- ---- ####
 #### ---- SETTINGS ---- ####
 #### ---- -------- ---- ####
 
-Install_Mode="User" # "System" wide (Default) / Current "User" only
+Install_Mode="User" # "System" wide / Current "User" only
+User_Dir=~ # Current User home directory.
 
-## - ------------------- - ##
-## - Package Information - ##
+### - ------------------- - ###
+### - Package Information - ###
 
 Header="${BG_Black}${F_Red}${Bold} -=: Software Installer Script for Chimbalix :=-${rBD}${F}\n"
 
@@ -50,7 +50,7 @@ MD5_Hash_Of_Archive="c1b04004eba3552a0c9bdcc55082a7df" # Basic archive integrity
 Info_Name="Example Application"
 Info_Version="v1.2"
 Info_Category="Image Editor (Example)"
-Info_Platform="Linux - Chimbalix 24.2 Alphachi"
+Info_Platform="Linux - Chimbalix 24.2 - 24.x"
 Info_Installed_Size="~1 MiB"
 Info_Licensing="\
 Freeware - Open Source (MIT)
@@ -62,16 +62,16 @@ Info_Developer="Chimbal"
 Info_URL="\n   https://github.com/Shedou/Chimbalix-Software-Catalog\n   https://github.com/Shedou/Chimbalix"
 Info_Description="\
   1) This installer allows you to:
-     - Storing program installation files in a 7-zip archive.
+     - Storing program installation files in a 7-zip archive (good compression).
      - Install the application in the standard \"portsoft\" directory.
      - Two installation modes:
-       . System - standard mode, you need root rights to install.
+       . System - you need root rights to install.
        . User - install only for the current User ($USER), does not require root rights.
      - Set owner and rights to the application directory (only in \"System\" mode).
   2) Check the current \"install.sh\" file to configure the installation package."
 
-## - ---------------- - ##
-## - Install Settings - ##
+### - ---------------- - ###
+### - Install Settings - ###
 
 Output_App_Folder_Name="example_application_v12"
 Output_App_Folder_Owner=root:root	# username:group, only for "System" mode.
@@ -96,30 +96,33 @@ Input_Menu_Shortcuts_Dir="$Installer_Archive_Mount_Dir/installer-data/menu/apps"
 Input_Uninstaller="$Installer_Archive_Mount_Dir/installer-data/uninstall.sh" # Uninstaller template file.
 
 
-# Other outputs:
+ # Other outputs:
+User_Bin_Dir="$User_Dir/.local/bin" # Works starting from Chimbalix 24.4
 User_Menu="$User_Dir/.config/menus/applications-merged"
 User_Menu_Dir="$User_Dir/.local/share/desktop-directories"
 User_Menu_AppsDir="$User_Dir/.local/share/applications/apps"
 
+System_Bin_Dir="/usr/bin"
 System_Menu="/etc/xdg/menus/applications-merged"
 System_Menu_Dir="/usr/share/desktop-directories"
 System_Menu_AppsDir="/usr/share/applications/apps"
 
-Output_User_Bin_Dir="$User_Dir/.local/bin" # Works starting from Chimbalix 24.4
-Output_System_Bin_Dir="/usr/bin"
 
 Output_Install_Dir="DON'T CHANGE!"
+Output_Bin_Dir="DON'T CHANGE!"
 Output_Menu="DON'T CHANGE!"
 Output_Menu_Dir="DON'T CHANGE!"
 Output_Menu_AppsDir="DON'T CHANGE!"
 
 if [ "$Install_Mode" == "System" ]; then
 	Output_Install_Dir="$Output_System_Install_Dir"
+	Output_Bin_Dir="$System_Bin_Dir"
 	Output_Menu="$System_Menu"
 	Output_Menu_Dir="$System_Menu_Dir"
 	Output_Menu_AppsDir="$System_Menu_AppsDir"
 else
 	Output_Install_Dir="$Output_User_Install_Dir"
+	Output_Bin_Dir="$User_Bin_Dir"
 	Output_Menu="$User_Menu"
 	Output_Menu_Dir="$User_Menu_Dir"
 	Output_Menu_AppsDir="$User_Menu_AppsDir"
@@ -155,7 +158,7 @@ $Header
   The installation was interrupted, press Enter or close the window to exit.
   Abort message: $1"
 	_UNMOUNT_ARCHIVE
-	read pause;	clear; exit 1 # Double clear resets styles before going to the system terminal window.
+	read pause; clear; exit 1 # Double clear resets styles before going to the system terminal window.
 }
 
 ###
@@ -384,9 +387,9 @@ if [ all_ok == true ]; then
 	Files_Menu_Dir=( $(ls "$Input_Menu_Desktop_Dir") )
 	Files_Menu_Apps=( $(ls "$Input_Menu_Shortcuts_Dir") )
 	
-	local arr_0=();	local arr_1=();	local arr_2=();	local arr_3=()
+	local arr_0=(); local arr_1=(); local arr_2=(); local arr_3=()
 	
-	if [ "$Install_Mode" == "System" ]; then for file in "${!Files_Bin_Dir[@]}"; do arr_0[$file]="$Output_System_Bin_Dir/${Files_Bin_Dir[$file]}"; done; fi
+	for file in "${!Files_Bin_Dir[@]}"; do arr_0[$file]="$Output_Bin_Dir/${Files_Bin_Dir[$file]}"; done
 	for file in "${!Files_Menu[@]}"; do arr_1[$file]="$Output_Menu/${Files_Menu[$file]}"; done
 	for file in "${!Files_Menu_Dir[@]}"; do arr_2[$file]="$Output_Menu_Dir/${Files_Menu_Dir[$file]}"; done
 	for file in "${!Files_Menu_Apps[@]}"; do arr_3[$file]="$Output_Menu_AppsDir/${Files_Menu_Apps[$file]}"; done
