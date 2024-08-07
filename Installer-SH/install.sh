@@ -45,7 +45,7 @@ User_Dir=~ # Current User home directory.
 Header="${BG_Black}${F_Red}${Bold} -=: Software Installer Script for Chimbalix :=-${rBD}${F}\n"
 
 Archive_File="$Path_To_Script/installer_data.7z"
-MD5_Hash_Of_Archive="c1b04004eba3552a0c9bdcc55082a7df" # Basic archive integrity check.
+MD5_Hash_Of_Archive="9326d5113732a04c827464a4452ebc33" # Basic archive integrity check.
 
 Info_Name="Example Application"
 Info_Version="v1.2"
@@ -171,7 +171,7 @@ $Header
 ### -------------------------
 ### Print package information
 function _PRINT_PACKAGE_INFO() {
-if [ all_ok == true ]; then
+if [ $all_ok == true ]; then
 	all_ok=false
 	echo -e "${BG_Black}"; clear; # A crutch to fill the background completely...
 	echo -e "\
@@ -196,7 +196,7 @@ else _ABORT "STAGE Print Package Info"; fi
 ### ---------------------------
 ### Print installation settings
 function _PRINT_INSTALL_SETTINGS() {
-if [ all_ok == true ]; then
+if [ $all_ok == true ]; then
 	all_ok=false
 	clear
 	echo -e "\
@@ -233,7 +233,7 @@ else _ABORT "STAGE Print Install Settings"; fi
 ### -------------------
 ### Install application
 function _INSTALL_APP() {
-if [ all_ok == true ]; then
+if [ $all_ok == true ]; then
 	all_ok=false
 	clear
 	echo -e "\
@@ -312,6 +312,7 @@ $Header
 		mkdir "$Temp_Dir"
 		cp -rf "$Input_Bin_Dir/." "$Temp_Dir"
 		for file in "$Temp_Dir"/*; do sed -i -e "s~PATH_TO_FOLDER~$Output_Install_Dir~g" "$file"; done
+		for file in "$Temp_Dir"/*; do chmod 755 "$file"; done
 		cp -rf "$Temp_Dir/." "$Output_Bin_Dir"
 		rm -rf "$Temp_Dir"
 		
@@ -351,7 +352,7 @@ else _ABORT "STAGE Install Application"; fi
 }
 
 function _CHECK_OUTPUTS() {
-if [ all_ok == true ]; then
+if [ $all_ok == true ]; then
 	all_ok=false
 	read pause
 	local error=false
@@ -387,7 +388,7 @@ else _ABORT "STAGE Check Outputs"; fi
 ### ------------------------
 ### Prepare uninstaller file
 function _PREPARE_UNINSTALLER() {
-if [ all_ok == true ]; then
+if [ $all_ok == true ]; then
 	if [ "$Install_Mode" == "System" ]; then
 		if sudo cp -r "$Input_Uninstaller" "$Output_Install_Dir/"; then
 			sudo chmod 755 "$Output_Install_Dir/uninstall.sh"
@@ -419,7 +420,7 @@ else _ABORT "STAGE Prepare Uninstaller"; fi
 ###
 
 function _FILL_INPUT_FILES() {
-if [ all_ok == true ]; then
+if [ $all_ok == true ]; then
 	Files_User_Data=( $(ls "$Input_User_Data") )
 	Files_Bin_Dir=( $(ls "$Input_Bin_Dir") )
 	Files_Menu=( $(ls "$Input_Menu_Files_Dir") )
@@ -447,7 +448,7 @@ else _ABORT "STAGE Fill Input Files"; fi
 
 ### Check and compare MD5 of archive
 function _CHECK_MD5() {
-if [ all_ok == true ]; then
+if [ $all_ok == true ]; then
 	all_ok=false
 	clear
 	echo -e "\
@@ -498,7 +499,7 @@ function _CHECK_OS() {
 
 ### ------------------------------------------------
 function _MOUNT_ARCHIVE() {
-if [ all_ok == true ]; then
+if [ $all_ok == true ]; then
 	all_ok=false
 	if [ ! -d "$Installer_Archive_Mount_Dir" ]; then
 		if ! mkdir -p "$Installer_Archive_Mount_Dir"; then _ABORT "Error creating archive mount dir."; fi; fi

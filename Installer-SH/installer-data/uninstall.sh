@@ -25,20 +25,11 @@ Header="${BG_Black}${F_Red}${Bold} -=: Software Uninstaller Script :=-${rBD}${F}
 clear
 echo -e "\
 $Header
-  The installation was interrupted, press Enter or close the window to exit."
+  ."
 
 function _remove { local file="$1"; if [ -e "$file" ]; then echo -e "Removing:\n $file"; sudo rm -rf "$file"; else echo -e "Object not found, skip:\n $file"; fi }
 
 FilesToDelete=(
-"/home/chimba/.local/share/applications/apps/example_application"
-"/home/chimba/.local/share/desktop-directories/example_application"
-"/home/chimba/.config/menus/applications-merged/example_application.menu"
-"NOT USED IN  INSTALLATION MODE/example-application-uninstall"
-"NOT USED IN  INSTALLATION MODE/example-application"
-"/home/chimba/tee"
-"/home/chimba/te"
-"/home/chimba/k"
-"/home/chimba/.local/portsoft/x86_64/example_application_v12"
 )
 
 # Display info and wait confirmation
@@ -50,24 +41,16 @@ ${B}The listed files and directories will be deleted if they are present in the 
 echo -e "\n${Bold} - Files to be deleted:${rBD}"
 for i in "${!FilesToDelete[@]}"; do echo "   ${FilesToDelete[$i]}"; done
 
-read pause
-
 echo -e "\nEnter \"${Bold}y${rBD}\" or \"${Bold}yes${rBD}\" to begin uninstallation."
 Confirm=""
 read Confirm
 
-# Run installation if confirm or "--silent"
+# Run if confirm
 if [ "$Confirm" == "y" ] || [ "$Confirm" == "yes" ] || [ "$arg1" == "--silent" ]; then
 	Continue=false
-	for i in "${!MenuFiles[@]}"; do _remove_file "$Out_Menu/${MenuFiles[$i]}"; done
-	for i in "${!BinDirFiles[@]}"; do _remove_file "$Out_BinDir/${BinDirFiles[$i]}"; done
-	_remove_dir "$Out_InstallDir"
-	_remove_dir "$Out_Menu_DDir"
-	_remove_dir "$Out_Menu_AppsDir"
-	
-	echo -e "\n- Updating the \"Start\" menu without rebooting (touch /etc/xdg/menus/*.menu)"
-	echo -e "If the old shortcuts do not disappear from the menu themselves, restart the Xfce panel with the command \"xfce4-panel -r\", or reboot the system.\n"
-	sudo touch /etc/xdg/menus/*.menu
+	for i in "${!FilesToDelete[@]}"; do _remove "${FilesToDelete[$i]}"; done
+	xfce4-panel -r
+	echo "Complete"
 fi
 
 if [ "$arg1" != "--silent" ]; then
