@@ -87,11 +87,12 @@ Temp_Dir="/tmp/$Output_App_Folder_Name""_TEMP"
 Input_App_Dir="$Installer_Archive_Mount_Dir/application"
 Input_Bin_Dir="$Installer_Archive_Mount_Dir/installer-data/bin" # Used only in "System" install mode...
 
-Input_User_Data="$Installer_Archive_Mount_Dir/USER_HOME" # The content will be copied to the user's home directory. Better not to use this...
+User_Data_Copy_Confirm=false
+Input_User_Data="$Installer_Archive_Mount_Dir/USER_HOME" # The content will be copied to the user's home directory. Better not to use this... DO NOT USE UNLESS VERY NECESSARY!
 
 Input_Menu_Files_Dir="$Installer_Archive_Mount_Dir/installer-data/menu/applications-merged"
 Input_Menu_Desktop_Dir="$Installer_Archive_Mount_Dir/installer-data/menu/desktop-directories/apps"
-Input_Menu_Shortcuts_Dir="$Installer_Archive_Mount_Dir/installer-data/menu/apps"
+Input_Menu_Apps_Dir="$Installer_Archive_Mount_Dir/installer-data/menu/apps"
 
 Input_Uninstaller="$Installer_Archive_Mount_Dir/installer-data/uninstall.sh" # Uninstaller template file.
 
@@ -234,11 +235,6 @@ else _ABORT "STAGE Print Install Settings"; fi
 function _INSTALL_APP() {
 if [ all_ok == true ]; then
 	all_ok=false
-#	Files_User_Data=( $(ls "$Input_User_Data") )
-#	Files_Bin_Dir=( $(ls "$Input_Bin_Dir") )
-#	Files_Menu=( $(ls "$Input_Menu_Files_Dir") )
-#	Files_Menu_Dir=( $(ls "$Input_Menu_Desktop_Dir") )
-#	Files_Menu_Apps=( $(ls "$Input_Menu_Shortcuts_Dir") )
 	clear
 	echo -e "\
 $Header
@@ -246,70 +242,109 @@ $Header
 	
 ### System MODE ###
 	if [ "$Install_Mode" == "System" ]; then
-				
 		# Copy Application files
-		echo -e "\n Copying Application files..."
+		echo " Copy application files..."
+		echo "  from: $Input_App_Dir"
+		echo "  to: $Output_Install_Dir"
 		sudo mkdir -p "$Output_Install_Dir"
-		sudo cp -r "$Input_App_Dir/." "$Output_Install_Dir"
+		sudo cp -rf "$Input_App_Dir/." "$Output_Install_Dir"
+		echo " Set rights and owner..."
 		chmod -R $Output_App_Folder_Permissions "$Output_Install_Dir"
 		chown -R $Output_App_Folder_Owner "$Output_Install_Dir"
 		
 		# Prepare and copy Bin files
-		echo -e "\n Copying \"Bin\" files..."
+		echo " Prepare and copy Bin files..."
+		echo "  from: $Input_Bin_Dir"
+		echo "  to: $Output_Bin_Dir"
 		mkdir "$Temp_Dir"
-		cp -rf "$In_BinDir/." "$Temp_Dir"
-		for file in "$Temp_Dir"/*; do sed -i -e "s~PATH_TO_FOLDER~$Out_InstallDir~g" "$file"; done
-		sudo cp -rf "$Temp_Dir/." "$Output_System_Bin_Dir"
-		rm -r "$Temp_Dir"
+		cp -rf "$Input_Bin_Dir/." "$Temp_Dir"
+		for file in "$Temp_Dir"/*; do sed -i -e "s~PATH_TO_FOLDER~$Output_Install_Dir~g" "$file"; done
+		sudo cp -rf "$Temp_Dir/." "$Output_Bin_Dir"
+		rm -rf "$Temp_Dir"
 		
 		# Prepare and copy Menu files
-		echo -e "\n Copying \"Menu\" files..."
+		echo " Prepare and copy Menu Apps files..."
+		echo "  from: $Input_Menu_Apps_Dir"
+		echo "  to: $Output_Menu_AppsDir"
 		mkdir "$Temp_Dir"
-		cp -rf "$In_Menu_AppsDir/." "$Temp_Dir"
-		for file in "$Temp_Dir"/*; do sed -i -e "s~PATH_TO_FOLDER~$Out_InstallDir~g" "$file"; done
-		sudo cp -rf "$Temp_Dir/." "$Out_Menu_AppsDir"
+		cp -rf "$Input_Menu_Apps_Dir/." "$Temp_Dir"
+		for file in "$Temp_Dir"/*; do grep -rl "PATH_TO_FOLDER" "$Temp_Dir" | xargs sed -i 's/PATH_TO_FOLDER/$Output_Install_Dir/g'; done
+		sudo cp -rf "$Temp_Dir/." "$Output_Menu_AppsDir"
 		rm -r "$Temp_Dir"
-		
-		sudo cp -rf "$In_Menu/." "$Out_Menu"
-		sudo cp -rf "$In_Menu_Dir/." "$Out_Menu_Dir"
-		
-		# Prepare uninstaller
-		echo "Prepare uninstaller: $Out_InstallDir/uninstall.sh"
-		cp "$UninstallerFile" "$Out_InstallDir"
-		sed -i -e "s~INSTALL_DIR_TO_BE_REPLACED~$Out_InstallDir~g" "$Out_InstallDir/uninstall.sh"
-		sed -i -e "s~BIN_DIR_TO_BE_REPLACED~$Out_BinDir~g" "$Out_InstallDir/uninstall.sh"
-		sed -i -e "s~MENU_DIR_TO_BE_REPLACED~$Out_Menu~g" "$Out_InstallDir/uninstall.sh"
-		sed -i -e "s~DDIR_DIR_TO_BE_REPLACED~$Out_Menu_Dir~g" "$Out_InstallDir/uninstall.sh"
-		sed -i -e "s~APPS_DIR_TO_BE_REPLACED~$Out_Menu_AppsDir~g" "$Out_InstallDir/uninstall.sh"
-		sed -i -e "s~USER_DIR_TO_BE_REPLACED~$Out_UserData~g" "$Out_InstallDir/uninstall.sh"
-		chmod 777 "$Out_InstallDir/uninstall.sh"
+		echo " Copy Menu files..."
+		echo "  from: $Input_Menu_Files_Dir"
+		echo "  to: $Output_Menu"
+		sudo cp -rf "$Input_Menu_Files_Dir/." "$Output_Menu"
+		echo " Copy Menu Dir files..."
+		echo "  from: $Input_Menu_Desktop_Dir"
+		echo "  to: $Output_Menu_Dir"
+		sudo cp -rf "$Input_Menu_Desktop_Dir/." "$Output_Menu_Dir"
 		
 		# Copy user data
-		if [ -d "$Out_UserData/.arduino15" ]; then echo -e "$Out_UserData/.arduino15 is present. Ignore.\nPlease copy the files manually if needed."
-		else
-			echo "Copying user files to: $Out_UserData"
-			echo "Please wait..."
-			cp -r "$In_UserData/.arduino15" "$Out_UserData"
+		if [ $User_Data_Copy_Confirm == true ]; then
+			echo " Copy User files..."
+			echo "  from: $Input_User_Data"
+			echo "  to: $Output_User_Home"
+			cp -rf "$Input_User_Data/." "$Output_User_Home"
 		fi
 		
-		if [ -d "$Out_UserData/.arduinoIDE" ]; then echo -e "$Out_UserData/.arduinoIDE is present. Ignore.\nPlease copy the files manually if needed."
-		else
-			echo "Copying user files to: $Out_UserData"
-			echo "Please wait..."
-			cp -r "$In_UserData/.arduinoIDE" "$Out_UserData"
-		fi
-		
+		# Restart taskbar
+		echo "Restart taskbar..."
 		xfce4-panel -r
 		echo -e "\nThe installation process has ended!"
-		
 	fi
 
 
 ### User MODE ###
 	if [ "$Install_Mode" == "User" ]; then
-		echo -e "\n Copying Application files..."
-		echo -e "\n Copying \"Menu\" files..."
+		# Copy Application files
+		echo " Copy application files..."
+		echo "  from: $Input_App_Dir"
+		echo "  to: $Output_Install_Dir"
+		mkdir -p "$Output_Install_Dir"
+		cp -rf "$Input_App_Dir/." "$Output_Install_Dir"
+		echo " Set rights and owner..."
 		
+		# Prepare and copy Bin files
+		echo " Prepare and copy Bin files..."
+		echo "  from: $Input_Bin_Dir"
+		echo "  to: $Output_Bin_Dir"
+		mkdir "$Temp_Dir"
+		cp -rf "$Input_Bin_Dir/." "$Temp_Dir"
+		for file in "$Temp_Dir"/*; do sed -i -e "s~PATH_TO_FOLDER~$Output_Install_Dir~g" "$file"; done
+		cp -rf "$Temp_Dir/." "$Output_Bin_Dir"
+		rm -rf "$Temp_Dir"
+		
+		# Prepare and copy Menu files
+		echo " Prepare and copy Menu Apps files..."
+		echo "  from: $Input_Menu_Apps_Dir"
+		echo "  to: $Output_Menu_AppsDir"
+		mkdir "$Temp_Dir"
+		cp -rf "$Input_Menu_Apps_Dir/." "$Temp_Dir"
+		for file in "$Temp_Dir"/*; do grep -rl "PATH_TO_FOLDER" "$Temp_Dir" | xargs sed -i 's/PATH_TO_FOLDER/$Output_Install_Dir/g'; done
+		cp -rf "$Temp_Dir/." "$Output_Menu_AppsDir"
+		rm -r "$Temp_Dir"
+		echo " Copy Menu files..."
+		echo "  from: $Input_Menu_Files_Dir"
+		echo "  to: $Output_Menu"
+		cp -rf "$Input_Menu_Files_Dir/." "$Output_Menu"
+		echo " Copy Menu Dir files..."
+		echo "  from: $Input_Menu_Desktop_Dir"
+		echo "  to: $Output_Menu_Dir"
+		cp -rf "$Input_Menu_Desktop_Dir/." "$Output_Menu_Dir"
+		
+		# Copy user data
+		if [ $User_Data_Copy_Confirm == true ]; then
+			echo " Copy User files..."
+			echo "  from: $Input_User_Data"
+			echo "  to: $Output_User_Home"
+			cp -rf "$Input_User_Data/." "$Output_User_Home"
+		fi
+		
+		# Restart taskbar
+		echo "Restart taskbar..."
+		xfce4-panel -r
+		echo -e "\nThe installation process has ended!"
 	fi
 	read pause;
 else _ABORT "STAGE Install Application"; fi
@@ -323,13 +358,17 @@ if [ all_ok == true ]; then
 	local arr_files_sorted=()
 	
 	for file in "${!All_Files[@]}"; do if [ -e "${All_Files[$file]}" ]; then arr_files_sorted[$file]="${All_Files[$file]}"; error=true; fi; done
+	for file in "${!Filled_User_Files[@]}"; do if [ -e "${Filled_User_Files[$file]}" ]; then arr_files_sorted[$file]="${Filled_User_Files[$file]}"; error=true; fi; done
 	
 	if [ $error == true ]; then
 		clear
 		echo -e "\
 $Header
  ${Bold}${F_Cyan}WARNING!${F}${rBD}"
-			echo -e "\
+		if [ $User_Data_Copy_Confirm == true ]; then
+			echo "WARNING! Copying data to the user directory is enabled!"
+		fi
+		echo -e "\
   Folders|Files already present:
 $(for file in "${!arr_files_sorted[@]}"; do echo "   ${arr_files_sorted[$file]}"; done)"
 		echo -e "\
@@ -338,7 +377,7 @@ $(for file in "${!arr_files_sorted[@]}"; do echo "   ${arr_files_sorted[$file]}"
   Please make a backup copy of your data, if any, in the above directories.
 
   Enter \"y\" or \"yes\" to continue."
-		read install_confirm;
+		read install_confirm
 		if [ "$install_confirm" == "y" ] || [ "$install_confirm" == "yes" ]; then all_ok=true
 		else _ABORT "Interrupted by user"; fi
 	fi
@@ -385,14 +424,22 @@ if [ all_ok == true ]; then
 	Files_Bin_Dir=( $(ls "$Input_Bin_Dir") )
 	Files_Menu=( $(ls "$Input_Menu_Files_Dir") )
 	Files_Menu_Dir=( $(ls "$Input_Menu_Desktop_Dir") )
-	Files_Menu_Apps=( $(ls "$Input_Menu_Shortcuts_Dir") )
+	Files_Menu_Apps=( $(ls "$Input_Menu_Apps_Dir") )
 	
 	local arr_0=(); local arr_1=(); local arr_2=(); local arr_3=()
+	local user_files_test=()
 	
 	for file in "${!Files_Bin_Dir[@]}"; do arr_0[$file]="$Output_Bin_Dir/${Files_Bin_Dir[$file]}"; done
 	for file in "${!Files_Menu[@]}"; do arr_1[$file]="$Output_Menu/${Files_Menu[$file]}"; done
 	for file in "${!Files_Menu_Dir[@]}"; do arr_2[$file]="$Output_Menu_Dir/${Files_Menu_Dir[$file]}"; done
 	for file in "${!Files_Menu_Apps[@]}"; do arr_3[$file]="$Output_Menu_AppsDir/${Files_Menu_Apps[$file]}"; done
+	
+	Filled_User_Files=()
+	
+	if [ $User_Data_Copy_Confirm == true ]; then
+		for file in "${!Files_User_Data[@]}"; do user_files_test[$file]="$Output_User_Home/${Files_User_Data[$file]}"; done
+		Filled_User_Files=("${user_files_test[@]}")
+	fi
 	
 	All_Files=("$Output_Install_Dir" "${arr_0[@]}" "${arr_1[@]}" "${arr_2[@]}" "${arr_3[@]}")
 else _ABORT "STAGE Fill Input Files"; fi
