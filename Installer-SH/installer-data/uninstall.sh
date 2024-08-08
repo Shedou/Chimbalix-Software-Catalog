@@ -27,7 +27,20 @@ echo -e "\
 $Header
   ."
 
-function _remove { local file="$1"; if [ -e "$file" ]; then echo -e "Removing:\n $file"; sudo rm -rf "$file"; else echo -e "Object not found, skip:\n $file"; fi }
+function _remove {
+	local file="$1"
+	if [ -e "$file" ]; then
+		echo -e "Removing:\n $file"
+		if rm -rf "$file"; then
+			echo "ok."
+		else
+			echo "Need root rights... Try with sudo."
+			sudo rm -rf "$file"
+		fi
+	else
+		echo -e "Object not found, skip:\n $file"
+	fi
+}
 
 FilesToDelete=(
 )

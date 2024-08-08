@@ -36,8 +36,9 @@ BG_Red='\033[101m'; BG_Green='\033[102m'; BG_Yellow='\033[103m'; BG_Blue='\033[1
 #### ---- SETTINGS ---- ####
 #### ---- -------- ---- ####
 
-Install_Mode="User" # "System" wide / Current "User" only
+Install_Mode="System" # "System" wide / Current "User" only
 User_Dir=~ # Current User home directory.
+User_Name=$USER
 
 ### - ------------------- - ###
 ### - Package Information - ###
@@ -45,7 +46,7 @@ User_Dir=~ # Current User home directory.
 Header="${BG_Black}${F_Red}${Bold} -=: Software Installer Script for Chimbalix :=-${rBD}${F}\n"
 
 Archive_File="$Path_To_Script/installer_data.7z"
-MD5_Hash_Of_Archive="bb4a9090292714807f227e979ffd873d" # Basic archive integrity check.
+MD5_Hash_Of_Archive="740c6e5f569694cbd847fd6bd80bf119" # Basic archive integrity check.
 
 Info_Name="Example Application"
 Info_Version="v1.2"
@@ -127,7 +128,6 @@ else
 	Output_Menu="$User_Menu"
 	Output_Menu_Dir="$User_Menu_Dir"
 	Output_Menu_AppsDir="$User_Menu_AppsDir"
-	Output_System_Bin_Dir="NOT USED IN User INSTALLATION MODE"
 fi
 
 
@@ -247,7 +247,7 @@ $Header
 		echo "  from: $Input_App_Dir"
 		echo "  to: $Output_Install_Dir"
 		sudo mkdir -p "$Output_Install_Dir"
-		sudo cp -rf "$Input_App_Dir/". "$Output_Install_Dir"
+		sudo cp -rf "$Input_App_Dir/." "$Output_Install_Dir"
 		echo " Set rights and owner..."
 		sudo chmod -R $Output_App_Folder_Permissions "$Output_Install_Dir"
 		sudo chown -R $Output_App_Folder_Owner "$Output_Install_Dir"
@@ -256,19 +256,19 @@ $Header
 		echo " Prepare and copy Bin files..."
 		echo "  from: $Input_Bin_Dir"
 		echo "  to: $Output_Bin_Dir"
-		mkdir "$Temp_Dir"
+		sudo mkdir "$Temp_Dir"
 		sudo cp -rf "$Input_Bin_Dir/." "$Temp_Dir"
-		for file in "$Temp_Dir"/*; do sed -i -e "s~PATH_TO_FOLDER~$Output_Install_Dir~g" "$file"; done
+		for file in "$Temp_Dir"/*; do sudo sed -i -e "s~PATH_TO_FOLDER~$Output_Install_Dir~g" "$file"; done
 		sudo cp -rf "$Temp_Dir/." "$Output_Bin_Dir"
-		rm -rf "$Temp_Dir"
+		sudo rm -rf "$Temp_Dir"
 		
 		# Prepare and copy Menu files
 		echo " Prepare and copy Menu Apps files..."
 		echo "  from: $Input_Menu_Apps_Dir"
 		echo "  to: $Output_Menu_AppsDir"
-		mkdir "$Temp_Dir"
+		sudo mkdir "$Temp_Dir"
 		sudo cp -rf "$Input_Menu_Apps_Dir/." "$Temp_Dir"
-		for file in "$Temp_Dir"/*; do grep -rl "PATH_TO_FOLDER" "$Temp_Dir" | xargs sed -i "s~PATH_TO_FOLDER~$Output_Install_Dir~g"; done
+		for file in "$Temp_Dir"/*; do sudo grep -rl "PATH_TO_FOLDER" "$Temp_Dir" | sudo xargs sed -i "s~PATH_TO_FOLDER~$Output_Install_Dir~g"; done
 		sudo cp -rf "$Temp_Dir/." "$Output_Menu_AppsDir"
 		sudo rm -r "$Temp_Dir"
 		echo " Copy Menu files..."
@@ -285,7 +285,10 @@ $Header
 			echo " Copy User files..."
 			echo "  from: $Input_User_Data"
 			echo "  to: $Output_User_Home"
-			cp -rf "$Input_User_Data/." "$Output_User_Home"
+			sudo mkdir "$Temp_Dir"
+			sudo cp -rf "$Input_User_Data/." "$Temp_Dir"
+			cp -rf "$Temp_Dir/." "$Output_User_Home"
+			sudo rm -rf "$Temp_Dir"
 		fi
 	fi
 
@@ -416,21 +419,32 @@ else _ABORT "STAGE Prepare Uninstaller"; fi
 
 function _FILL_INPUT_FILES() {
 if [ $all_ok == true ]; then
-	Files_User_Data=( $(ls "$Input_User_Data") )
-	Files_Bin_Dir=( $(ls "$Input_Bin_Dir") )
-	Files_Menu=( $(ls "$Input_Menu_Files_Dir") )
-	Files_Menu_Dir=( $(ls "$Input_Menu_Desktop_Dir") )
-	Files_Menu_Apps=( $(ls "$Input_Menu_Apps_Dir") )
+	if [ "$Install_Mode" == "System" ]; then
+		Files_User_Data=( $(sudo ls "$Input_User_Data") )
+		Files_Bin_Dir=( $(sudo ls "$Input_Bin_Dir") )
+		Files_Menu=( $(sudo ls "$Input_Menu_Files_Dir") )
+		Files_Menu_Dir=( $(sudo ls "$Input_Menu_Desktop_Dir") )
+		Files_Menu_Apps=( $(sudo ls "$Input_Menu_Apps_Dir") )
+	fi
+	
+	if [ "$Install_Mode" == "User" ]; then
+		Files_User_Data=( $(ls "$Input_User_Data") )
+		Files_Bin_Dir=( $(ls "$Input_Bin_Dir") )
+		Files_Menu=( $(ls "$Input_Menu_Files_Dir") )
+		Files_Menu_Dir=( $(ls "$Input_Menu_Desktop_Dir") )
+		Files_Menu_Apps=( $(ls "$Input_Menu_Apps_Dir") )
+	fi
 	
 	local arr_0=(); local arr_1=(); local arr_2=(); local arr_3=()
 	local user_files_test=()
+	
+	All_Files=()
+	Filled_User_Files=()
 	
 	for file in "${!Files_Bin_Dir[@]}"; do arr_0[$file]="$Output_Bin_Dir/${Files_Bin_Dir[$file]}"; done
 	for file in "${!Files_Menu[@]}"; do arr_1[$file]="$Output_Menu/${Files_Menu[$file]}"; done
 	for file in "${!Files_Menu_Dir[@]}"; do arr_2[$file]="$Output_Menu_Dir/${Files_Menu_Dir[$file]}"; done
 	for file in "${!Files_Menu_Apps[@]}"; do arr_3[$file]="$Output_Menu_AppsDir/${Files_Menu_Apps[$file]}"; done
-	
-	Filled_User_Files=()
 	
 	if [ $User_Data_Copy_Confirm == true ]; then
 		for file in "${!Files_User_Data[@]}"; do user_files_test[$file]="$Output_User_Home/${Files_User_Data[$file]}"; done
@@ -496,22 +510,39 @@ function _CHECK_OS() {
 function _MOUNT_ARCHIVE() {
 if [ $all_ok == true ]; then
 	all_ok=false
-	if [ ! -d "$Installer_Archive_Mount_Dir" ]; then
-		if ! mkdir -p "$Installer_Archive_Mount_Dir"; then _ABORT "Error creating archive mount dir."; fi
-		chmod 777 "$Installer_Archive_Mount_Dir"
+	if [ "$Install_Mode" == "System" ]; then
+		if [ ! -d "$Installer_Archive_Mount_Dir" ]; then
+			if ! sudo mkdir -p "$Installer_Archive_Mount_Dir"; then _ABORT "Error creating archive mount dir."; fi; fi
+			if ! sudo archivemount -o nosave "$Path_To_Script/installer_data.7z" "$Installer_Archive_Mount_Dir"; then _ABORT "Error mounting archive."
+		else all_ok=true; fi
 	fi
-	if ! archivemount -o nosave "$Path_To_Script/installer_data.7z" "$Installer_Archive_Mount_Dir"; then _ABORT "Error mounting archive."
-	else all_ok=true; fi
+	
+	if [ "$Install_Mode" == "User" ]; then
+		if [ ! -d "$Installer_Archive_Mount_Dir" ]; then
+			if ! mkdir -p "$Installer_Archive_Mount_Dir"; then _ABORT "Error creating archive mount dir."; fi; fi
+			if ! archivemount -o nosave "$Path_To_Script/installer_data.7z" "$Installer_Archive_Mount_Dir"; then _ABORT "Error mounting archive."
+		else all_ok=true; fi
+	fi
 else _ABORT "STAGE Mount Archive"; fi
 }
 
 ### ------------------------------------------------
 function _UNMOUNT_ARCHIVE() {
-	if [ -d "$Installer_Archive_Mount_Dir" ]; then
-		umount "$Installer_Archive_Mount_Dir"
-		rm -r "$Installer_Archive_Mount_Dir"
+if [[ "$(mount | grep "$Installer_Archive_Mount_Dir")" =~ "archivemount on $Installer_Archive_Mount_Dir".*$ ]]; then
+	if [ "$Install_Mode" == "System" ]; then
+		sudo umount "$Installer_Archive_Mount_Dir"
+		sudo rm -rf "$Installer_Archive_Mount_Dir"
 	fi
-	if [ -d "$Temp_Dir" ]; then rm -r "$Temp_Dir"; fi
+	if [ "$Install_Mode" == "User" ]; then
+		umount "$Installer_Archive_Mount_Dir"
+		rm -rf "$Installer_Archive_Mount_Dir"
+	fi
+fi
+
+if [ -e "$Temp_Dir" ]; then
+	if [ "$Install_Mode" == "System" ]; then sudo rm -rf "$Temp_Dir"; fi
+	if [ "$Install_Mode" == "User" ]; then rm -rf "$Temp_Dir"; fi
+fi
 }
 
 #### ---- --------- ---- ####

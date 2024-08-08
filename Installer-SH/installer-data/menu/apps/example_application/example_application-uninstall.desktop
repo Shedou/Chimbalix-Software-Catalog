@@ -12,7 +12,7 @@ Name=Uninstall - Example Application
 Comment=
 GenericName=
 
-Icon="PATH_TO_FOLDER/icon-uninstall.png"
+Icon=PATH_TO_FOLDER/icon-uninstall.png
 Exec="PATH_TO_FOLDER/uninstall.sh"
 TryExec="PATH_TO_FOLDER/uninstall.sh"
 Path=
