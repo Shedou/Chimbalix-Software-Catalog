@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Script version 1.3
+# Script version 1.4
 # LICENSE for this script is at the end of this file
 #
 #FreeSpace=$(df -m "$Out_InstallDir" | grep "/" | awk '{print $4}')
@@ -37,6 +37,8 @@ Szip_bin="$Installer_Data_Path/tools/7zip/7zzs"
 
 Install_Mode="User" # "System" / "User"
 
+Unique_App_Folder_Name="example_application_v14"
+
  # Copy other data to the user's home directory (do not use this function unless necessary):
 User_Data_Copy_Confirm=true
 
@@ -46,7 +48,7 @@ User_Data_Copy_Confirm=true
 Header="${BG_Black}${F_Red}${Bold} -=: Software Installer Script for Chimbalix :=-${rBD}${F}\n"
 
 Info_Name="Example Application"
-Info_Version="v1.3"
+Info_Version="v1.4"
 Info_Category="Image Editor (Example)"
 Info_Platform="Linux - Chimbalix 24.2 - 24.x"
 Info_Installed_Size="~1 MiB"
@@ -84,14 +86,13 @@ if [ ! -e "$Archive_User_Files" ] && [ $User_Data_Copy_Confirm == true ]; then U
 ######### - ------------ - #########
 ######### - Output paths - #########
 
-Out_App_Folder_Name="example_application_v13"
 Out_App_Folder_Owner=root:root	# Only for "System" mode, username:group
 Out_App_Folder_Permissions=755	# Only for "System" mode.
 
-Out_Install_Dir_System="/portsoft/x86_64/$Out_App_Folder_Name"
-Out_Install_Dir_User="$User_Home/.local/portsoft/x86_64/$Out_App_Folder_Name"
+Out_Install_Dir_System="/portsoft/x86_64/$Unique_App_Folder_Name"
+Out_Install_Dir_User="$User_Home/.local/portsoft/x86_64/$Unique_App_Folder_Name"
 
-Temp_Dir="/tmp/$Out_App_Folder_Name""_$RANDOM""_$RANDOM" # TEMP Directory
+Temp_Dir="/tmp/$Unique_App_Folder_Name""_$RANDOM""_$RANDOM" # TEMP Directory
 
 Out_User_Bin_Dir="$User_Home/.local/bin" # Works starting from Chimbalix 24.4
 Out_User_Menu_files="$User_Home/.config/menus/applications-merged"
