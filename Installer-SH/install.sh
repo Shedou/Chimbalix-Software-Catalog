@@ -73,14 +73,14 @@ Info_Description="\
 ######### - Archives paths - #########
 
 Archive_Program_Files="$Installer_Data_Path/program_files.7z"
-Archive_Program_Files_MD5="bd7674b4658dfc37d545256ee1557d0e"
+Archive_Program_Files_MD5="b9f52db0f2b17eafdd1a6ba595cd4470"
 
 Archive_System_Files="$Installer_Data_Path/system_files.7z"
-Archive_System_Files_MD5="f2bc88aee77eeae3dde7008432cd5b4a"
+Archive_System_Files_MD5="fcb4087a180740f52270f340dcfe30ec"
 
  # Not used if "User_Data_Copy_Confirm=false"
 Archive_User_Files="$Installer_Data_Path/user_files.7z"
-Archive_User_Files_MD5="f6a1f4cebddce4f59459a83c7591f82e"
+Archive_User_Files_MD5="7c2afb6e020e3674dc41213fd69c66a7"
 if [ ! -e "$Archive_User_Files" ] && [ $User_Data_Copy_Confirm == true ]; then User_Data_Copy_Confirm=false; fi # Extra check
 
 ######### - ------------ - #########
@@ -328,7 +328,19 @@ if [ $all_ok == true ]; then all_ok=false
 	
 	for file in "$Temp_Dir"/*; do
 		grep -rl "PATH_TO_FOLDER" "$Temp_Dir" | xargs sed -i "s~PATH_TO_FOLDER~$Output_Install_Dir~g"
+		grep -rl "UNIQUE_APP_FOLDER_NAME" "$Temp_Dir" | xargs sed -i "s~UNIQUE_APP_FOLDER_NAME~$Unique_App_Folder_Name~g"
 	done
+
+	local All_Renamed=false
+	while [ $All_Renamed == false ]; do
+		if find "$Temp_Dir/" -name "UNIQUE_APP_FOLDER_NAME*" | sed -e "p;s~UNIQUE_APP_FOLDER_NAME~$Unique_App_Folder_Name~" | xargs -n2 mv &> /dev/null; then
+			All_Renamed=true
+		fi
+	done
+	
+	#for file in `find "$Temp_Dir/" -type d -name 'UNIQUE_APP_FOLDER_NAME*'`; do
+	#	mv $file `echo $file | sed "s~UNIQUE_APP_FOLDER_NAME~$Unique_App_Folder_Name~"`
+	#done
 	
 	Input_Bin_Dir="$Temp_Dir/bin"
 	Input_Menu_Files_Dir="$Temp_Dir/menu/applications-merged"

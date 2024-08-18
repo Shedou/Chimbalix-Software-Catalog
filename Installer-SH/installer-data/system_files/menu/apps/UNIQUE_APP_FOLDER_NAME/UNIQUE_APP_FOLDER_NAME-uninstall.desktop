@@ -8,26 +8,26 @@ Encoding=UTF-8
 NoDisplay=false
 Hidden=false
 
-Name=Example Application
+Name=Uninstall - Example Application
 Comment=
 GenericName=
 
-Icon=PATH_TO_FOLDER/icon.png
-Exec="PATH_TO_FOLDER/example-application.sh"
-TryExec="PATH_TO_FOLDER/example-application.sh"
+Icon=PATH_TO_FOLDER/icon-uninstall.png
+Exec="PATH_TO_FOLDER/uninstall.sh"
+TryExec="PATH_TO_FOLDER/uninstall.sh"
 Path=
 #StartupWMClass=
 
 Terminal=true
 StartupNotify=false
 
-Categories=
+Categories=UNIQUE_APP_FOLDER_NAME
 #Keywords=
 #MimeType=
 
 # - Translations:
 # FOR TRANSLATORS! Please! Do not translate the app NAME, such as "FeatherPad".
-#Name[ru]=
+Name[ru]=Удалить - Example Application
 #GenericName[ru]=
 #Comment[ru]=
 

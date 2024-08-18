@@ -8,12 +8,12 @@ Encoding=UTF-8
 NoDisplay=false
 Hidden=false
 
-Name=Example Application
-Comment=No comments...
+Name=Example Application v1.4
+Comment=
 #GenericName=
 
-Icon=dialog-warning
+Icon=PATH_TO_FOLDER/icon.png
 
 # - Translations:
-Name[ru]=Example Application
-Comment[ru]=Без комментариев...
+Name[ru]=Example Application v1.4
+Comment[ru]=
