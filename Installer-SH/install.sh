@@ -154,16 +154,14 @@ Str_ERROR_BeforeStage="${Bold}${F_Red}ERROR${F_Yellow} at the stage before:${F}$
 ######### ------------------------------------------------
 function _CLEAR_TEMP() {
 if [ -e "$Temp_Dir" ]; then
-	if [ "$Install_Mode" == "System" ]; then rm -rf "$Temp_Dir"; fi
-	if [ "$Install_Mode" == "User" ]; then rm -rf "$Temp_Dir"; fi
+	rm -rf "$Temp_Dir"
 fi
 }
 
 ######### ------------------------------------------------
 function _CREATE_TEMP() {
-if [ -e "$Temp_Dir" ]; then _CLEAR_TEMP; fi
-if [ "$Install_Mode" == "System" ]; then mkdir "$Temp_Dir"; fi
-if [ "$Install_Mode" == "User" ]; then mkdir "$Temp_Dir"; fi
+	if [ -e "$Temp_Dir" ]; then _CLEAR_TEMP; fi
+	mkdir "$Temp_Dir"
 }
 
 ######### ------------------------------------------------
