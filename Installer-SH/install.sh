@@ -3,7 +3,6 @@
 # LICENSE for this script is at the end of this file
 #
 #FreeSpace=$(df -m "$Out_InstallDir" | grep "/" | awk '{print $4}')
-#if (( FreeSpace < InfoReqFreeDiskSpace )); then
 #
 ### $(for file in "${!Files_Bin_Dir[@]}"; do echo "   > ${Files_Bin_Dir[$file]}"; done)
 ######### ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ##
@@ -150,6 +149,8 @@ all_ok=true
 ######### Strings
 Str_InterruptedByUser="${Bold}${F_Green}Interrupted by user${F}${rBD}"
 Str_ERROR_BeforeStage="${Bold}${F_Red}ERROR${F_Yellow} at the stage before:${F}${rBD}"
+Str_ErrorUnpackingProgramFiles="${Bold}${F_Red}ERROR${F_Yellow} unpacking program files...${F}${rBD}"
+Str_CompleteInstall="${Bold}${F_Green}The installation process has been completed successfully.${F}${rBD}"
 
 ######### ---- --------- ---- #########
 ######### ---- FUNCTIONS ---- #########
@@ -380,7 +381,7 @@ if [ $all_ok == true ]; then all_ok=false
 	All_Files=("$Output_Install_Dir" "${arr_0[@]}" "${arr_1[@]}" "${arr_2[@]}" "${arr_3[@]}")
 	
 	all_ok=true
-else _ABORT "$Str_ERROR_BeforeStage \"Fill Input Files\""; fi
+else _ABORT "$Str_ERROR_BeforeStage \"Prepare Input Files\""; fi
 }
 
 
@@ -398,17 +399,15 @@ if [ $all_ok == true ]; then all_ok=false
 		echo -e "\
 $Header
  ${Bold}${F_Cyan}WARNING!${F}${rBD}"
-		if [ $User_Data_Copy_Confirm == true ]; then
-			echo " WARNING! Copying data to the user directory is enabled!"
-		fi
+	
 		echo -e "\
   Folders|Files already present:
 $(for file in "${!arr_files_sorted[@]}"; do echo "   ${arr_files_sorted[$file]}"; done)"
 		echo -e "\
-
+  
   Continue installation and overwrite directories/files?
   Please make a backup copy of your data, if any, in the above directories.
-
+  
   Enter \"y\" or \"yes\" to continue."
 		read install_confirm
 		if [ "$install_confirm" == "y" ] || [ "$install_confirm" == "yes" ]; then all_ok=true
@@ -441,7 +440,7 @@ $Header
 		read confirm_error_unpacking
 		if [ "$confirm_error_unpacking" == "y" ] || [ "$confirm_error_unpacking" == "yes" ]; then
 			echo "  Continue..."
-		else _ABORT "Error unpacking program files..."; fi
+		else _ABORT "$Str_ErrorUnpackingProgramFiles"; fi
 	fi
 	
 	######### System MODE #########
@@ -529,10 +528,8 @@ if [ $all_ok == true ]; then
 	fi
 	# Restart taskbar
 	xfce4-panel -r
-else _ABORT "$Str_ERROR_BeforeStage \"Prepare Uninstaller\""; fi
+else _ABORT "$Str_ERROR_BeforeStage \"Prepare Uninstaller file\""; fi
 }
-
-
 
 ######### ---- --------- ---- #########
 ######### -- END FUNCTIONS -- #########
@@ -553,13 +550,9 @@ _CHECK_OUTPUTS
 _INSTALL_APP
 _PREPARE_UNINSTALLER
 
-_ABORT "Complete install"
+_ABORT "$Str_CompleteInstall"
 
-
-if [ "$arg1" != "--silent" ]; then
-	echo "Press Enter to exit or close this window."
-	read pause
-fi
+## End ##
 
 # MIT License
 #
