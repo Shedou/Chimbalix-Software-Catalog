@@ -20,7 +20,6 @@ BG_Red='\033[101m'; BG_Green='\033[102m'; BG_Yellow='\033[103m'; BG_Blue='\033[1
 ######### ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ##
 
 ######### Base vars #########
-
 Argument_1="$1"; shift
 Path_To_Script="$( dirname "$(readlink -f "$0")")" # Current installer script directory.
 User_Home=~ # Current User home directory.
@@ -29,18 +28,25 @@ User_Name=$USER
 Installer_Data_Path="$Path_To_Script/installer-data"
 Szip_bin="$Installer_Data_Path/tools/7zip/7zzs"
 
-######### ========= #########
-
 ######### ---- -------- ---- #########
 ######### ---- SETTINGS ---- #########
 ######### ---- -------- ---- #########
 
-Install_Mode="User" # "System" / "User"
+ # Installation mode: "System" / "User"
+ # In "User" mode, root rights are not required.
+Install_Mode="User"
 
+ # Unique application name, used for directory name.
+ # Template for automatic replacement in menu files: UNIQUE_APP_FOLDER_NAME
 Unique_App_Folder_Name="example_application_v14"
 
+ # Application installation directory.
+ # Template for automatic replacement in files: PATH_TO_FOLDER
+Out_Install_Dir_System="/portsoft/x86_64/$Unique_App_Folder_Name"
+Out_Install_Dir_User="$User_Home/.local/portsoft/x86_64/$Unique_App_Folder_Name"
+
  # Copy other data to the user's home directory (do not use this function unless necessary):
-User_Data_Copy_Confirm=true
+User_Data_Copy_Confirm=false
 
 ######### - ------------------- - #########
 ######### - Package Information - #########
@@ -88,9 +94,6 @@ if [ ! -e "$Archive_User_Files" ] && [ $User_Data_Copy_Confirm == true ]; then U
 
 Out_App_Folder_Owner=root:root	# Only for "System" mode, username:group
 Out_App_Folder_Permissions=755	# Only for "System" mode.
-
-Out_Install_Dir_System="/portsoft/x86_64/$Unique_App_Folder_Name"
-Out_Install_Dir_User="$User_Home/.local/portsoft/x86_64/$Unique_App_Folder_Name"
 
 Temp_Dir="/tmp/$Unique_App_Folder_Name""_$RANDOM""_$RANDOM" # TEMP Directory
 
