@@ -4,7 +4,6 @@
 #
 #FreeSpace=$(df -m "$Out_InstallDir" | grep "/" | awk '{print $4}')
 #
-### $(for file in "${!Files_Bin_Dir[@]}"; do echo "   > ${Files_Bin_Dir[$file]}"; done)
 ######### ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ##
 # Font styles: "${Bold} BLACK TEXT ${rBD} normal text."
 Bold="\e[1m"; Dim="\e[2m"; rBD="\e[22m";
