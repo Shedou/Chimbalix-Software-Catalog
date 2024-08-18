@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Script version 1.2
+# Script version 1.4
 # LICENSE for this script is at the end of this file
 ## ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ##
 ## ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ##
@@ -19,23 +19,28 @@ BG_Red='\033[101m'; BG_Green='\033[102m'; BG_Yellow='\033[103m'; BG_Blue='\033[1
 ## ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ##
 ## ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ##
 
-Header="${BG_Black}${F_Red}${Bold} -=: Software Uninstaller Script :=-${rBD}${F}\n"
+Header="${F_Red}${Bold} -=: Software Uninstaller Script (Installer-SH v1.4) :=-${rBD}${F}\n"
 
 # Welcome message
 clear
-echo -e "\
-$Header
-  ."
+echo -e "$Header"
+
+if_sudo=false
 
 function _remove {
 	local file="$1"
 	if [ -e "$file" ]; then
-		echo -e "Removing:\n $file"
-		if rm -rf "$file"; then
-			echo "ok."
-		else
-			echo "Need root rights... Try with sudo."
-			sudo rm -rf "$file"
+		echo -ne "Removing: $file"
+		if [ $if_sudo == false ]; then
+			if rm -rf "$file"; then
+				echo -ne " - ok.\n"
+			else
+				echo -ne "\n ${F_Yellow}${Bold}Need root rights... Try with sudo.${rBD}${F}\n"
+				if sudo rm -rf "$file"; then if_sudo=true; fi
+			fi
+		else 
+			if sudo rm -rf "$file"; then echo -ne " - ok.\n"
+			else echo -e " Something went wrong..."; fi
 		fi
 	else
 		echo -e "Object not found, skip:\n $file"
@@ -47,29 +52,26 @@ FilesToDelete=(
 
 # Display info and wait confirmation
 echo -e "\
+ ${Bold}${F_Yellow}Attention!${F}${rBD} Make sure that you do not have any important data in the program directory!
+ 
+ ${Bold}The listed files and directories will be deleted if they are present in the system!${rBD}"
 
-${B}Attention!${N} Make sure that you do not have any important data in the program directory!
-${B}The listed files and directories will be deleted if they are present in the system!${N}"
-
-echo -e "\n${Bold} - Files to be deleted:${rBD}"
+echo -e "${Bold} - Files to be deleted:${rBD}"
 for i in "${!FilesToDelete[@]}"; do echo "   ${FilesToDelete[$i]}"; done
 
-echo -e "\nEnter \"${Bold}y${rBD}\" or \"${Bold}yes${rBD}\" to begin uninstallation."
+echo -e "\n Enter \"${Bold}y${rBD}\" or \"${Bold}yes${rBD}\" to begin uninstallation."
 Confirm=""
 read Confirm
 
 # Run if confirm
-if [ "$Confirm" == "y" ] || [ "$Confirm" == "yes" ] || [ "$arg1" == "--silent" ]; then
-	Continue=false
+if [ "$Confirm" == "y" ] || [ "$Confirm" == "yes" ]; then
 	for i in "${!FilesToDelete[@]}"; do _remove "${FilesToDelete[$i]}"; done
 	xfce4-panel -r
-	echo "Complete"
+	echo -e "\n ${Bold}${F_Green}Uninstallation completed.${F}${rBD}\n"
 fi
 
-if [ "$arg1" != "--silent" ]; then
-	echo "Press Enter to exit or close this window."
-	read pause
-fi
+echo " Press Enter to exit or close this window."
+read pause
 
 # MIT License
 #

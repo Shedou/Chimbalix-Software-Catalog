@@ -49,7 +49,7 @@ User_Data_Copy_Confirm=false
 ######### - ------------------- - #########
 ######### - Package Information - #########
 
-Header="${BG_Black}${F_Red}${Bold} -=: Software Installer Script for Chimbalix :=-${rBD}${F}\n"
+Header="${BG_Black}${F_Red}${Bold} -=: Software Installer Script for Chimbalix (Installer-SH v1.4) :=-${rBD}${F}\n"
 
 Info_Name="Example Application"
 Info_Version="v1.4"
@@ -61,7 +61,7 @@ Info_Licensing="Freeware - Open Source (MIT)
     Freeware - Proprietary (EULA)
     Trialware - 30 days free, Proprietary (Other License Name)"
 Info_Developer="Chimbal"
-Info_URL="\n   https://github.com/Shedou/Chimbalix-Software-Catalog\n   https://github.com/Shedou/Chimbalix"
+Info_URL="https://github.com/Shedou/Chimbalix-Software-Catalog\n       https://github.com/Shedou/Chimbalix"
 Info_Description="\
   1) This installer allows you to:
      - Suitable for installation on stand-alone PCs without Internet access.
@@ -76,14 +76,14 @@ Info_Description="\
 ######### - Archives paths - #########
 
 Archive_Program_Files="$Installer_Data_Path/program_files.7z"
-Archive_Program_Files_MD5="b9f52db0f2b17eafdd1a6ba595cd4470"
+Archive_Program_Files_MD5="8c7af08f9320ae9b07d62ec6a3ed56c1"
 
 Archive_System_Files="$Installer_Data_Path/system_files.7z"
-Archive_System_Files_MD5="fcb4087a180740f52270f340dcfe30ec"
+Archive_System_Files_MD5="bbbb00c2b451199d956d14164b0f465e"
 
  # Not used if "User_Data_Copy_Confirm=false"
 Archive_User_Files="$Installer_Data_Path/user_files.7z"
-Archive_User_Files_MD5="7c2afb6e020e3674dc41213fd69c66a7"
+Archive_User_Files_MD5="757e92cfb9320f97d0e71d7b62a2946d"
 
  # Extra check
 if [ ! -e "$Archive_User_Files" ] && [ $User_Data_Copy_Confirm == true ]; then User_Data_Copy_Confirm=false; fi
@@ -431,7 +431,9 @@ $Header
 	echo " Unpack application files..."
 	echo "  from: $Archive_Program_Files"
 	echo "  to: $Output_Install_Dir"
+	if [ -e "$Output_Install_Dir" ]; then if [ "$Install_Mode" == "System" ]; then sudo chmod -R 777 "$Output_Install_Dir"; fi; fi
 	mkdir -p "$Output_Install_Dir"
+	
 	if ! "$Szip_bin" x -aoa "$Archive_Program_Files" -o"$Output_Install_Dir/" &> /dev/null; then
 		echo -e "\n ATTENTION!!! Error unpacking program files..."
 		echo " Broken archive? Or symbolic links with absolute paths as part of an application?"
@@ -445,8 +447,8 @@ $Header
 	######### System MODE #########
 	if [ "$Install_Mode" == "System" ]; then
 		echo " Set rights and owner..."
-		sudo chmod -R $Output_App_Folder_Permissions "$Output_Install_Dir"
-		sudo chown -R $Output_App_Folder_Owner "$Output_Install_Dir"
+		sudo chmod -R $Out_App_Folder_Permissions "$Output_Install_Dir"
+		sudo chown -R $Out_App_Folder_Owner "$Output_Install_Dir"
 		
 		# Copy Bin files
 		echo " Install Bin files..."
@@ -459,10 +461,10 @@ $Header
 		echo "  to: $Output_Menu_Files"
 		sudo cp -rf "$Input_Menu_Files_Dir/." "$Output_Menu_Files"
 		echo " Copy Menu Dir files..."
-		echo "  from: $Input_Menu_Desktop_Dir\n  to: $Output_Menu_DDir"
+		echo -e "  from: $Input_Menu_Desktop_Dir\n  to: $Output_Menu_DDir"
 		sudo cp -rf "$Input_Menu_Desktop_Dir/." "$Output_Menu_DDir"
 		echo " Сopy Menu Apps..."
-		echo -e "  from: $Input_Menu_Apps_Dir\n  to: $Output_Menu_App"
+		echo -e "  from: $Input_Menu_Apps_Dir\n  to: $Output_Menu_Apps"
 		sudo cp -rf "$Input_Menu_Apps_Dir/." "$Output_Menu_Apps"
 	fi
 
@@ -483,10 +485,10 @@ $Header
 		echo "  to: $Output_Menu_Files"
 		cp -rf "$Input_Menu_Files_Dir/." "$Output_Menu_Files"
 		echo " Copy Menu Dir files..."
-		echo "  from: $Input_Menu_Desktop_Dir\n  to: $Output_Menu_DDir"
+		echo -e "  from: $Input_Menu_Desktop_Dir\n  to: $Output_Menu_DDir"
 		cp -rf "$Input_Menu_Desktop_Dir/." "$Output_Menu_DDir"
 		echo " Сopy Menu Apps..."
-		echo -e "  from: $Input_Menu_Apps_Dir\n  to: $Output_Menu_App"
+		echo -e "  from: $Input_Menu_Apps_Dir\n  to: $Output_Menu_Apps"
 		cp -rf "$Input_Menu_Apps_Dir/." "$Output_Menu_Apps"
 	fi
 	
