@@ -58,20 +58,19 @@ Info_Version="v1.4"
 Info_Category="Image Editor (Example)"
 Info_Platform="Linux - Chimbalix 24.2 - 24.x"
 Info_Installed_Size="~1 MiB"
-Info_Licensing="\
-Freeware - Open Source (MIT)
+Info_Licensing="Freeware - Open Source (MIT)
    Other Licensing Examples:
     Freeware - Proprietary (EULA)
-    Trialware - 30 days free, Proprietary (Other License Name)
-    AdWare - Proprietary (New License Name)"
+    Trialware - 30 days free, Proprietary (Other License Name)"
 Info_Developer="Chimbal"
 Info_URL="\n   https://github.com/Shedou/Chimbalix-Software-Catalog\n   https://github.com/Shedou/Chimbalix"
 Info_Description="\
   1) This installer allows you to:
-     - Storing program installation files in a 7-zip archive (good compression).
+     - Suitable for installation on stand-alone PCs without Internet access.
+     - Storing installation files in a 7-zip archive (good compression and fast decompression).
      - Two installation modes:
-       . System - you need root rights to install.
        . User - install only for the current User ($User_Name), does not require root rights.
+       . System - For all users, root rights are required.
      - Set owner and rights to the application directory (only in \"System\" mode).
   2) Check the current \"install.sh\" file to configure the installation package."
 
@@ -87,7 +86,9 @@ Archive_System_Files_MD5="fcb4087a180740f52270f340dcfe30ec"
  # Not used if "User_Data_Copy_Confirm=false"
 Archive_User_Files="$Installer_Data_Path/user_files.7z"
 Archive_User_Files_MD5="7c2afb6e020e3674dc41213fd69c66a7"
-if [ ! -e "$Archive_User_Files" ] && [ $User_Data_Copy_Confirm == true ]; then User_Data_Copy_Confirm=false; fi # Extra check
+
+ # Extra check
+if [ ! -e "$Archive_User_Files" ] && [ $User_Data_Copy_Confirm == true ]; then User_Data_Copy_Confirm=false; fi
 
 ######### - ------------ - #########
 ######### - Output paths - #########
@@ -296,7 +297,7 @@ if [ $all_ok == true ]; then all_ok=false
 $Header
  ${Bold}${F_Cyan}Installation paths (${F_DarkYellow}$Install_Mode${F_Cyan} mode):${F}${rBD}
 
- -${Bold}${F_DarkGreen}Temp Directory:${F}${rBD} $Temp_Dir
+ -${Bold}${F_DarkGreen}Temporary Directory:${F}${rBD} $Temp_Dir
  
  -${Bold}${F_DarkGreen}Application install Directory:
    ${F}${rBD}$Output_Install_Dir
@@ -306,15 +307,28 @@ $Header
    $Output_Menu_DDir
    $Output_Menu_Apps
 
- -${Bold}${F_DarkGreen}Install Bin shortcuts to:${F}${rBD} $Output_Bin_Dir"
-if [ $User_Data_Copy_Confirm == true ]; then
-	echo -e "\n -${Bold}${F_Yellow}Attention!${F}${F_DarkGreen} Copy user data to:${F}${rBD} $Output_User_Home"
-fi
+ -${Bold}${F_DarkGreen}Bin files will be installed in:${F}${rBD}
+   $Output_Bin_Dir"
+
+	if [ $User_Data_Copy_Confirm == true ]; then
+		echo -e "\n -${Bold}${F_Yellow}Attention!${F}${F_DarkGreen} Copy user data to:${F}${rBD} $Output_User_Home
+   Change the variable \"User_Data_Copy_Confirm=false\" in the script if you do not want
+   to install any data to the home directory (the application may not work correctly)."
+	fi
+	
+	if [ "$Install_Mode" == "System" ]; then
+		echo -e "\n -${Bold}${F_Yellow}Attention!
+   Installation mode \"System\", root rights are required!
+   During the installation process, the root password will be requested.${F}${rBD}"
+	fi
+	
 	echo -e "\n Please close all important applications before installation."
 	echo -e "\n Start installation? Enter \"y\" or \"yes\" to confirm."
 	read install_settings_confirm
+	
 	if [ "$install_settings_confirm" == "y" ] || [ "$install_settings_confirm" == "yes" ]; then all_ok=true
 	else _ABORT "$Str_InterruptedByUser"; fi
+	
 else _ABORT "$Str_ERROR_BeforeStage \"Print Install Settings\""; fi
 }
 
