@@ -10,7 +10,7 @@
 
 [Blender v4.2.0 (Installer-SH v1.4)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/blender420) - [![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Software-Catalog/blender420/total.svg)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/blender420)
 
-[Blender v3.6.7 (Installer-SH v1.3)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/blender367) - [![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Software-Catalog/blender367/total.svg)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/blender367)
+[Blender v3.6.7 (Installer-SH v1.4)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/blender367) - [![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Software-Catalog/blender367/total.svg)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/blender367)
 
 ### Other:
 
