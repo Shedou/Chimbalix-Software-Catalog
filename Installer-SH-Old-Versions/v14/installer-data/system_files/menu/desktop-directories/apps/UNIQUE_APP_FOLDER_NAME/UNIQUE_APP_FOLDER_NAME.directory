@@ -1,0 +1,19 @@
+[Desktop Entry]
+# -= DIRECTORY =- #
+Type=Directory
+Version=1.1
+Encoding=UTF-8
+#OnlyShowIn=
+#NotShowIn=
+NoDisplay=false
+Hidden=false
+
+Name=Example Application v1.4
+Comment=
+#GenericName=
+
+Icon=PATH_TO_FOLDER/icon.png
+
+# - Translations:
+Name[ru]=Example Application v1.4
+Comment[ru]=
