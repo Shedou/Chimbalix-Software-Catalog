@@ -4,7 +4,7 @@
 
 ### Video Editors:
 
-[kdenlive v24.05.2 (Installer-SH v1.3)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/kdenlive24052) - [![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Software-Catalog/kdenlive24052/total.svg)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/kdenlive24052)
+[kdenlive v24.05.2 (Installer-SH v1.4)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/kdenlive24052) - [![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Software-Catalog/kdenlive24052/total.svg)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/kdenlive24052)
 
 ### 3D Editors:
 
