@@ -15,3 +15,7 @@
 ### Other:
 
 [Arduino IDE v2.2.1 - (ISH v1.4)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/arduino221) - [![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Software-Catalog/arduino221/total.svg)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/arduino221)
+
+### System Utilities
+
+[Chimbalix Tweaker v1.0a - (ISH v1.4)](https://github.com/Shedou/Chimbalix-Tweaker/releases/tag/ctweaker_v10a) - [![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Tweaker/ctweaker_v10a/total.svg)](https://github.com/Shedou/Chimbalix-Tweaker/releases/tag/ctweaker_v10a)
