@@ -14,7 +14,7 @@ for foldername in "${!Folders_to_Archive[@]}"; do
 	Current="${Folders_to_Archive[$foldername]}"
 	if [ -e "$Current" ]; then
 		echo -e "$Spacer"
-		"$Path_To_Script/tools/7zip/7zzs" a -snl -mx9 -m0=LZMA:d256m "$Current.7z" "$Path_To_Script/$Current/."
+		"$Path_To_Script/tools/7zip/7zzs" a -snl -mx9 -m0=LZMA:d256m -ms=on "$Current.7z" "$Path_To_Script/$Current/."
 		MD5_DATA=`md5sum "$Path_To_Script/$Current.7z" | awk '{print $1}'`
 		echo "$MD5_DATA" > "$Path_To_Script/$Current-md5.txt"
 	fi
