@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Script version 1.4
+# Script version 1.5
 # LICENSE for this script is at the end of this file
 #
 #FreeSpace=$(df -m "$Out_InstallDir" | grep "/" | awk '{print $4}')
@@ -34,14 +34,17 @@ Szip_bin="$Installer_Data_Path/tools/7zip/7zzs"
  # In "User" mode, root rights are not required.
 Install_Mode="User"
 
+# x86_64, x86, script, other
+Architecture="x86_64"
+
  # Unique application name, used for directory name.
  # Template for automatic replacement in menu files: UNIQUE_APP_FOLDER_NAME
-Unique_App_Folder_Name="example_application_v14"
+Unique_App_Folder_Name="example_application_v15"
 
  # Application installation directory.
  # Template for automatic replacement in files: PATH_TO_FOLDER
-Out_Install_Dir_System="/portsoft/x86_64/$Unique_App_Folder_Name"
-Out_Install_Dir_User="$User_Home/.local/portsoft/x86_64/$Unique_App_Folder_Name"
+Out_Install_Dir_System="/portsoft/$Architecture/$Unique_App_Folder_Name"
+Out_Install_Dir_User="$User_Home/.local/portsoft/$Architecture/$Unique_App_Folder_Name"
 
  # Copy other data to the user's home directory (do not use this function unless necessary):
 User_Data_Copy_Confirm=false
@@ -49,7 +52,7 @@ User_Data_Copy_Confirm=false
 ######### - ------------------- - #########
 ######### - Package Information - #########
 
-Header="${BG_Black}${F_Red}${Bold} -=: Software Installer Script for Chimbalix (Installer-SH v1.4) :=-${rBD}${F}\n"
+Header="${BG_Black}${F_Red}${Bold} -=: Software Installer Script for Chimbalix (Installer-SH v1.5) :=-${rBD}${F}\n"
 
 Info_Name="Example Application"
 Info_Version="v1.4"
@@ -206,7 +209,7 @@ if [ $all_ok == true ]; then all_ok=false
 	echo -e "\
 $Header
  ${Bold}${F_Cyan}Software Info:${F}${rBD}
- -${Bold}${F_DarkYellow}Name:${F} $Info_Name${rBD} ($Info_Version)
+ -${Bold}${F_DarkYellow}Name:${F} $Info_Name${rBD} ($Info_Version, $Architecture)
  -${Bold}${F_DarkYellow}Category:${rBD}${F} $Info_Category
  -${Bold}${F_DarkYellow}Platform:${rBD}${F} $Info_Platform
  -${Bold}${F_DarkYellow}Installed Size:${rBD}${F} $Info_Installed_Size
