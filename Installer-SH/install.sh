@@ -55,7 +55,8 @@ User_Data_Copy_Confirm=false
 Header="${BG_Black}${F_Red}${Bold} -=: Software Installer Script for Chimbalix (Installer-SH v1.5) :=-${rBD}${F}\n"
 
 Info_Name="Example Application"
-Info_Version="v1.4"
+Info_Version="v1.5"
+Info_Release_Date="2024-09-10"
 Info_Category="Image Editor (Example)"
 Info_Platform="Linux - Chimbalix 24.2 - 24.x"
 Info_Installed_Size="~1 MiB"
@@ -209,7 +210,8 @@ if [ $all_ok == true ]; then all_ok=false
 	echo -e "\
 $Header
  ${Bold}${F_Cyan}Software Info:${F}${rBD}
- -${Bold}${F_DarkYellow}Name:${F} $Info_Name${rBD} ($Info_Version, $Architecture)
+ -${Bold}${F_DarkYellow}Name:${F} $Info_Name${rBD} ($Info_Version,  $Architecture)
+ -${Bold}${F_DarkYellow}Release Date:${rBD}${F} $Info_Release_Date
  -${Bold}${F_DarkYellow}Category:${rBD}${F} $Info_Category
  -${Bold}${F_DarkYellow}Platform:${rBD}${F} $Info_Platform
  -${Bold}${F_DarkYellow}Installed Size:${rBD}${F} $Info_Installed_Size
