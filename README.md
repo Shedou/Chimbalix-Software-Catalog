@@ -2,6 +2,10 @@
 
 ## Software packages for Chimbalix 24.2 and later
 
+### IDE
+
+[Apache NetBeans 22 - (ISH v1.5a)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/apache_netbeans22) - [![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Software-Catalog/apache_netbeans22/total.svg)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/apache_netbeans22)
+
 ### Video Editors:
 
 [kdenlive v24.05.2 - (ISH v1.4)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/kdenlive24052) - [![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Software-Catalog/kdenlive24052/total.svg)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/kdenlive24052)
