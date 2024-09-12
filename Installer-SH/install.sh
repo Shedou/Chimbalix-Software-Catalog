@@ -285,7 +285,15 @@ echo -e "\n  Enter \"y\" or \"yes\" to continue installation (not recommended):"
 			else _ABORT "$Str_InterruptedByUser"; fi
 		else
 			all_ok=true
-			echo -e "\n  ${F_Green}The integrity of the installation archive has been successfully verified, press ${Bold}Enter${rBD} to continue.${F}"
+			echo -e "
+  ${F_Green}The integrity of the installation archive has been successfully verified
+   ${Bold}Program Files MD5 hash:${rBD}  \"$Program_Files_MD5\"
+   ${Bold}System Files MD5 hash:${rBD}   \"$System_Files_MD5\""
+if [ $User_Data_Copy_Confirm == true ]; then echo -e "\
+   ${Bold}User Files MD5 hash:${rBD}     \"$User_Files_MD5\""
+fi
+echo -e "
+  press ${Bold}Enter${rBD} to continue.${F}"
 			read pause
 		fi
 	else all_ok=true; fi
