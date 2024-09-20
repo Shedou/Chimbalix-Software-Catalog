@@ -13,8 +13,8 @@ Comment=
 GenericName=
 
 Icon=PATH_TO_FOLDER/icon.png
-Exec="PATH_TO_FOLDER/example-application.sh"
-TryExec="PATH_TO_FOLDER/example-application.sh"
+Exec=PATH_TO_FOLDER/example-application.sh
+TryExec=PATH_TO_FOLDER/example-application.sh
 Path=
 #StartupWMClass=
 
