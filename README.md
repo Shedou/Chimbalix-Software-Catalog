@@ -12,6 +12,8 @@
 
 ### Image Editors:
 
+[Krita 5.2.2 - (ISH v1.5)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/krita522) - [![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Software-Catalog/krita522/total.svg)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/krita522)
+
 [RawTherapee 5.11 - (ISH v1.5)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/rawtherapee511) - [![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Software-Catalog/rawtherapee511/total.svg)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/rawtherapee511)
 
 ### 3D Editors:
