@@ -10,6 +10,10 @@
 
 [kdenlive v24.05.2 - (ISH v1.4)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/kdenlive24052) - [![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Software-Catalog/kdenlive24052/total.svg)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/kdenlive24052)
 
+### Image Editors:
+
+[RawTherapee 5.11 - (ISH v1.5)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/rawtherapee511) - [![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Software-Catalog/rawtherapee511/total.svg)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/rawtherapee511)
+
 ### 3D Editors:
 
 [Blender v4.2.0 - (ISH v1.4)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/blender420) - [![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Software-Catalog/blender420/total.svg)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/blender420)
