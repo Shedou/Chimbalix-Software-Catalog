@@ -8,20 +8,21 @@ Encoding=UTF-8
 NoDisplay=false
 Hidden=false
 
-Name=Example Application
+Name=PROGRAM_NAME_IN_MENU
 Comment=
 GenericName=
 
 Icon=PATH_TO_FOLDER/icon.png
-Exec=PATH_TO_FOLDER/example-application.sh
-TryExec=PATH_TO_FOLDER/example-application.sh
+# Don't use quotes here, otherwise the app won't be in the "open with" menu...
+Exec=PATH_TO_FOLDER/PROGRAM_EXECUTABLE_FILE
+TryExec=PATH_TO_FOLDER/PROGRAM_EXECUTABLE_FILE
 Path=
 #StartupWMClass=
 
 Terminal=true
 StartupNotify=false
 
-Categories=UNIQUE_APP_FOLDER_NAME
+Categories=UNIQUE_APP_FOLDER_NAME;ADDITIONAL_CATEGORIES
 #Keywords=
 #MimeType=
 
