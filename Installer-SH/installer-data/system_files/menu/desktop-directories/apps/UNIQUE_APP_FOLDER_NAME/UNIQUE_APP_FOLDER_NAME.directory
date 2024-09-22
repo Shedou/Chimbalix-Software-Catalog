@@ -8,12 +8,12 @@ Encoding=UTF-8
 NoDisplay=false
 Hidden=false
 
-Name=PROGRAM_NAME_IN_MENU
+Name=Example Application v1.4
 Comment=
 #GenericName=
 
 Icon=PATH_TO_FOLDER/icon.png
 
 # - Translations:
-#Name[ru]=
-#Comment[ru]=
+Name[ru]=Example Application v1.4
+Comment[ru]=

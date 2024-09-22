@@ -8,12 +8,11 @@ Encoding=UTF-8
 NoDisplay=false
 Hidden=false
 
-Name=Uninstall - PROGRAM_NAME_IN_MENU
+Name=Uninstall - Example Application
 Comment=
 GenericName=
 
 Icon=PATH_TO_FOLDER/icon-uninstall.png
-# Don't remove the quotes here or the app will end up in the "open with" menu...
 Exec="PATH_TO_FOLDER/uninstall.sh"
 TryExec="PATH_TO_FOLDER/uninstall.sh"
 Path=
@@ -22,13 +21,13 @@ Path=
 Terminal=true
 StartupNotify=false
 
-Categories=UNIQUE_APP_FOLDER_NAME;
+Categories=UNIQUE_APP_FOLDER_NAME
 #Keywords=
 #MimeType=
 
 # - Translations:
 # FOR TRANSLATORS! Please! Do not translate the app NAME, such as "FeatherPad".
-Name[ru]=Удалить - PROGRAM_NAME_IN_MENU
+Name[ru]=Удалить - Example Application
 #GenericName[ru]=
 #Comment[ru]=
 
