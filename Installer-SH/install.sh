@@ -577,7 +577,7 @@ function _PREPARE_UNINSTALLER() {
 if [ $all_ok == true ]; then
 	if [ "$Install_Mode" == "System" ]; then
 		sudo chmod 755 "$Output_Uninstaller"
-		sudo chown $Out_App_Folder_Owner "$Output_Uninstaller"
+		sudo chown root:root "$Output_Uninstaller"
 		for filename in "${!All_Files[@]}"; do
 			CurrentFile="${All_Files[$filename]}"
 			sudo awk -i inplace '{if($0=="FilesToDelete=(") $0=$0"\n\"'"$CurrentFile"'\"";print}' "$Output_Uninstaller"
