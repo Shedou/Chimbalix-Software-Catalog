@@ -442,8 +442,6 @@ $Header
 	
 	# Copy Application files
 	echo " Unpack application files..."
-	echo "  from: $Archive_Program_Files"
-	echo "  to: $Output_Install_Dir"
 	if [ -e "$Output_Install_Dir" ]; then if [ "$Install_Mode" == "System" ]; then sudo chmod -R 777 "$Output_Install_Dir"; fi; fi
 	mkdir -p "$Output_Install_Dir"
 	
@@ -465,19 +463,14 @@ $Header
 		
 		# Copy Bin files
 		echo " Install Bin files..."
-		echo -e "  from: $Input_Bin_Dir\n  to: $Output_Bin_Dir"
 		sudo cp -rf "$Input_Bin_Dir/." "$Output_Bin_Dir"
 		
 		# Сopy Menu files
 		echo " Copy Menu files..."
-		echo -e "  from: $Input_Menu_Files_Dir"
-		echo "  to: $Output_Menu_Files"
 		sudo cp -rf "$Input_Menu_Files_Dir/." "$Output_Menu_Files"
 		echo " Copy Menu Dir files..."
-		echo -e "  from: $Input_Menu_Desktop_Dir\n  to: $Output_Menu_DDir"
 		sudo cp -rf "$Input_Menu_Desktop_Dir/." "$Output_Menu_DDir"
 		echo " Сopy Menu Apps..."
-		echo -e "  from: $Input_Menu_Apps_Dir\n  to: $Output_Menu_Apps"
 		sudo cp -rf "$Input_Menu_Apps_Dir/." "$Output_Menu_Apps"
 	fi
 
@@ -488,28 +481,20 @@ $Header
 		
 		# Copy Bin files
 		echo " Install Bin files..."
-		echo "  from: $Input_Bin_Dir"
-		echo "  to: $Output_Bin_Dir"
 		cp -rf "$Input_Bin_Dir/." "$Output_Bin_Dir"
 		
 		# Сopy Menu files
 		echo " Copy Menu files..."
-		echo -e "  from: $Input_Menu_Files_Dir"
-		echo "  to: $Output_Menu_Files"
 		cp -rf "$Input_Menu_Files_Dir/." "$Output_Menu_Files"
 		echo " Copy Menu Dir files..."
-		echo -e "  from: $Input_Menu_Desktop_Dir\n  to: $Output_Menu_DDir"
 		cp -rf "$Input_Menu_Desktop_Dir/." "$Output_Menu_DDir"
 		echo " Сopy Menu Apps..."
-		echo -e "  from: $Input_Menu_Apps_Dir\n  to: $Output_Menu_Apps"
 		cp -rf "$Input_Menu_Apps_Dir/." "$Output_Menu_Apps"
 	fi
 	
 	# Copy user data
 	if [ $User_Data_Copy_Confirm == true ]; then
 		echo " Copy User files..."
-		echo "  from: $Archive_User_Files"
-		echo "  to: $Output_User_Home"
 		if ! "$Szip_bin" x -aoa "$Archive_User_Files" -o"$Output_User_Home/" &> /dev/null; then
 			echo "Error unpacking user files..."
 			read pause
@@ -527,7 +512,7 @@ function _PREPARE_UNINSTALLER() {
 if [ $all_ok == true ]; then
 	if [ "$Install_Mode" == "System" ]; then
 		sudo chmod 755 "$Output_Uninstaller"
-		sudo chown root:root "$Output_Uninstaller"
+		sudo chown $Out_App_Folder_Owner "$Output_Uninstaller"
 		for filename in "${!All_Files[@]}"; do
 			CurrentFile="${All_Files[$filename]}"
 			sudo awk -i inplace '{if($0=="FilesToDelete=(") $0=$0"\n\"'"$CurrentFile"'\"";print}' "$Output_Uninstaller"
