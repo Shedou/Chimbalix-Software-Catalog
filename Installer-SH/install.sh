@@ -159,10 +159,9 @@ all_ok=true
 ######### -- ------------ -- #########
 
 ######### Strings
-Str_Header_Warning="${Bold}${F_Cyan}WARNING!${F}${rBD}"
-Str_AbortCode_InterruptedByUser="${Bold}${F_Green}Interrupted by user${F}${rBD}"
-Str_AbortCode_ERROR_BeforeStage="${Bold}${F_Red}ERROR${F_Yellow} at the stage before:${F}${rBD}"
-Str_AbortCode_ErrorUnpackingProgramFiles="${Bold}${F_Red}ERROR${F_Yellow} unpacking program files...${F}${rBD}"
+Str_InterruptedByUser="${Bold}${F_Green}Interrupted by user${F}${rBD}"
+Str_ERROR_BeforeStage="${Bold}${F_Red}ERROR${F_Yellow} at the stage before:${F}${rBD}"
+Str_ErrorUnpackingProgramFiles="${Bold}${F_Red}ERROR${F_Yellow} unpacking program files...${F}${rBD}"
 Str_CompleteInstall="${Bold}${F_Green}The installation process has been completed successfully.${F}${rBD}"
 
 ######### ---- --------- ---- #########
@@ -241,10 +240,10 @@ $Info_Description
 	echo -e "\n Start the application installation process? Enter \"y\" or \"yes\" to confirm."
 	read package_info_confirm
 	if [ "$package_info_confirm" == "y" ] || [ "$package_info_confirm" == "yes" ]; then all_ok=true
-	else _ABORT "$Str_AbortCode_InterruptedByUser"; fi
+	else _ABORT "$Str_InterruptedByUser"; fi
 	
 	if [ $DEBUG_MODE == true ]; then echo "_PRINT_PACKAGE_INFO - all_ok = $all_ok"; read pause; fi
-else _ABORT "$Str_AbortCode_ERROR_BeforeStage \"_PRINT_PACKAGE_INFO\""; fi
+else _ABORT "$Str_ERROR_BeforeStage \"Print Package Info\""; fi
 }
 
 ######### Check and compare MD5 of archive
@@ -316,7 +315,7 @@ echo -e "
 	else all_ok=true; fi
 	
 	if [ $DEBUG_MODE == true ]; then echo "_CHECK_MD5 - all_ok = $all_ok"; read pause; fi
-else _ABORT "$Str_AbortCode_ERROR_BeforeStage \"_CHECK_MD5\""; fi
+else _ABORT "$Str_ERROR_BeforeStage \"MD5 Check\""; fi
 }
 
 
@@ -362,7 +361,7 @@ $Header
 	else _ABORT "$Str_InterruptedByUser"; fi
 	
 	if [ $DEBUG_MODE == true ]; then echo "_PRINT_INSTALL_SETTINGS - all_ok = $all_ok"; read pause; fi
-else _ABORT "$Str_AbortCode_ERROR_BeforeStage \"_PRINT_INSTALL_SETTINGS\""; fi
+else _ABORT "$Str_ERROR_BeforeStage \"Print Install Settings\""; fi
 }
 
 ######### -------------------
@@ -417,7 +416,7 @@ if [ $all_ok == true ]; then all_ok=false
 	all_ok=true
 	
 	if [ $DEBUG_MODE == true ]; then echo "_PREPARE_INPUT_FILES - all_ok = $all_ok"; read pause; fi
-else _ABORT "$Str_AbortCode_ERROR_BeforeStage \"_PREPARE_INPUT_FILES\""; fi
+else _ABORT "$Str_ERROR_BeforeStage \"Prepare Input Files\""; fi
 }
 
 
@@ -434,7 +433,7 @@ if [ $all_ok == true ]; then all_ok=false
 		clear
 		echo -e "\
 $Header
- $Str_Header_Warning"
+ ${Bold}${F_Cyan}WARNING!${F}${rBD}"
 	
 		echo -e "\
   Folders|Files already present:
@@ -453,7 +452,7 @@ $(for file in "${!arr_files_sorted[@]}"; do echo "   ${arr_files_sorted[$file]}"
 	fi
 	
 	if [ $DEBUG_MODE == true ]; then echo "_CHECK_OUTPUTS - all_ok = $all_ok"; read pause; fi
-else _ABORT "$Str_AbortCode_ERROR_BeforeStage \"_CHECK_OUTPUTS\""; fi
+else _ABORT "$Str_ERROR_BeforeStage \"Check Outputs\""; fi
 }
 
 
@@ -479,6 +478,8 @@ $Header
 	fi
 	
 	echo " Unpack application files..."
+	echo "  from: $Archive_Program_Files"
+	echo "  to: $Output_Install_Dir"
 	
 	if [ "$Install_Mode" == "System" ]; then
 		if ! sudo "$Szip_bin" x -aoa "$Archive_Program_Files" -o"$Output_Install_Dir/" &> /dev/null; then
@@ -488,7 +489,7 @@ $Header
 			read confirm_error_unpacking
 			if [ "$confirm_error_unpacking" == "y" ] || [ "$confirm_error_unpacking" == "yes" ]; then
 				echo "  Continue..."
-			else _ABORT "$Str_AbortCode_ErrorUnpackingProgramFiles"; fi
+			else _ABORT "$Str_ErrorUnpackingProgramFiles"; fi
 		fi
 	fi
 	
@@ -500,7 +501,7 @@ $Header
 			read confirm_error_unpacking
 			if [ "$confirm_error_unpacking" == "y" ] || [ "$confirm_error_unpacking" == "yes" ]; then
 				echo "  Continue..."
-			else _ABORT "$Str_AbortCode_ErrorUnpackingProgramFiles"; fi
+			else _ABORT "$Str_ErrorUnpackingProgramFiles"; fi
 		fi
 	fi
 	
@@ -512,14 +513,19 @@ $Header
 		
 		# Copy Bin files
 		echo " Install Bin files..."
+		echo -e "  from: $Input_Bin_Dir\n  to: $Output_Bin_Dir"
 		sudo cp -rf "$Input_Bin_Dir/." "$Output_Bin_Dir"
 		
 		# Сopy Menu files
 		echo " Copy Menu files..."
+		echo -e "  from: $Input_Menu_Files_Dir"
+		echo "  to: $Output_Menu_Files"
 		sudo cp -rf "$Input_Menu_Files_Dir/." "$Output_Menu_Files"
 		echo " Copy Menu Dir files..."
+		echo -e "  from: $Input_Menu_Desktop_Dir\n  to: $Output_Menu_DDir"
 		sudo cp -rf "$Input_Menu_Desktop_Dir/." "$Output_Menu_DDir"
 		echo " Сopy Menu Apps..."
+		echo -e "  from: $Input_Menu_Apps_Dir\n  to: $Output_Menu_Apps"
 		sudo cp -rf "$Input_Menu_Apps_Dir/." "$Output_Menu_Apps"
 	fi
 
@@ -530,14 +536,20 @@ $Header
 		
 		# Copy Bin files
 		echo " Install Bin files..."
+		echo "  from: $Input_Bin_Dir"
+		echo "  to: $Output_Bin_Dir"
 		cp -rf "$Input_Bin_Dir/." "$Output_Bin_Dir"
 		
 		# Сopy Menu files
 		echo " Copy Menu files..."
+		echo -e "  from: $Input_Menu_Files_Dir"
+		echo "  to: $Output_Menu_Files"
 		cp -rf "$Input_Menu_Files_Dir/." "$Output_Menu_Files"
 		echo " Copy Menu Dir files..."
+		echo -e "  from: $Input_Menu_Desktop_Dir\n  to: $Output_Menu_DDir"
 		cp -rf "$Input_Menu_Desktop_Dir/." "$Output_Menu_DDir"
 		echo " Сopy Menu Apps..."
+		echo -e "  from: $Input_Menu_Apps_Dir\n  to: $Output_Menu_Apps"
 		cp -rf "$Input_Menu_Apps_Dir/." "$Output_Menu_Apps"
 	fi
 	
@@ -555,7 +567,7 @@ $Header
 	all_ok=true
 	
 	if [ $DEBUG_MODE == true ]; then echo "_INSTALL_APP - all_ok = $all_ok"; read pause; fi
-else _ABORT "$Str_AbortCode_ERROR_BeforeStage \"_INSTALL_APP\""; fi
+else _ABORT "$Str_ERROR_BeforeStage \"Install Application\""; fi
 }
 
 
@@ -582,7 +594,7 @@ if [ $all_ok == true ]; then
 	xfce4-panel -r
 	
 	if [ $DEBUG_MODE == true ]; then echo "_PREPARE_UNINSTALLER - all_ok = $all_ok"; read pause; fi
-else _ABORT "$Str_AbortCode_ERROR_BeforeStage \"_PREPARE_UNINSTALLER\""; fi
+else _ABORT "$Str_ERROR_BeforeStage \"Prepare Uninstaller file\""; fi
 }
 
 ######### ---- --------- ---- #########
