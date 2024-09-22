@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Script version 1.5
+# Script version 1.6
 # LICENSE for this script is at the end of this file
 #
 #FreeSpace=$(df -m "$Out_InstallDir" | grep "/" | awk '{print $4}')
@@ -22,6 +22,7 @@ Argument_1="$1"; shift
 Path_To_Script="$( dirname "$(readlink -f "$0")")" # Current installer script directory.
 User_Home=~ # Current User home directory.
 User_Name=$USER
+DEBUG_MODE=false
 
 Installer_Data_Path="$Path_To_Script/installer-data"
 Szip_bin="$Installer_Data_Path/tools/7zip/7zzs"
@@ -39,7 +40,15 @@ Architecture="x86_64"
 
  # Unique application name, used for directory name.
  # Template for automatic replacement in menu files: UNIQUE_APP_FOLDER_NAME
-Unique_App_Folder_Name="example_application_v15"
+Unique_App_Folder_Name="example_application_16"
+
+# Please prepare additional files in the directory "installer-data/system_files/menu/apps/UNIQUE_APP_FOLDER_NAME/" if necessary.
+Program_Name_In_Menu="Example Application 1.6" #PROGRAM_NAME_IN_MENU
+Program_Executable_File="example-application.sh" #PROGRAM_EXECUTABLE_FILE
+
+# Additional menu categories that will include the main application shortcuts.
+# Please do not use this variable in the uninstaller shortcut file.
+Additional_Categories="chi-other;chi-admin;" #ADDITIONAL_CATEGORIES
 
  # Application installation directory.
  # Template for automatic replacement in files: PATH_TO_FOLDER
@@ -55,8 +64,8 @@ User_Data_Copy_Confirm=false
 Header="${BG_Black}${F_Red}${Bold} -=: Software Installer Script for Chimbalix (Installer-SH v1.5) :=-${rBD}${F}\n"
 
 Info_Name="Example Application"
-Info_Version="v1.5"
-Info_Release_Date="2024-09-10"
+Info_Version="1.6"
+Info_Release_Date="2024-09-22"
 Info_Category="Image Editor (Example)"
 Info_Platform="Linux - Chimbalix 24.2 - 24.x"
 Info_Installed_Size="~1 MiB"
@@ -80,14 +89,14 @@ Info_Description="\
 ######### - Archives paths - #########
 
 Archive_Program_Files="$Installer_Data_Path/program_files.7z"
-Archive_Program_Files_MD5="8c7af08f9320ae9b07d62ec6a3ed56c1"
+Archive_Program_Files_MD5="1773d79a725075d29f5331145ae61f0b"
 
 Archive_System_Files="$Installer_Data_Path/system_files.7z"
-Archive_System_Files_MD5="bbbb00c2b451199d956d14164b0f465e"
+Archive_System_Files_MD5="5a6c4496be30f5fddbc51948019eff43"
 
  # Not used if "User_Data_Copy_Confirm=false"
 Archive_User_Files="$Installer_Data_Path/user_files.7z"
-Archive_User_Files_MD5="757e92cfb9320f97d0e71d7b62a2946d"
+Archive_User_Files_MD5="112c146025e464558b46f18b398ba904"
 
  # Extra check
 if [ ! -e "$Archive_User_Files" ] && [ $User_Data_Copy_Confirm == true ]; then User_Data_Copy_Confirm=false; fi
@@ -219,6 +228,8 @@ $Info_Description
 	read package_info_confirm
 	if [ "$package_info_confirm" == "y" ] || [ "$package_info_confirm" == "yes" ]; then all_ok=true
 	else _ABORT "$Str_InterruptedByUser"; fi
+	
+	if [ $DEBUG_MODE == true ]; then echo "_PRINT_PACKAGE_INFO - all_ok = $all_ok"; read pause; fi
 else _ABORT "$Str_ERROR_BeforeStage \"Print Package Info\""; fi
 }
 
@@ -289,6 +300,8 @@ echo -e "
 			read pause
 		fi
 	else all_ok=true; fi
+	
+	if [ $DEBUG_MODE == true ]; then echo "_CHECK_MD5 - all_ok = $all_ok"; read pause; fi
 else _ABORT "$Str_ERROR_BeforeStage \"MD5 Check\""; fi
 }
 
@@ -334,6 +347,7 @@ $Header
 	if [ "$install_settings_confirm" == "y" ] || [ "$install_settings_confirm" == "yes" ]; then all_ok=true
 	else _ABORT "$Str_InterruptedByUser"; fi
 	
+	if [ $DEBUG_MODE == true ]; then echo "_PRINT_INSTALL_SETTINGS - all_ok = $all_ok"; read pause; fi
 else _ABORT "$Str_ERROR_BeforeStage \"Print Install Settings\""; fi
 }
 
@@ -341,16 +355,19 @@ else _ABORT "$Str_ERROR_BeforeStage \"Print Install Settings\""; fi
 ######### Prepare Input Files
 function _PREPARE_INPUT_FILES() {
 if [ $all_ok == true ]; then all_ok=false
+	
+	if ! [[ -x "$Szip_bin" ]]; then chmod +x "$Szip_bin"; fi
+	
 	if ! "$Szip_bin" x "$Archive_System_Files" -o"$Temp_Dir/" &> /dev/null; then
-		chmod +x "$Szip_bin"
-		if ! "$Szip_bin" x "$Archive_System_Files" -o"$Temp_Dir/" &> /dev/null; then
-			_ABORT "Error unpacking temp files (_PREPARE_INPUT_FILES), try copying the installation files to another disk before running."
-		fi
+		_ABORT "Error unpacking temp files (_PREPARE_INPUT_FILES), try copying the installation files to another disk before running."
 	fi
 	
 	for file in "$Temp_Dir"/*; do
 		grep -rl "PATH_TO_FOLDER" "$Temp_Dir" | xargs sed -i "s~PATH_TO_FOLDER~$Output_Install_Dir~g"
 		grep -rl "UNIQUE_APP_FOLDER_NAME" "$Temp_Dir" | xargs sed -i "s~UNIQUE_APP_FOLDER_NAME~$Unique_App_Folder_Name~g"
+		grep -rl "PROGRAM_NAME_IN_MENU" "$Temp_Dir" | xargs sed -i "s~PROGRAM_NAME_IN_MENU~$Program_Name_In_Menu~g"
+		grep -rl "PROGRAM_EXECUTABLE_FILE" "$Temp_Dir" | xargs sed -i "s~PROGRAM_EXECUTABLE_FILE~$Program_Executable_File~g"
+		grep -rl "ADDITIONAL_CATEGORIES" "$Temp_Dir" | xargs sed -i "s~ADDITIONAL_CATEGORIES~$Additional_Categories~g"
 	done
 
 	local All_Renamed=false
@@ -383,8 +400,9 @@ if [ $all_ok == true ]; then all_ok=false
 	for file in "${!Files_Menu_Apps[@]}"; do arr_3[$file]="$Output_Menu_Apps/${Files_Menu_Apps[$file]}"; done
 	
 	All_Files=("$Output_Install_Dir" "${arr_0[@]}" "${arr_1[@]}" "${arr_2[@]}" "${arr_3[@]}")
-	
 	all_ok=true
+	
+	if [ $DEBUG_MODE == true ]; then echo "_PREPARE_INPUT_FILES - all_ok = $all_ok"; read pause; fi
 else _ABORT "$Str_ERROR_BeforeStage \"Prepare Input Files\""; fi
 }
 
@@ -419,6 +437,8 @@ $(for file in "${!arr_files_sorted[@]}"; do echo "   ${arr_files_sorted[$file]}"
 	else
 		all_ok=true
 	fi
+	
+	if [ $DEBUG_MODE == true ]; then echo "_CHECK_OUTPUTS - all_ok = $all_ok"; read pause; fi
 else _ABORT "$Str_ERROR_BeforeStage \"Check Outputs\""; fi
 }
 
@@ -433,18 +453,41 @@ $Header
  ${Bold}${F_Cyan}Installing...${F}${rBD}"
 	
 	# Copy Application files
-	echo " Unpack application files..."
-	if [ -e "$Output_Install_Dir" ]; then if [ "$Install_Mode" == "System" ]; then sudo chmod -R 777 "$Output_Install_Dir"; fi; fi
-	mkdir -p "$Output_Install_Dir"
 	
-	if ! "$Szip_bin" x -aoa "$Archive_Program_Files" -o"$Output_Install_Dir/" &> /dev/null; then
-		echo -e "\n ATTENTION!!! Error unpacking program files..."
-		echo " Broken archive? Or symbolic links with absolute paths as part of an application?"
-		echo -e "\n Enter \"y\" or \"yes\" to continue installation."
-		read confirm_error_unpacking
-		if [ "$confirm_error_unpacking" == "y" ] || [ "$confirm_error_unpacking" == "yes" ]; then
-			echo "  Continue..."
-		else _ABORT "$Str_ErrorUnpackingProgramFiles"; fi
+	echo " Create output folder if it does not exist..."
+	
+	if [ ! -e "$Output_Install_Dir" ]; then
+		if [ "$Install_Mode" == "System" ]; then if ! sudo mkdir -p "$Output_Install_Dir"; then _ABORT "No rights to continue installation?"; fi; fi
+		if [ "$Install_Mode" == "User" ]; then if ! mkdir -p "$Output_Install_Dir"; then _ABORT "No rights to continue installation?"; fi; fi
+	else
+		if [ "$Install_Mode" == "System" ]; then if ! sudo touch "$Output_Install_Dir"; then _ABORT "No rights to continue installation?"; fi; fi
+		if [ "$Install_Mode" == "User" ]; then if ! touch "$Output_Install_Dir"; then _ABORT "No rights to continue installation?"; fi; fi
+	fi
+	
+	echo " Unpack application files..."
+	
+	if [ "$Install_Mode" == "System" ]; then
+		if ! sudo "$Szip_bin" x -aoa "$Archive_Program_Files" -o"$Output_Install_Dir/" &> /dev/null; then
+			echo -e "\n ATTENTION!!! Error unpacking program files..."
+			echo " Broken archive? Or symbolic links with absolute paths as part of an application?"
+			echo -e "\n $Str_y_or_yes_continue"
+			read confirm_error_unpacking
+			if [ "$confirm_error_unpacking" == "y" ] || [ "$confirm_error_unpacking" == "yes" ]; then
+				echo "  Continue..."
+			else _ABORT "$Str_AbortCode_ErrorUnpackingProgramFiles"; fi
+		fi
+	fi
+	
+	if [ "$Install_Mode" == "User" ]; then
+		if ! "$Szip_bin" x -aoa "$Archive_Program_Files" -o"$Output_Install_Dir/" &> /dev/null; then
+			echo -e "\n ATTENTION!!! Error unpacking program files..."
+			echo " Broken archive? Or symbolic links with absolute paths as part of an application?"
+			echo -e "\n $Str_y_or_yes_continue"
+			read confirm_error_unpacking
+			if [ "$confirm_error_unpacking" == "y" ] || [ "$confirm_error_unpacking" == "yes" ]; then
+				echo "  Continue..."
+			else _ABORT "$Str_AbortCode_ErrorUnpackingProgramFiles"; fi
+		fi
 	fi
 	
 	######### System MODE #########
@@ -494,6 +537,8 @@ $Header
 	fi
 	
 	all_ok=true
+	
+	if [ $DEBUG_MODE == true ]; then echo "_INSTALL_APP - all_ok = $all_ok"; read pause; fi
 else _ABORT "$Str_ERROR_BeforeStage \"Install Application\""; fi
 }
 
@@ -519,6 +564,8 @@ if [ $all_ok == true ]; then
 	fi
 	# Restart taskbar
 	xfce4-panel -r
+	
+	if [ $DEBUG_MODE == true ]; then echo "_PREPARE_UNINSTALLER - all_ok = $all_ok"; read pause; fi
 else _ABORT "$Str_ERROR_BeforeStage \"Prepare Uninstaller file\""; fi
 }
 
