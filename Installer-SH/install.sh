@@ -160,17 +160,9 @@ Str_CompleteInstall="${Bold}${F_Green}The installation process has been complete
 ######### ---- --------- ---- #########
 
 ######### ------------------------------------------------
-function _CLEAR_TEMP() {
-if [ -e "$Temp_Dir" ]; then
-	rm -rf "$Temp_Dir"
-fi
-}
 
-######### ------------------------------------------------
-function _CREATE_TEMP() {
-	if [ -e "$Temp_Dir" ]; then _CLEAR_TEMP; fi
-	mkdir "$Temp_Dir"
-}
+function _CLEAR_TEMP() { if [ -e "$Temp_Dir" ]; then rm -rf "$Temp_Dir"; fi; }
+function _CREATE_TEMP() { _CLEAR_TEMP; mkdir "$Temp_Dir"; }
 
 ######### ------------------------------------------------
 function _ABORT() {
