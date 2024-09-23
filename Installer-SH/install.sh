@@ -50,7 +50,7 @@ Program_Executable_File="example-application.sh" #PROGRAM_EXECUTABLE_FILE
 
  # Additional menu categories that will include the main application shortcuts.
  # Please do not use this variable in the uninstaller shortcut file.
-Additional_Categories="chi-other;chi-admin;" #ADDITIONAL_CATEGORIES
+Additional_Categories="chi-other;" #ADDITIONAL_CATEGORIES
  # -=== Chimbalix 24.4 main categories:
  # chi-ai  chi-accessories  chi-accessories-fm  chi-view  chi-admin  chi-info  chi-info-bench  chi-info-help
  # chi-dev  chi-dev-other  chi-dev-ide  chi-edit  chi-edit-audiovideo  chi-edit-image  chi-edit-text  chi-games
@@ -68,7 +68,7 @@ Header="${BG_Black}${F_Red}${Bold} -=: Software Installer Script for Chimbalix (
 Info_Name="Example Application"
 Info_Version="1.6"
 Info_Release_Date="2024-09-22"
-Info_Category="Administration, Other"
+Info_Category="Other"
 Info_Platform="Linux - Chimbalix 24.2 - 24.x"
 Info_Installed_Size="~1 MiB"
 Info_Licensing="Freeware - Open Source (MIT)
