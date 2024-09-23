@@ -64,7 +64,7 @@ Additional_Categories="chi-other;" #ADDITIONAL_CATEGORIES
 ######### - Package Information - #########
 ######### - ------------------- - #########
 
-Header="${BG_Black}${F_Red}${Bold} -=: Software Installer Script for Chimbalix (Installer-SH v1.5) :=-${rBD}${F}\n"
+Header="${BG_Black}${F_Red}${Bold} -=: Software Installer Script for Chimbalix (Installer-SH v1.6) :=-${rBD}${F}\n"
 
 Info_Name="Example Application"
 Info_Version="1.6"
