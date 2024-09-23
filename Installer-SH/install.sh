@@ -38,7 +38,7 @@ User_Data_Copy_Confirm=false
 Install_Mode="User" # In "User" mode, root rights are not required.
 
  # x86_64, x86, script, other
-Architecture="x86_64"
+Architecture="script"
 
  # Unique application name, used for directory name.
  # Template for automatic replacement in menu files: UNIQUE_APP_FOLDER_NAME
