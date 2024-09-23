@@ -31,6 +31,9 @@ Szip_bin="$Installer_Data_Path/tools/7zip/7zzs"
 ######### ---- SETTINGS ---- #########
 ######### ---- -------- ---- #########
 
+ # Copy other data to the user's home directory (do not use this function unless necessary):
+User_Data_Copy_Confirm=false
+
  # Installation mode: "System" / "User"
 Install_Mode="User" # In "User" mode, root rights are not required.
 
@@ -55,15 +58,6 @@ Additional_Categories="chi-other;chi-admin;" #ADDITIONAL_CATEGORIES
  # -=== XDG / Linux Categories Version 1.1 (20 August 2016):
  # URL: https://specifications.freedesktop.org/menu-spec/latest/category-registry.html
  # URL: https://specifications.freedesktop.org/menu-spec/latest/additional-category-registry.html
-
-
- # Application installation directory.
- # Template for automatic replacement in files: PATH_TO_FOLDER
-Out_Install_Dir_System="/portsoft/$Architecture/$Unique_App_Folder_Name"
-Out_Install_Dir_User="$User_Home/.local/portsoft/$Architecture/$Unique_App_Folder_Name"
-
- # Copy other data to the user's home directory (do not use this function unless necessary):
-User_Data_Copy_Confirm=false
 
 ######### - ------------------- - #########
 ######### - Package Information - #########
@@ -113,6 +107,10 @@ if [ ! -e "$Archive_User_Files" ] && [ $User_Data_Copy_Confirm == true ]; then U
 ######### - ------------ - #########
 ######### - Output paths - #########
 ######### - ------------ - #########
+
+ # Application installation directory.
+Out_Install_Dir_System="/portsoft/$Architecture/$Unique_App_Folder_Name"
+Out_Install_Dir_User="$User_Home/.local/portsoft/$Architecture/$Unique_App_Folder_Name"
 
 Out_App_Folder_Owner=root:root	# Only for "System" mode, username:group
 Out_App_Folder_Permissions=755	# Only for "System" mode.
