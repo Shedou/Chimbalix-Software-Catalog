@@ -18,10 +18,10 @@ BG_Red='\033[101m'; BG_Green='\033[102m'; BG_Yellow='\033[103m'; BG_Blue='\033[1
 ######### ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ##
 
 ######### Base vars #########
-Argument_1="$1"; shift
+Arguments=("$@")
 Path_To_Script="$( dirname "$(readlink -f "$0")")" # Current installer script directory.
 User_Home=~ # Current User home directory.
-User_Name=$USER
+User_Name=$USER # Current User name.
 DEBUG_MODE=false
 
 Installer_Data_Path="$Path_To_Script/installer-data"
@@ -32,8 +32,7 @@ Szip_bin="$Installer_Data_Path/tools/7zip/7zzs"
 ######### ---- -------- ---- #########
 
  # Installation mode: "System" / "User"
- # In "User" mode, root rights are not required.
-Install_Mode="User"
+Install_Mode="User" # In "User" mode, root rights are not required.
 
  # x86_64, x86, script, other
 Architecture="x86_64"
@@ -153,11 +152,7 @@ fi
 
 Output_Uninstaller="$Output_Install_Dir/uninstall.sh" # Uninstaller template file.
 
-###  Make sure the following files are properly prepared according to the application.
-#  All files listed here will be modified according to the installation path of the application,
-#  you must take care to correctly use the "PATH_TO_FOLDER" variable inside the files.
-# The "PATH_TO_FOLDER" variable points to the application installation directory without the trailing slash, for example "/portsoft/x86_64/example-application".
-
+ # The "PATH_TO_FOLDER" variable points to the application installation directory without the trailing slash, for example "/portsoft/x86_64/example-application".
 
  # Desktop shortcut files:
  ## Copy files from "Template_Menu_Files_Dir" to "/etc/xdg/menus/applications-merged/" or "/home/USER_NAME/.config/menus/applications-merged/"
