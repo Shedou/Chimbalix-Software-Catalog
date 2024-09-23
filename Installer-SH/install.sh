@@ -49,6 +49,14 @@ Program_Executable_File="example-application.sh" #PROGRAM_EXECUTABLE_FILE
 # Additional menu categories that will include the main application shortcuts.
 # Please do not use this variable in the uninstaller shortcut file.
 Additional_Categories="chi-other;chi-admin;" #ADDITIONAL_CATEGORIES
+# -=== Chimbalix 24.4 main categories:
+# chi-ai  chi-accessories  chi-accessories-fm  chi-view  chi-admin  chi-info  chi-info-bench  chi-info-help
+# chi-dev  chi-dev-other  chi-dev-ide  chi-edit  chi-edit-audiovideo  chi-edit-image  chi-edit-text  chi-games
+# chi-network  chi-multimedia  chi-multimedia-players  chi-office  chi-other  chi-tools  chi-tools-archivers
+# -=== XDG / Linux Categories Version 1.1 (20 August 2016):
+# URL: https://specifications.freedesktop.org/menu-spec/latest/category-registry.html
+# URL: https://specifications.freedesktop.org/menu-spec/latest/additional-category-registry.html
+
 
  # Application installation directory.
  # Template for automatic replacement in files: PATH_TO_FOLDER
