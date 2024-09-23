@@ -46,6 +46,7 @@ Unique_App_Folder_Name="example_application_16"
 
  # Please prepare additional files in the directory "installer-data/system_files/menu/apps/UNIQUE_APP_FOLDER_NAME/" if necessary.
 Program_Name_In_Menu="Example Application 1.6" #PROGRAM_NAME_IN_MENU
+Program_Icon_In_Menu="icon.png" #PROGRAM_ICON_IN_MENU
 Program_Executable_File="example-application.sh" #PROGRAM_EXECUTABLE_FILE
 
  # Additional menu categories that will include the main application shortcuts.
@@ -92,14 +93,14 @@ Info_Description="\
 ######### - -------------- - #########
 
 Archive_Program_Files="$Installer_Data_Path/program_files.7z"
-Archive_Program_Files_MD5="1773d79a725075d29f5331145ae61f0b"
+Archive_Program_Files_MD5="f209f7bfabb4da5d44c8169f9a903b66"
 
 Archive_System_Files="$Installer_Data_Path/system_files.7z"
-Archive_System_Files_MD5="5a6c4496be30f5fddbc51948019eff43"
+Archive_System_Files_MD5="5ac319d40b109fba1ee3c3ed1798cbd9"
 
  # Not used if "User_Data_Copy_Confirm=false"
 Archive_User_Files="$Installer_Data_Path/user_files.7z"
-Archive_User_Files_MD5="112c146025e464558b46f18b398ba904"
+Archive_User_Files_MD5="983ed40a5041a142b3c96859978f9f2a"
 
  # Extra check
 if [ ! -e "$Archive_User_Files" ] && [ $User_Data_Copy_Confirm == true ]; then User_Data_Copy_Confirm=false; fi
@@ -372,6 +373,7 @@ if [ $all_ok == true ]; then all_ok=false
 		grep -rl "PROGRAM_NAME_IN_MENU" "$Temp_Dir" | xargs sed -i "s~PROGRAM_NAME_IN_MENU~$Program_Name_In_Menu~g"
 		grep -rl "PROGRAM_EXECUTABLE_FILE" "$Temp_Dir" | xargs sed -i "s~PROGRAM_EXECUTABLE_FILE~$Program_Executable_File~g"
 		grep -rl "ADDITIONAL_CATEGORIES" "$Temp_Dir" | xargs sed -i "s~ADDITIONAL_CATEGORIES~$Additional_Categories~g"
+		grep -rl "PROGRAM_ICON_IN_MENU" "$Temp_Dir" | xargs sed -i "s~PROGRAM_ICON_IN_MENU~$Program_Icon_In_Menu~g"
 	done
 
 	local All_Renamed=false
