@@ -1,5 +1,5 @@
-# In-Dev
+## Installer-SH
 
-### Old Versions:
+https://github.com/Shedou/Chimbalix-Software-Catalog
 
-https://github.com/Shedou/Chimbalix-Software-Catalog/tree/main/Installer-SH-Old-Versions
+The version and hints are in the file "install.sh".
