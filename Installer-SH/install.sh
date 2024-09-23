@@ -93,10 +93,10 @@ Info_Description="\
 ######### - -------------- - #########
 
 Archive_Program_Files="$Installer_Data_Path/program_files.7z"
-Archive_Program_Files_MD5="f209f7bfabb4da5d44c8169f9a903b66"
+Archive_Program_Files_MD5="b11e5b34c12c0a547acb6a5cbb72a61a"
 
 Archive_System_Files="$Installer_Data_Path/system_files.7z"
-Archive_System_Files_MD5="5ac319d40b109fba1ee3c3ed1798cbd9"
+Archive_System_Files_MD5="ffa6fa59bdc223a2e2242ed4883b0807"
 
  # Not used if "User_Data_Copy_Confirm=false"
 Archive_User_Files="$Installer_Data_Path/user_files.7z"

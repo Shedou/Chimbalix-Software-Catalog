@@ -29,6 +29,12 @@
 # B=$(tput bold)
 # N=$(tput sgr0)
 
-echo "Example Application!"
+Args=("$@")
+
+echo -e "Example Application!\n"
+
+for i in "${!Args[@]}"; do
+	echo "${Args[$i]}"
+done
 
 read pause;
