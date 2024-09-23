@@ -35,27 +35,27 @@ Szip_bin="$Installer_Data_Path/tools/7zip/7zzs"
  # In "User" mode, root rights are not required.
 Install_Mode="User"
 
-# x86_64, x86, script, other
+ # x86_64, x86, script, other
 Architecture="x86_64"
 
  # Unique application name, used for directory name.
  # Template for automatic replacement in menu files: UNIQUE_APP_FOLDER_NAME
 Unique_App_Folder_Name="example_application_16"
 
-# Please prepare additional files in the directory "installer-data/system_files/menu/apps/UNIQUE_APP_FOLDER_NAME/" if necessary.
+ # Please prepare additional files in the directory "installer-data/system_files/menu/apps/UNIQUE_APP_FOLDER_NAME/" if necessary.
 Program_Name_In_Menu="Example Application 1.6" #PROGRAM_NAME_IN_MENU
 Program_Executable_File="example-application.sh" #PROGRAM_EXECUTABLE_FILE
 
-# Additional menu categories that will include the main application shortcuts.
-# Please do not use this variable in the uninstaller shortcut file.
+ # Additional menu categories that will include the main application shortcuts.
+ # Please do not use this variable in the uninstaller shortcut file.
 Additional_Categories="chi-other;chi-admin;" #ADDITIONAL_CATEGORIES
-# -=== Chimbalix 24.4 main categories:
-# chi-ai  chi-accessories  chi-accessories-fm  chi-view  chi-admin  chi-info  chi-info-bench  chi-info-help
-# chi-dev  chi-dev-other  chi-dev-ide  chi-edit  chi-edit-audiovideo  chi-edit-image  chi-edit-text  chi-games
-# chi-network  chi-multimedia  chi-multimedia-players  chi-office  chi-other  chi-tools  chi-tools-archivers
-# -=== XDG / Linux Categories Version 1.1 (20 August 2016):
-# URL: https://specifications.freedesktop.org/menu-spec/latest/category-registry.html
-# URL: https://specifications.freedesktop.org/menu-spec/latest/additional-category-registry.html
+ # -=== Chimbalix 24.4 main categories:
+ # chi-ai  chi-accessories  chi-accessories-fm  chi-view  chi-admin  chi-info  chi-info-bench  chi-info-help
+ # chi-dev  chi-dev-other  chi-dev-ide  chi-edit  chi-edit-audiovideo  chi-edit-image  chi-edit-text  chi-games
+ # chi-network  chi-multimedia  chi-multimedia-players  chi-office  chi-other  chi-tools  chi-tools-archivers
+ # -=== XDG / Linux Categories Version 1.1 (20 August 2016):
+ # URL: https://specifications.freedesktop.org/menu-spec/latest/category-registry.html
+ # URL: https://specifications.freedesktop.org/menu-spec/latest/additional-category-registry.html
 
 
  # Application installation directory.
@@ -68,18 +68,19 @@ User_Data_Copy_Confirm=false
 
 ######### - ------------------- - #########
 ######### - Package Information - #########
+######### - ------------------- - #########
 
 Header="${BG_Black}${F_Red}${Bold} -=: Software Installer Script for Chimbalix (Installer-SH v1.5) :=-${rBD}${F}\n"
 
 Info_Name="Example Application"
 Info_Version="1.6"
 Info_Release_Date="2024-09-22"
-Info_Category="Image Editor (Example)"
+Info_Category="Administration, Other"
 Info_Platform="Linux - Chimbalix 24.2 - 24.x"
 Info_Installed_Size="~1 MiB"
 Info_Licensing="Freeware - Open Source (MIT)
    Other Licensing Examples:
-    Freeware - Proprietary (EULA)
+    Freeware - Proprietary (EULA, Please read \"install-EULA-example.txt\")
     Trialware - 30 days free, Proprietary (Other License Name)"
 Info_Developer="Chimbal"
 Info_URL="https://github.com/Shedou/Chimbalix-Software-Catalog\n       https://github.com/Shedou/Chimbalix"
@@ -95,6 +96,7 @@ Info_Description="\
 
 ######### - -------------- - #########
 ######### - Archives paths - #########
+######### - -------------- - #########
 
 Archive_Program_Files="$Installer_Data_Path/program_files.7z"
 Archive_Program_Files_MD5="1773d79a725075d29f5331145ae61f0b"
@@ -111,6 +113,7 @@ if [ ! -e "$Archive_User_Files" ] && [ $User_Data_Copy_Confirm == true ]; then U
 
 ######### - ------------ - #########
 ######### - Output paths - #########
+######### - ------------ - #########
 
 Out_App_Folder_Owner=root:root	# Only for "System" mode, username:group
 Out_App_Folder_Permissions=755	# Only for "System" mode.
