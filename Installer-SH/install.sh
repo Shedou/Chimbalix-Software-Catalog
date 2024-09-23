@@ -23,6 +23,7 @@ Path_To_Script="$( dirname "$(readlink -f "$0")")" # Current installer script di
 User_Home=~ # Current User home directory.
 User_Name=$USER # Current User name.
 DEBUG_MODE=false
+Silent_Mode=false
 
 Installer_Data_Path="$Path_To_Script/installer-data"
 Szip_bin="$Installer_Data_Path/tools/7zip/7zzs"
@@ -211,9 +212,10 @@ function _CHECK_OS() {
 ######### -------------------------
 ######### Print package information
 function _PRINT_PACKAGE_INFO() {
-if [ $all_ok == true ]; then all_ok=false
-	echo -e "${BG_Black}"; clear; # A crutch to fill the background completely...
-	echo -e "\
+if [ $Silent_Mode == false ]; then
+	if [ $all_ok == true ]; then all_ok=false
+		echo -e "${BG_Black}"; clear; # A crutch to fill the background completely...
+		echo -e "\
 $Header
  ${Bold}${F_Cyan}Software Info:${F}${rBD}
  -${Bold}${F_DarkYellow}Name:${F} $Info_Name${rBD} ($Info_Version,  $Architecture)
@@ -229,20 +231,91 @@ $Info_Description
 
  -${Bold}${F_DarkGreen}Current OS:${F} $Distro_Full_Name${rBD}
  -${Bold}${F_DarkGreen}Installation Mode:${F} $Install_Mode${rBD}"
-	echo -e "\n Start the application installation process? Enter \"y\" or \"yes\" to confirm."
-	read package_info_confirm
-	if [ "$package_info_confirm" == "y" ] || [ "$package_info_confirm" == "yes" ]; then all_ok=true
-	else _ABORT "$Str_InterruptedByUser"; fi
-	
-	if [ $DEBUG_MODE == true ]; then echo "_PRINT_PACKAGE_INFO - all_ok = $all_ok"; read pause; fi
-else _ABORT "$Str_ERROR_BeforeStage \"Print Package Info\""; fi
+		echo -e "\n Start the application installation process? Enter \"y\" or \"yes\" to confirm."
+		read package_info_confirm
+		if [ "$package_info_confirm" == "y" ] || [ "$package_info_confirm" == "yes" ]; then all_ok=true
+		else _ABORT "$Str_InterruptedByUser"; fi
+		
+		if [ $DEBUG_MODE == true ]; then echo "_PRINT_PACKAGE_INFO - all_ok = $all_ok"; read pause; fi
+	else _ABORT "$Str_ERROR_BeforeStage \"Print Package Info\""; fi
+fi
 }
 
+######### --------------------------------
 ######### Check and compare MD5 of archive
-function _CHECK_MD5() {
-if [ $all_ok == true ]; then all_ok=false
+
+function _CHECK_MD5_COMPARE() {
+	
+	md5_pfiles_error=false; md5_sfiles_error=false; md5_ufiles_error=false
+	md5_warning=false;
+	
+	Program_Files_MD5=`md5sum "$Archive_Program_Files" | awk '{print $1}'`
+	System_Files_MD5=`md5sum "$Archive_System_Files" | awk '{print $1}'`
+	
+	if [ "$Program_Files_MD5" != "$Archive_Program_Files_MD5" ]; then md5_pfiles_error=true; fi
+	if [ "$System_Files_MD5" != "$Archive_System_Files_MD5" ]; then md5_sfiles_error=true; fi
+	
+	if [ $User_Data_Copy_Confirm == true ]; then
+		local User_Files_MD5=`md5sum "$Archive_User_Files" | awk '{print $1}'`
+		if [ "$User_Files_MD5" != "$Archive_User_Files_MD5" ]; then md5_ufiles_error=false; fi
+	fi
+	
+	if [ $md5_pfiles_error == true ] || [ $md5_sfiles_error == true ] || [ $md5_ufiles_error == true ]; then
+		md5_warning=true
+	fi
+	
+}
+
+function _CHECK_MD5_PRINT() {
 	clear
 	echo -e "\
+$Header
+ ${Bold}${F_Cyan}Integrity check:${F}${rBD}
+  Checking the integrity of the installation archives, please wait..."
+	
+	if [ $md5_warning == true ]; then
+		echo -e "\
+
+  ${Bold}${F_DarkRed}Attention! The archives hash sum does not match the value specified in the settings!${F}
+  ${F_Red}The files may have been copied with errors or modified! Be careful!${F}${rBD}"
+		if [ $md5_pfiles_error == true ]; then
+			echo -e "\
+
+   ${Bold}Expected Program Files MD5 hash:${rBD} \"$Archive_Program_Files_MD5\"
+   ${Bold}Real Program Files MD5 hash:${rBD}     \"$Program_Files_MD5\""; fi
+		if [ $md5_sfiles_error == true ]; then
+			echo -e "\
+
+   ${Bold}Expected System Files MD5 hash:${rBD} \"$Archive_System_Files_MD5\"
+   ${Bold}Real System Files MD5 hash:${rBD}     \"$System_Files_MD5\""; fi
+		if [ $md5_ufiles_error == true ]; then
+			echo -e "\
+
+   ${Bold}Expected User Files MD5 hash:${rBD} \"$Archive_User_Files_MD5\"
+   ${Bold}Real User Files MD5 hash:${rBD}     \"$User_Files_MD5\""; fi
+		echo -e "\n  Enter \"y\" or \"yes\" to continue installation (not recommended):"
+		read errors_confirm
+    	if [ "$errors_confirm" == "y" ] || [ "$errors_confirm" == "yes" ]; then all_ok=true
+		else _ABORT "$Str_InterruptedByUser"; fi
+	else
+		all_ok=true
+		echo -e "
+  ${F_Green}The integrity of the installation archive has been successfully verified
+   ${Bold}Program Files MD5 hash:${rBD}  \"$Program_Files_MD5\"
+   ${Bold}System Files MD5 hash:${rBD}   \"$System_Files_MD5\""
+		if [ $User_Data_Copy_Confirm == true ]; then echo -e "\
+   ${Bold}User Files MD5 hash:${rBD}     \"$User_Files_MD5\""
+		fi
+		echo -e "
+  press ${Bold}Enter${rBD} to continue.${F}"
+		read pause
+	fi
+}
+
+function _CHECK_MD5() {
+	if [ $all_ok == true ]; then all_ok=false
+		clear
+		echo -e "\
 $Header
  ${Bold}${F_Cyan}Checking archives integrity:${F}${rBD}
   Do you want to check the integrity of the installation package?
@@ -250,61 +323,11 @@ $Header
   
   Enter \"y\" or \"yes\" to check the integrity of the archives (recommended)."
 	
-	read check_md5_confirm
-	if [ "$check_md5_confirm" == "y" ] || [ "$check_md5_confirm" == "yes" ]; then
-		clear
-		echo -e "\
-$Header
- ${Bold}${F_Cyan}Integrity check:${F}${rBD}
-  Checking the integrity of the installation archives, please wait..."
-		local pfiles=true; local sfiles=true; local ufiles=true; local warning=false;
-		local Program_Files_MD5=`md5sum "$Archive_Program_Files" | awk '{print $1}'`
-		local System_Files_MD5=`md5sum "$Archive_System_Files" | awk '{print $1}'`
-		
-		if [ "$Program_Files_MD5" != "$Archive_Program_Files_MD5" ]; then pfiles=false; fi
-		if [ "$System_Files_MD5" != "$Archive_System_Files_MD5" ]; then sfiles=false; fi
-		
-		if [ $User_Data_Copy_Confirm == true ]; then
-			local User_Files_MD5=`md5sum "$Archive_User_Files" | awk '{print $1}'`
-			if [ "$User_Files_MD5" != "$Archive_User_Files_MD5" ]; then ufiles=false; fi
-		fi
-		if [ $pfiles == false ] || [ $sfiles == false ] || [ $ufiles == false ]; then warning=true; fi
-		
-		if [ $warning == true ]; then
-			echo -e "\
-
-  ${Bold}${F_DarkRed}Attention! The archives hash sum does not match the value specified in the settings!${F}
-  ${F_Red}The files may have been copied with errors or modified! Be careful!${F}${rBD}"
-if [ $pfiles == false ]; then echo -e "\
-
-   ${Bold}Expected Program Files MD5 hash:${rBD} \"$Archive_Program_Files_MD5\"
-   ${Bold}Real Program Files MD5 hash:${rBD}     \"$Program_Files_MD5\""; fi
-if [ $sfiles == false ]; then echo -e "\
-
-   ${Bold}Expected System Files MD5 hash:${rBD} \"$Archive_System_Files_MD5\"
-   ${Bold}Real System Files MD5 hash:${rBD}     \"$System_Files_MD5\""; fi
-if [ $ufiles == false ]; then echo -e "\
-
-   ${Bold}Expected User Files MD5 hash:${rBD} \"$Archive_User_Files_MD5\"
-   ${Bold}Real User Files MD5 hash:${rBD}     \"$User_Files_MD5\""; fi
-echo -e "\n  Enter \"y\" or \"yes\" to continue installation (not recommended):"
-			read errors_confirm
-    		if [ "$errors_confirm" == "y" ] || [ "$errors_confirm" == "yes" ]; then all_ok=true
-			else _ABORT "$Str_InterruptedByUser"; fi
-		else
-			all_ok=true
-			echo -e "
-  ${F_Green}The integrity of the installation archive has been successfully verified
-   ${Bold}Program Files MD5 hash:${rBD}  \"$Program_Files_MD5\"
-   ${Bold}System Files MD5 hash:${rBD}   \"$System_Files_MD5\""
-if [ $User_Data_Copy_Confirm == true ]; then echo -e "\
-   ${Bold}User Files MD5 hash:${rBD}     \"$User_Files_MD5\""
-fi
-echo -e "
-  press ${Bold}Enter${rBD} to continue.${F}"
-			read pause
-		fi
-	else all_ok=true; fi
+		read check_md5_confirm
+		if [ "$check_md5_confirm" == "y" ] || [ "$check_md5_confirm" == "yes" ]; then
+			_CHECK_MD5_COMPARE
+			_CHECK_MD5_PRINT
+		else all_ok=true; fi
 	
 	if [ $DEBUG_MODE == true ]; then echo "_CHECK_MD5 - all_ok = $all_ok"; read pause; fi
 else _ABORT "$Str_ERROR_BeforeStage \"MD5 Check\""; fi
@@ -314,9 +337,9 @@ else _ABORT "$Str_ERROR_BeforeStage \"MD5 Check\""; fi
 ######### ---------------------------
 ######### Print installation settings
 function _PRINT_INSTALL_SETTINGS() {
-if [ $all_ok == true ]; then all_ok=false
-	clear
-	echo -e "\
+	if [ $all_ok == true ]; then all_ok=false
+		clear
+		echo -e "\
 $Header
  ${Bold}${F_Cyan}Installation paths (${F_DarkYellow}$Install_Mode${F_Cyan} mode):${F}${rBD}
 
@@ -333,24 +356,24 @@ $Header
  -${Bold}${F_DarkGreen}Bin files will be installed in:${F}${rBD}
    $Output_Bin_Dir"
 
-	if [ $User_Data_Copy_Confirm == true ]; then
-		echo -e "\n -${Bold}${F_Yellow}Attention!${F}${F_DarkGreen} Copy user data to:${F}${rBD} $Output_User_Home
+		if [ $User_Data_Copy_Confirm == true ]; then
+			echo -e "\n -${Bold}${F_Yellow}Attention!${F}${F_DarkGreen} Copy user data to:${F}${rBD} $Output_User_Home
    Change the variable \"User_Data_Copy_Confirm=false\" in the script if you do not want
    to install any data to the home directory (the application may not work correctly)."
-	fi
+		fi
 	
-	if [ "$Install_Mode" == "System" ]; then
-		echo -e "\n -${Bold}${F_Yellow}Attention!
+		if [ "$Install_Mode" == "System" ]; then
+			echo -e "\n -${Bold}${F_Yellow}Attention!
    Installation mode \"System\", root rights are required!
    During the installation process, the root password will be requested.${F}${rBD}"
-	fi
+		fi
+		
+		echo -e "\n Please close all important applications before installation."
+		echo -e "\n Start installation? Enter \"y\" or \"yes\" to confirm."
+		read install_settings_confirm
 	
-	echo -e "\n Please close all important applications before installation."
-	echo -e "\n Start installation? Enter \"y\" or \"yes\" to confirm."
-	read install_settings_confirm
-	
-	if [ "$install_settings_confirm" == "y" ] || [ "$install_settings_confirm" == "yes" ]; then all_ok=true
-	else _ABORT "$Str_InterruptedByUser"; fi
+		if [ "$install_settings_confirm" == "y" ] || [ "$install_settings_confirm" == "yes" ]; then all_ok=true
+		else _ABORT "$Str_InterruptedByUser"; fi
 	
 	if [ $DEBUG_MODE == true ]; then echo "_PRINT_INSTALL_SETTINGS - all_ok = $all_ok"; read pause; fi
 else _ABORT "$Str_ERROR_BeforeStage \"Print Install Settings\""; fi
@@ -359,57 +382,57 @@ else _ABORT "$Str_ERROR_BeforeStage \"Print Install Settings\""; fi
 ######### -------------------
 ######### Prepare Input Files
 function _PREPARE_INPUT_FILES() {
-if [ $all_ok == true ]; then all_ok=false
-	
-	if ! [[ -x "$Szip_bin" ]]; then chmod +x "$Szip_bin"; fi
-	
-	if ! "$Szip_bin" x "$Archive_System_Files" -o"$Temp_Dir/" &> /dev/null; then
-		_ABORT "Error unpacking temp files (_PREPARE_INPUT_FILES), try copying the installation files to another disk before running."
-	fi
-	
-	for file in "$Temp_Dir"/*; do
-		grep -rl "PATH_TO_FOLDER" "$Temp_Dir" | xargs sed -i "s~PATH_TO_FOLDER~$Output_Install_Dir~g"
-		grep -rl "UNIQUE_APP_FOLDER_NAME" "$Temp_Dir" | xargs sed -i "s~UNIQUE_APP_FOLDER_NAME~$Unique_App_Folder_Name~g"
-		grep -rl "PROGRAM_NAME_IN_MENU" "$Temp_Dir" | xargs sed -i "s~PROGRAM_NAME_IN_MENU~$Program_Name_In_Menu~g"
-		grep -rl "PROGRAM_EXECUTABLE_FILE" "$Temp_Dir" | xargs sed -i "s~PROGRAM_EXECUTABLE_FILE~$Program_Executable_File~g"
-		grep -rl "ADDITIONAL_CATEGORIES" "$Temp_Dir" | xargs sed -i "s~ADDITIONAL_CATEGORIES~$Additional_Categories~g"
-		grep -rl "PROGRAM_ICON_IN_MENU" "$Temp_Dir" | xargs sed -i "s~PROGRAM_ICON_IN_MENU~$Program_Icon_In_Menu~g"
-	done
-
-	local All_Renamed=false
-	while [ $All_Renamed == false ]; do
-		if find "$Temp_Dir/" -name "UNIQUE_APP_FOLDER_NAME*" | sed -e "p;s~UNIQUE_APP_FOLDER_NAME~$Unique_App_Folder_Name~" | xargs -n2 mv &> /dev/null; then
-			All_Renamed=true
+	if [ $all_ok == true ]; then all_ok=false
+		
+		if ! [[ -x "$Szip_bin" ]]; then chmod +x "$Szip_bin"; fi
+		
+		if ! "$Szip_bin" x "$Archive_System_Files" -o"$Temp_Dir/" &> /dev/null; then
+			_ABORT "Error unpacking temp files (_PREPARE_INPUT_FILES), try copying the installation files to another disk before running."
 		fi
-	done
+		
+		for file in "$Temp_Dir"/*; do
+			grep -rl "PATH_TO_FOLDER" "$Temp_Dir" | xargs sed -i "s~PATH_TO_FOLDER~$Output_Install_Dir~g"
+			grep -rl "UNIQUE_APP_FOLDER_NAME" "$Temp_Dir" | xargs sed -i "s~UNIQUE_APP_FOLDER_NAME~$Unique_App_Folder_Name~g"
+			grep -rl "PROGRAM_NAME_IN_MENU" "$Temp_Dir" | xargs sed -i "s~PROGRAM_NAME_IN_MENU~$Program_Name_In_Menu~g"
+			grep -rl "PROGRAM_EXECUTABLE_FILE" "$Temp_Dir" | xargs sed -i "s~PROGRAM_EXECUTABLE_FILE~$Program_Executable_File~g"
+			grep -rl "ADDITIONAL_CATEGORIES" "$Temp_Dir" | xargs sed -i "s~ADDITIONAL_CATEGORIES~$Additional_Categories~g"
+			grep -rl "PROGRAM_ICON_IN_MENU" "$Temp_Dir" | xargs sed -i "s~PROGRAM_ICON_IN_MENU~$Program_Icon_In_Menu~g"
+		done
 	
-	#for file in `find "$Temp_Dir/" -type d -name 'UNIQUE_APP_FOLDER_NAME*'`; do
-	#	mv $file `echo $file | sed "s~UNIQUE_APP_FOLDER_NAME~$Unique_App_Folder_Name~"`
-	#done
-	
-	Input_Bin_Dir="$Temp_Dir/bin"
-	Input_Menu_Files_Dir="$Temp_Dir/menu/applications-merged"
-	Input_Menu_Desktop_Dir="$Temp_Dir/menu/desktop-directories/apps"
-	Input_Menu_Apps_Dir="$Temp_Dir/menu/apps"
-	
-	Files_Bin_Dir=( $(ls "$Input_Bin_Dir") )
-	Files_Menu=( $(ls "$Input_Menu_Files_Dir") )
-	Files_Menu_Dir=( $(ls "$Input_Menu_Desktop_Dir") )
-	Files_Menu_Apps=( $(ls "$Input_Menu_Apps_Dir") )
-	
-	local arr_0=(); local arr_1=(); local arr_2=(); local arr_3=()
-	All_Files=()
-	
-	for file in "${!Files_Bin_Dir[@]}"; do arr_0[$file]="$Output_Bin_Dir/${Files_Bin_Dir[$file]}"; done
-	for file in "${!Files_Menu[@]}"; do arr_1[$file]="$Output_Menu_Files/${Files_Menu[$file]}"; done
-	for file in "${!Files_Menu_Dir[@]}"; do arr_2[$file]="$Output_Menu_DDir/${Files_Menu_Dir[$file]}"; done
-	for file in "${!Files_Menu_Apps[@]}"; do arr_3[$file]="$Output_Menu_Apps/${Files_Menu_Apps[$file]}"; done
-	
-	All_Files=("$Output_Install_Dir" "${arr_0[@]}" "${arr_1[@]}" "${arr_2[@]}" "${arr_3[@]}")
-	all_ok=true
-	
-	if [ $DEBUG_MODE == true ]; then echo "_PREPARE_INPUT_FILES - all_ok = $all_ok"; read pause; fi
-else _ABORT "$Str_ERROR_BeforeStage \"Prepare Input Files\""; fi
+		local All_Renamed=false
+		while [ $All_Renamed == false ]; do
+			if find "$Temp_Dir/" -name "UNIQUE_APP_FOLDER_NAME*" | sed -e "p;s~UNIQUE_APP_FOLDER_NAME~$Unique_App_Folder_Name~" | xargs -n2 mv &> /dev/null; then
+				All_Renamed=true
+			fi
+		done
+		
+		#for file in `find "$Temp_Dir/" -type d -name 'UNIQUE_APP_FOLDER_NAME*'`; do
+		#	mv $file `echo $file | sed "s~UNIQUE_APP_FOLDER_NAME~$Unique_App_Folder_Name~"`
+		#done
+		
+		Input_Bin_Dir="$Temp_Dir/bin"
+		Input_Menu_Files_Dir="$Temp_Dir/menu/applications-merged"
+		Input_Menu_Desktop_Dir="$Temp_Dir/menu/desktop-directories/apps"
+		Input_Menu_Apps_Dir="$Temp_Dir/menu/apps"
+		
+		Files_Bin_Dir=( $(ls "$Input_Bin_Dir") )
+		Files_Menu=( $(ls "$Input_Menu_Files_Dir") )
+		Files_Menu_Dir=( $(ls "$Input_Menu_Desktop_Dir") )
+		Files_Menu_Apps=( $(ls "$Input_Menu_Apps_Dir") )
+		
+		local arr_0=(); local arr_1=(); local arr_2=(); local arr_3=()
+		All_Files=()
+		
+		for file in "${!Files_Bin_Dir[@]}"; do arr_0[$file]="$Output_Bin_Dir/${Files_Bin_Dir[$file]}"; done
+		for file in "${!Files_Menu[@]}"; do arr_1[$file]="$Output_Menu_Files/${Files_Menu[$file]}"; done
+		for file in "${!Files_Menu_Dir[@]}"; do arr_2[$file]="$Output_Menu_DDir/${Files_Menu_Dir[$file]}"; done
+		for file in "${!Files_Menu_Apps[@]}"; do arr_3[$file]="$Output_Menu_Apps/${Files_Menu_Apps[$file]}"; done
+		
+		All_Files=("$Output_Install_Dir" "${arr_0[@]}" "${arr_1[@]}" "${arr_2[@]}" "${arr_3[@]}")
+		all_ok=true
+		
+		if [ $DEBUG_MODE == true ]; then echo "_PREPARE_INPUT_FILES - all_ok = $all_ok"; read pause; fi
+	else _ABORT "$Str_ERROR_BeforeStage \"Prepare Input Files\""; fi
 }
 
 
