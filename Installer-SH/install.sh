@@ -29,23 +29,26 @@ Use_Default_Locale=false
 Installer_Data_Path="$Path_To_Script/installer-data"
 Szip_bin="$Installer_Data_Path/tools/7zip/7zzs"
 
-## Default Locale
+# Main function, don't change!
+function _MAIN() {
+	_PACKAGE_SETTINGS
+	_CHECK_OS # Distro_Full_Name - Distro_Name - Distro_Version_ID
+	
+	_PRINT_PACKAGE_INFO
+	_CHECK_MD5
+	_PRINT_INSTALL_SETTINGS
+	
+	_CREATE_TEMP
+	_PREPARE_INPUT_FILES
+	_CHECK_OUTPUTS
+	
+	_INSTALL_APP
+	_PREPARE_UNINSTALLER
+	
+	_ABORT "$Str_CompleteInstall"
+}
 
-if [ -e "$Path_To_Script/locales/ru_RU" ]; then
-	if [ $(grep Locale_Version "$Path_To_Script/locales/ru_RU") == 'Locale_Version="1.6"' ]; then
-		source "$Path_To_Script/locales/ru_RU";
-	else
-		Use_Default_Locale=true
-	fi
-else
-	Use_Default_Locale=true
-fi
-
-if [ $Use_Default_Locale == true ]; then
-	test="Default string!"
-fi
-
-
+function _PACKAGE_SETTINGS() {
 ######### ---- -------- ---- #########
 ######### ---- SETTINGS ---- #########
 ######### ---- -------- ---- #########
@@ -82,7 +85,6 @@ Additional_Categories="chi-other;" #ADDITIONAL_CATEGORIES
 ######### - ------------------- - #########
 ######### - Package Information - #########
 ######### - ------------------- - #########
-
 Header="${BG_Black}${F_Red}${Bold} -=: Software Installer Script for Chimbalix (Installer-SH v1.6) - ${Bold}$test${rBD} :=-${rBD}${F}\n"
 
 Info_Name="Example Application"
@@ -178,9 +180,27 @@ Output_Uninstaller="$Output_Install_Dir/uninstall.sh" # Uninstaller template fil
 
 all_ok=true
 
+}
+
 ######### -- ------------ -- #########
 ######### -- END SETTINGS -- #########
 ######### -- ------------ -- #########
+
+## Default Locale
+
+if [ -e "$Path_To_Script/locales/ru_RU" ]; then
+	if [ $(grep Locale_Version "$Path_To_Script/locales/ru_RU") == 'Locale_Version="1.6"' ]; then
+		source "$Path_To_Script/locales/ru_RU";
+	else
+		Use_Default_Locale=true
+	fi
+else
+	Use_Default_Locale=true
+fi
+
+if [ $Use_Default_Locale == true ]; then
+	test="Default string!"
+fi
 
 ######### Strings
 Str_InterruptedByUser="${Bold}${F_Green}Interrupted by user${F}${rBD}"
@@ -622,20 +642,7 @@ else _ABORT "$Str_ERROR_BeforeStage \"Prepare Uninstaller file\""; fi
 
 ## START ##
 
-_CHECK_OS # Check: Distro_Full_Name - Distro_Name - Distro_Version_ID
-
-_PRINT_PACKAGE_INFO
-_CHECK_MD5
-_PRINT_INSTALL_SETTINGS
-
-_CREATE_TEMP
-_PREPARE_INPUT_FILES
-_CHECK_OUTPUTS
-
-_INSTALL_APP
-_PREPARE_UNINSTALLER
-
-_ABORT "$Str_CompleteInstall"
+_MAIN
 
 ## End ##
 
