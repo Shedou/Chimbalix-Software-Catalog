@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
 # Script version 1.6
 # LICENSE for this script is at the end of this file
-#
-#FreeSpace=$(df -m "$Out_InstallDir" | grep "/" | awk '{print $4}')
-#
-######### ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ##
+# FreeSpace=$(df -m "$Out_InstallDir" | grep "/" | awk '{print $4}')
 # Font styles: "${Bold} BLACK TEXT ${rBD} normal text."
 Bold="\e[1m"; Dim="\e[2m"; rBD="\e[22m";
 F='\033[39m'; BG='\033[49m'; # Reset colors
@@ -14,8 +11,7 @@ F_Red='\033[91m'; F_Green='\033[92m'; F_Yellow='\033[93m'; F_Blue='\033[94m'; F_
 BG_Black='\033[40m'; BG_DarkGray='\033[100m'; BG_Gray='\033[47m'; BG_White='\033[107m';
 BG_DarkRed='\033[41m'; BG_DarkGreen='\033[42m'; BG_DarkYellow='\033[43m'; BG_DarkBlue='\033[44m'; BG_DarkMagenta='\033[45m'; BG_DarkCyan='\033[46m';
 BG_Red='\033[101m'; BG_Green='\033[102m'; BG_Yellow='\033[103m'; BG_Blue='\033[104m'; BG_Magenta='\033[105m'; BG_Cyan='\033[106m';
-######### ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ##
-
+######### --------- #########
 ######### Base vars #########
 Arguments=("$@"); Path_To_Script="$( dirname "$(readlink -f "$0")")"
 User_Home=~; User_Name=$USER; DEBUG_MODE=false; Silent_Mode=false; Use_Default_Locale=false
@@ -61,25 +57,6 @@ Architecture="script"
  # Unique name of the output directory. Template for automatic replacement in menu files: UNIQUE_APP_FOLDER_NAME
 Unique_App_Folder_Name="example_application_16"
 
- ### Preparing menu files ###
- # Please prepare additional files in the directory "installer-data/system_files/" if necessary.
-Program_Name_In_Menu="Example Application 1.6" #PROGRAM_NAME_IN_MENU
-Program_Icon_In_Menu="icon.png" #PROGRAM_ICON_IN_MENU
-Program_Executable_File="example-application.sh" #PROGRAM_EXECUTABLE_FILE
-Program_Uninstaller_File="uninstall.sh"  #PROGRAM_UNINSTALLER_FILE
-Program_Uninstaller_Icon="icon-uninstall.png"  #PROGRAM_UNINSTALLER_ICON
-
- # Additional menu categories that will include the main application shortcuts.
- # Please do not use this variable in the uninstaller shortcut file.
-Additional_Categories="chi-other;" #ADDITIONAL_CATEGORIES
- # -=== Chimbalix 24.4 main categories:
- # chi-ai  chi-accessories  chi-accessories-fm  chi-view  chi-admin  chi-info  chi-info-bench  chi-info-help
- # chi-dev  chi-dev-other  chi-dev-ide  chi-edit  chi-edit-audiovideo  chi-edit-image  chi-edit-text  chi-games
- # chi-network  chi-multimedia  chi-multimedia-players  chi-office  chi-other  chi-tools  chi-tools-archivers
- # -=== XDG / Linux Categories Version 1.1 (20 August 2016):
- # URL: https://specifications.freedesktop.org/menu-spec/latest/category-registry.html
- # URL: https://specifications.freedesktop.org/menu-spec/latest/additional-category-registry.html
-
 ######### - ------------------- - #########
 ######### - Package Information - #########
 ######### - ------------------- - #########
@@ -107,15 +84,41 @@ Info_Description="\
      - Set owner and rights to the application directory (only in \"System\" mode).
   2) Check the current \"install.sh\" file to configure the installation package."
 
+### ------------------------ ###
+ ### Basic Menu File Settings ###
+ ### ------------------------ ###
+ # Please manually prepare the menu files in the "installer-data/system_files/" directory before packaging the application,
+ # this functionality does not allow you to fully customize the menu files.
+ # Use the variable names given in the comments to simplify the preparation of menu files.
+Program_Executable_File="example-application" # PROGRAM_EXECUTABLE_FILE
+Program_Name_In_Menu="Example Application 1.6" # PROGRAM_NAME_IN_MENU
+Program_Icon_In_Menu="icon.png" # PROGRAM_ICON_IN_MENU
+Program_Exe_Run_In_Terminal="true" # PROGRAM_EXE_RUN_IN_TERMINAL
+Program_Uninstaller_File="uninstall.sh"  # PROGRAM_UNINSTALLER_FILE
+Program_Uninstaller_Icon="icon-uninstall.png"  # PROGRAM_UNINSTALLER_ICON
+Menu_Directory_Name="Example Application (v1.6)" # MENU_DIRECTORY_NAME
+Menu_Directory_Icon="icon.png" # MENU_DIRECTORY_ICON
+
+ # Additional menu categories that will include the main application shortcuts.
+ # Please do not use this variable in the uninstaller shortcut file.
+Additional_Categories="chi-other;" #ADDITIONAL_CATEGORIES
+ # -=== Chimbalix 24.4 main categories:
+ # chi-ai  chi-accessories  chi-accessories-fm  chi-view  chi-admin  chi-info  chi-info-bench  chi-info-help
+ # chi-dev  chi-dev-other  chi-dev-ide  chi-edit  chi-edit-audiovideo  chi-edit-image  chi-edit-text  chi-games
+ # chi-network  chi-multimedia  chi-multimedia-players  chi-office  chi-other  chi-tools  chi-tools-archivers
+ # -=== XDG / Linux Categories Version 1.1 (20 August 2016):
+ # URL: https://specifications.freedesktop.org/menu-spec/latest/category-registry.html
+ # URL: https://specifications.freedesktop.org/menu-spec/latest/additional-category-registry.html
+
 ######### - -------------- - #########
 ######### - Archives paths - #########
 ######### - -------------- - #########
 
 Archive_Program_Files="$Installer_Data_Path/program_files.7z"
-Archive_Program_Files_MD5="b11e5b34c12c0a547acb6a5cbb72a61a"
+Archive_Program_Files_MD5="b0140093e2c9e72698b7d4f8ad9af83d"
 
 Archive_System_Files="$Installer_Data_Path/system_files.7z"
-Archive_System_Files_MD5="9e5b4ae6daf573bb88db292c3dfc3399"
+Archive_System_Files_MD5="0b02ea89b3899def0ea3fd67f6737fdd"
 
  # Not used if "User_Data_Copy_Confirm=false"
 Archive_User_Files="$Installer_Data_Path/user_files.7z"
@@ -426,10 +429,13 @@ function _PREPARE_INPUT_FILES() {
 			grep -rl "UNIQUE_APP_FOLDER_NAME" "$Temp_Dir" | xargs sed -i "s~UNIQUE_APP_FOLDER_NAME~$Unique_App_Folder_Name~g"
 			grep -rl "PROGRAM_NAME_IN_MENU" "$Temp_Dir" | xargs sed -i "s~PROGRAM_NAME_IN_MENU~$Program_Name_In_Menu~g"
 			grep -rl "PROGRAM_EXECUTABLE_FILE" "$Temp_Dir" | xargs sed -i "s~PROGRAM_EXECUTABLE_FILE~$Program_Executable_File~g"
-			grep -rl "ADDITIONAL_CATEGORIES" "$Temp_Dir" | xargs sed -i "s~ADDITIONAL_CATEGORIES~$Additional_Categories~g"
+			grep -rl "PROGRAM_EXE_RUN_IN_TERMINAL" "$Temp_Dir" | xargs sed -i "s~PROGRAM_EXE_RUN_IN_TERMINAL~$Program_Exe_Run_In_Terminal~g"
 			grep -rl "PROGRAM_ICON_IN_MENU" "$Temp_Dir" | xargs sed -i "s~PROGRAM_ICON_IN_MENU~$Program_Icon_In_Menu~g"
 			grep -rl "PROGRAM_UNINSTALLER_FILE" "$Temp_Dir" | xargs sed -i "s~PROGRAM_UNINSTALLER_FILE~$Program_Uninstaller_File~g"
 			grep -rl "PROGRAM_UNINSTALLER_ICON" "$Temp_Dir" | xargs sed -i "s~PROGRAM_UNINSTALLER_ICON~$Program_Uninstaller_Icon~g"
+			grep -rl "ADDITIONAL_CATEGORIES" "$Temp_Dir" | xargs sed -i "s~ADDITIONAL_CATEGORIES~$Additional_Categories~g"
+			grep -rl "MENU_DIRECTORY_NAME" "$Temp_Dir" | xargs sed -i "s~MENU_DIRECTORY_NAME~$Menu_Directory_Name~g"
+			grep -rl "MENU_DIRECTORY_ICON" "$Temp_Dir" | xargs sed -i "s~MENU_DIRECTORY_ICON~$Menu_Directory_Icon~g"
 		done
 	
 		local All_Renamed=false

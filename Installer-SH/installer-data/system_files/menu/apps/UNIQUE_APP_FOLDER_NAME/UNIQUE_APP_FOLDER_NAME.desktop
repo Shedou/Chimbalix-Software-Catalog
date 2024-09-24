@@ -9,7 +9,7 @@ NoDisplay=false
 Hidden=false
 
 Name=PROGRAM_NAME_IN_MENU
-Comment=
+Comment=This is a sample application for Installer-SH.
 GenericName=
 
 Icon=PATH_TO_FOLDER/PROGRAM_ICON_IN_MENU
@@ -19,7 +19,7 @@ TryExec=PATH_TO_FOLDER/PROGRAM_EXECUTABLE_FILE
 Path=
 #StartupWMClass=
 
-Terminal=true
+Terminal=PROGRAM_EXE_RUN_IN_TERMINAL
 StartupNotify=false
 
 Categories=UNIQUE_APP_FOLDER_NAME;ADDITIONAL_CATEGORIES

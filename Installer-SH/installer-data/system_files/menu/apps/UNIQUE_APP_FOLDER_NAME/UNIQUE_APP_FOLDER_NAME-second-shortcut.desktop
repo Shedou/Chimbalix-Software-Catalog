@@ -9,7 +9,7 @@ NoDisplay=false
 Hidden=false
 
 Name=PROGRAM_NAME_IN_MENU - Second Shortcut!
-Comment=
+Comment=This is the second shortcut from the example, it is partly prepared manually.
 GenericName=
 
 Icon=PATH_TO_FOLDER/second-PROGRAM_ICON_IN_MENU
@@ -19,7 +19,7 @@ TryExec=PATH_TO_FOLDER/PROGRAM_EXECUTABLE_FILE
 Path=
 #StartupWMClass=
 
-Terminal=true
+Terminal=PROGRAM_EXE_RUN_IN_TERMINAL
 StartupNotify=false
 
 Categories=UNIQUE_APP_FOLDER_NAME;ADDITIONAL_CATEGORIES
