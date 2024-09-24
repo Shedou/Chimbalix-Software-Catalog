@@ -24,9 +24,25 @@ User_Home=~ # Current User home directory.
 User_Name=$USER # Current User name.
 DEBUG_MODE=false
 Silent_Mode=false
+Use_Default_Locale=true
 
 Installer_Data_Path="$Path_To_Script/installer-data"
 Szip_bin="$Installer_Data_Path/tools/7zip/7zzs"
+
+## Default Locale
+
+
+if [ -e "$Path_To_Script/locales/ru_RU" ]; then
+	if [ $(grep Locale_Version "$Path_To_Script/locales/ru_RU") == 'Locale_Version="1.6"' ]; then
+		Use_Default_Locale=false
+		source "$Path_To_Script/locales/ru_RU";
+	fi
+fi
+
+if [ $Use_Default_Locale == true ]; then
+	test="Default string!"
+fi
+
 
 ######### ---- -------- ---- #########
 ######### ---- SETTINGS ---- #########
@@ -80,6 +96,7 @@ Info_Licensing="Freeware - Open Source (MIT)
 Info_Developer="Chimbal"
 Info_URL="https://github.com/Shedou/Chimbalix-Software-Catalog\n       https://github.com/Shedou/Chimbalix"
 Info_Description="\
+  Locale test: $test
   1) This installer allows you to:
      - Suitable for installation on stand-alone PCs without Internet access.
      - Storing installation files in a 7-zip archive (good compression and fast decompression).

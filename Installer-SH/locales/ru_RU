@@ -1,0 +1,5 @@
+# Locale file for Installer-SH
+
+Locale_Version="1.6"
+
+test="Locale file "ru_RU" connected!"
