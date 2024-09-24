@@ -24,11 +24,9 @@ all_ok=true
 
 # Main function, don't change!
 function _MAIN() {
-	if [ ${Arguments[$1]} == "-silent" ]; then
-		Silent_Mode=true
-	fi
+	if [ ${Arguments[$1]} == "-silent" ]; then Silent_Mode=true; fi
 	_CHECK_OS # Distro_Full_Name - Distro_Name - Distro_Version_ID
-	_SET_LOCALE
+	if [ $Silent_Mode == false ]; then _SET_LOCALE; fi
 	_PACKAGE_SETTINGS
 	
 	_PRINT_PACKAGE_INFO
