@@ -83,7 +83,7 @@ Additional_Categories="chi-other;" #ADDITIONAL_CATEGORIES
 ######### - Package Information - #########
 ######### - ------------------- - #########
 
-Header="${BG_Black}${F_Red}${Bold} -=: Software Installer Script for Chimbalix (Installer-SH v1.6) :=-${rBD}${F}\n"
+Header="${BG_Black}${F_Red}${Bold} -=: Software Installer Script for Chimbalix (Installer-SH v1.6) - ${Bold}$test${rBD} :=-${rBD}${F}\n"
 
 Info_Name="Example Application"
 Info_Version="1.6"
@@ -96,9 +96,8 @@ Info_Licensing="Freeware - Open Source (MIT)
     Freeware - Proprietary (EULA, Please read \"install-EULA-example.txt\")
     Trialware - 30 days free, Proprietary (Other License Name)"
 Info_Developer="Chimbal"
-Info_URL="https://github.com/Shedou/Chimbalix-Software-Catalog\n       https://github.com/Shedou/Chimbalix"
+Info_URL="https://github.com/Shedou/Chimbalix-Software-Catalog"
 Info_Description="\
-  Locale test: $test
   1) This installer allows you to:
      - Suitable for installation on stand-alone PCs without Internet access.
      - Storing installation files in a 7-zip archive (good compression and fast decompression).
