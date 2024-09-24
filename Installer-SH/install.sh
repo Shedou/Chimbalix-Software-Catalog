@@ -48,7 +48,7 @@ function _MAIN() {
 
 function _PACKAGE_SETTINGS() {
 
- # Copy other data to the user's home directory (do not use this function unless necessary):
+ # Copy other data to the user's home directory: "true" / "false". Do not use this function unless necessary!
 User_Data_Copy_Confirm=false
 
  # Installation mode: "System" / "User"
