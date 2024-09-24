@@ -24,6 +24,9 @@ all_ok=true
 
 # Main function, don't change!
 function _MAIN() {
+	if [ ${Arguments[$1]} == "-silent" ]; then
+		Silent_Mode=true
+	fi
 	_CHECK_OS # Distro_Full_Name - Distro_Name - Distro_Version_ID
 	_SET_LOCALE
 	_PACKAGE_SETTINGS
@@ -338,6 +341,7 @@ $Header
 }
 
 function _CHECK_MD5() {
+if [ $Silent_Mode == false ]; then
 	if [ $all_ok == true ]; then all_ok=false
 		clear
 		echo -e "\
@@ -355,7 +359,11 @@ $Header
 		else all_ok=true; fi
 	
 	if [ $DEBUG_MODE == true ]; then echo "_CHECK_MD5 - all_ok = $all_ok"; read pause; fi
-else _ABORT "$Str_ERROR_BeforeStage \"MD5 Check\""; fi
+	else _ABORT "$Str_ERROR_BeforeStage \"MD5 Check\""; fi
+else
+	_CHECK_MD5_COMPARE
+	if [ $md5_warning == true ]; then _CHECK_MD5_PRINT; fi
+fi
 }
 
 
