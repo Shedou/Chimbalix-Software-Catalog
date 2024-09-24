@@ -24,19 +24,21 @@ User_Home=~ # Current User home directory.
 User_Name=$USER # Current User name.
 DEBUG_MODE=false
 Silent_Mode=false
-Use_Default_Locale=true
+Use_Default_Locale=false
 
 Installer_Data_Path="$Path_To_Script/installer-data"
 Szip_bin="$Installer_Data_Path/tools/7zip/7zzs"
 
 ## Default Locale
 
-
 if [ -e "$Path_To_Script/locales/ru_RU" ]; then
 	if [ $(grep Locale_Version "$Path_To_Script/locales/ru_RU") == 'Locale_Version="1.6"' ]; then
-		Use_Default_Locale=false
 		source "$Path_To_Script/locales/ru_RU";
+	else
+		Use_Default_Locale=true
 	fi
+else
+	Use_Default_Locale=true
 fi
 
 if [ $Use_Default_Locale == true ]; then
