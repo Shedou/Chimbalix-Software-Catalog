@@ -31,8 +31,9 @@ Szip_bin="$Installer_Data_Path/tools/7zip/7zzs"
 
 # Main function, don't change!
 function _MAIN() {
-	_PACKAGE_SETTINGS
 	_CHECK_OS # Distro_Full_Name - Distro_Name - Distro_Version_ID
+	_SET_LOCALE
+	_PACKAGE_SETTINGS
 	
 	_PRINT_PACKAGE_INFO
 	_CHECK_MD5
@@ -48,10 +49,11 @@ function _MAIN() {
 	_ABORT "$Str_CompleteInstall"
 }
 
-function _PACKAGE_SETTINGS() {
 ######### ---- -------- ---- #########
 ######### ---- SETTINGS ---- #########
 ######### ---- -------- ---- #########
+
+function _PACKAGE_SETTINGS() {
 
  # Copy other data to the user's home directory (do not use this function unless necessary):
 User_Data_Copy_Confirm=false
@@ -188,29 +190,27 @@ all_ok=true
 
 ## Default Locale
 
-if [ -e "$Path_To_Script/locales/ru_RU" ]; then
-	if [ $(grep Locale_Version "$Path_To_Script/locales/ru_RU") == 'Locale_Version="1.6"' ]; then
-		source "$Path_To_Script/locales/ru_RU";
+function _SET_LOCALE() {
+	if [ -e "$Path_To_Script/locales/ru_RU" ]; then
+		if [ $(grep Locale_Version "$Path_To_Script/locales/ru_RU") == 'Locale_Version="1.6"' ]; then
+			source "$Path_To_Script/locales/ru_RU";
+		else
+			Use_Default_Locale=true
+		fi
 	else
 		Use_Default_Locale=true
 	fi
-else
-	Use_Default_Locale=true
-fi
-
-if [ $Use_Default_Locale == true ]; then
-	test="Default string!"
-fi
-
-######### Strings
-Str_InterruptedByUser="${Bold}${F_Green}Interrupted by user${F}${rBD}"
-Str_ERROR_BeforeStage="${Bold}${F_Red}ERROR${F_Yellow} at the stage before:${F}${rBD}"
-Str_ErrorUnpackingProgramFiles="${Bold}${F_Red}ERROR${F_Yellow} unpacking program files...${F}${rBD}"
-Str_CompleteInstall="${Bold}${F_Green}The installation process has been completed successfully.${F}${rBD}"
-
-######### ---- --------- ---- #########
-######### ---- FUNCTIONS ---- #########
-######### ---- --------- ---- #########
+	
+	if [ $Use_Default_Locale == true ]; then
+		test="Default string!"
+	fi
+	
+	######### Strings
+	Str_InterruptedByUser="${Bold}${F_Green}Interrupted by user${F}${rBD}"
+	Str_ERROR_BeforeStage="${Bold}${F_Red}ERROR${F_Yellow} at the stage before:${F}${rBD}"
+	Str_ErrorUnpackingProgramFiles="${Bold}${F_Red}ERROR${F_Yellow} unpacking program files...${F}${rBD}"
+	Str_CompleteInstall="${Bold}${F_Green}The installation process has been completed successfully.${F}${rBD}"
+}
 
 ######### ------------------------------------------------
 
