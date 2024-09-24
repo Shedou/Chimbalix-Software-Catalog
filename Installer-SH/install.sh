@@ -60,7 +60,7 @@ Unique_App_Folder_Name="example_application_16"
 ######### - ------------------- - #########
 ######### - Package Information - #########
 ######### - ------------------- - #########
-Header="${BG_Black}${F_Red}${Bold} -=: Software Installer Script for Chimbalix (Installer-SH v1.6) - ${Bold}$test${rBD} :=-${rBD}${F}\n"
+Header="${BG_Black}${F_Red}${Bold} -=: Software Installer Script for Chimbalix (Installer-SH v1.6) - Lang: ${Bold}$Language${rBD} :=-${rBD}${F}\n"
 
 Info_Name="Example Application"
 Info_Version="1.6"
@@ -179,28 +179,26 @@ Output_Uninstaller="$Output_Install_Dir/$Program_Uninstaller_File" # Uninstaller
 ######### -- END SETTINGS -- #########
 ######### -- ------------ -- #########
 
-## Default Locale
+######### Strings! #########
+###### Default Locale ######
 
 function _SET_LOCALE() {
-	if [ -e "$Path_To_Script/locales/ru_RU" ]; then
-		if [ $(grep Locale_Version "$Path_To_Script/locales/ru_RU") == 'Locale_Version="1.6"' ]; then
-			source "$Path_To_Script/locales/ru_RU";
-		else
-			Use_Default_Locale=true
-		fi
-	else
-		Use_Default_Locale=true
-	fi
+	Language="${LANG%%.*}"
+	Locale_File="$Path_To_Script/locales/$Language"
+	if [ -e "$Locale_File" ]; then
+		if [ $(grep Locale_Version "$Locale_File") == 'Locale_Version="1.6"' ]; then
+			source "$Locale_File";
+		else Use_Default_Locale=true; fi
+	else Use_Default_Locale=true; fi
 	
 	if [ $Use_Default_Locale == true ]; then
-		test="Default string!"
+		Language="Default string!"
+		Str_InterruptedByUser="${Bold}${F_Green}Interrupted by user${F}${rBD}"
+		Str_ERROR_BeforeStage="${Bold}${F_Red}ERROR${F_Yellow} at the stage before:${F}${rBD}"
+		Str_ErrorUnpackingProgramFiles="${Bold}${F_Red}ERROR${F_Yellow} unpacking program files...${F}${rBD}"
+		Str_CompleteInstall="${Bold}${F_Green}The installation process has been completed successfully.${F}${rBD}"
 	fi
 	
-	######### Strings
-	Str_InterruptedByUser="${Bold}${F_Green}Interrupted by user${F}${rBD}"
-	Str_ERROR_BeforeStage="${Bold}${F_Red}ERROR${F_Yellow} at the stage before:${F}${rBD}"
-	Str_ErrorUnpackingProgramFiles="${Bold}${F_Red}ERROR${F_Yellow} unpacking program files...${F}${rBD}"
-	Str_CompleteInstall="${Bold}${F_Green}The installation process has been completed successfully.${F}${rBD}"
 }
 
 ######### ------------------------------------------------

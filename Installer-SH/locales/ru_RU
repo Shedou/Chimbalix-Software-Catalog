@@ -2,4 +2,9 @@
 
 Locale_Version="1.6"
 
-test="Locale file "ru_RU" connected!"
+Current_Locale="RU Русский"
+
+Str_InterruptedByUser="${Bold}${F_Green}Прервано пользователем${F}${rBD}"
+Str_ERROR_BeforeStage="${Bold}${F_Red}ОШИБКА${F_Yellow} at the stage before:${F}${rBD}"
+Str_ErrorUnpackingProgramFiles="${Bold}${F_Red}ERROR${F_Yellow} unpacking program files...${F}${rBD}"
+Str_CompleteInstall="${Bold}${F_Green}The installation process has been completed successfully.${F}${rBD}"
