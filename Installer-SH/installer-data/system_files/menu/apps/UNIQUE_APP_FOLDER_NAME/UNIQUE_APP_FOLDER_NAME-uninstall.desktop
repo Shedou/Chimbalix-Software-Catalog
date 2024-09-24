@@ -12,10 +12,10 @@ Name=Uninstall - PROGRAM_NAME_IN_MENU
 Comment=
 GenericName=
 
-Icon=PATH_TO_FOLDER/icon-uninstall.png
+Icon=PATH_TO_FOLDER/PROGRAM_UNINSTALLER_ICON
 # Don't remove the quotes here or the app will end up in the "open with" menu...
-Exec="PATH_TO_FOLDER/uninstall.sh"
-TryExec="PATH_TO_FOLDER/uninstall.sh"
+Exec="PATH_TO_FOLDER/PROGRAM_UNINSTALLER_FILE"
+TryExec="PATH_TO_FOLDER/PROGRAM_UNINSTALLER_FILE"
 Path=
 #StartupWMClass=
 

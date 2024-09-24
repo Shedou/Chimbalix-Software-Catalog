@@ -7,7 +7,6 @@
 ######### ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ##
 # Font styles: "${Bold} BLACK TEXT ${rBD} normal text."
 Bold="\e[1m"; Dim="\e[2m"; rBD="\e[22m";
-# Font Colors:
 F='\033[39m'; BG='\033[49m'; # Reset colors
 F_Black='\033[30m'; F_DarkGray='\033[90m'; F_Gray='\033[37m'; F_White='\033[97m';
 F_DarkRed='\033[31m'; F_DarkGreen='\033[32m'; F_DarkYellow='\033[33m'; F_DarkBlue='\033[34m'; F_DarkMagenta='\033[35m'; F_DarkCyan='\033[36m';
@@ -18,16 +17,10 @@ BG_Red='\033[101m'; BG_Green='\033[102m'; BG_Yellow='\033[103m'; BG_Blue='\033[1
 ######### ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ##
 
 ######### Base vars #########
-Arguments=("$@")
-Path_To_Script="$( dirname "$(readlink -f "$0")")" # Current installer script directory.
-User_Home=~ # Current User home directory.
-User_Name=$USER # Current User name.
-DEBUG_MODE=false
-Silent_Mode=false
-Use_Default_Locale=false
-
-Installer_Data_Path="$Path_To_Script/installer-data"
-Szip_bin="$Installer_Data_Path/tools/7zip/7zzs"
+Arguments=("$@"); Path_To_Script="$( dirname "$(readlink -f "$0")")"
+User_Home=~; User_Name=$USER; DEBUG_MODE=false; Silent_Mode=false; Use_Default_Locale=false
+Installer_Data_Path="$Path_To_Script/installer-data"; Szip_bin="$Installer_Data_Path/tools/7zip/7zzs"
+all_ok=true
 
 # Main function, don't change!
 function _MAIN() {
@@ -64,14 +57,16 @@ Install_Mode="User" # In "User" mode, root rights are not required.
  # x86_64, x86, script, other
 Architecture="script"
 
- # Unique application name, used for directory name.
- # Template for automatic replacement in menu files: UNIQUE_APP_FOLDER_NAME
+ # Unique name of the output directory. Template for automatic replacement in menu files: UNIQUE_APP_FOLDER_NAME
 Unique_App_Folder_Name="example_application_16"
 
- # Please prepare additional files in the directory "installer-data/system_files/menu/apps/UNIQUE_APP_FOLDER_NAME/" if necessary.
+ ### Preparing menu files ###
+ # Please prepare additional files in the directory "installer-data/system_files/" if necessary.
 Program_Name_In_Menu="Example Application 1.6" #PROGRAM_NAME_IN_MENU
 Program_Icon_In_Menu="icon.png" #PROGRAM_ICON_IN_MENU
 Program_Executable_File="example-application.sh" #PROGRAM_EXECUTABLE_FILE
+Program_Uninstaller_File="uninstall.sh"  #PROGRAM_UNINSTALLER_FILE
+Program_Uninstaller_Icon="icon-uninstall.png"  #PROGRAM_UNINSTALLER_ICON
 
  # Additional menu categories that will include the main application shortcuts.
  # Please do not use this variable in the uninstaller shortcut file.
@@ -151,6 +146,7 @@ Out_System_Menu_Files="/etc/xdg/menus/applications-merged"
 Out_System_Menu_DDir="/usr/share/desktop-directories/apps"
 Out_System_Menu_Apps="/usr/share/applications/apps"
 
+# The "PATH_TO_FOLDER" variable points to the application installation directory without the trailing slash (Output_Install_Dir), for example "/portsoft/x86_64/example_application".
 Output_Install_Dir="DONtCHANGE"
 Output_Bin_Dir="DONtCHANGE"
 Output_Menu_Files="DONtCHANGE"
@@ -172,16 +168,7 @@ else
 	Output_Menu_Apps="$Out_User_Menu_Apps"
 fi
 
-Output_Uninstaller="$Output_Install_Dir/uninstall.sh" # Uninstaller template file.
-
- # The "PATH_TO_FOLDER" variable points to the application installation directory without the trailing slash, for example "/portsoft/x86_64/example-application".
-
- # Desktop shortcut files:
- ## Copy files from "Template_Menu_Files_Dir" to "/etc/xdg/menus/applications-merged/" or "/home/USER_NAME/.config/menus/applications-merged/"
- ## Copy files from "Template_Menu_Desktop_Dir" to "/usr/share/desktop-directories/apps/" or "/home/USER_NAME/.local/share/desktop-directories/apps/"
-
-all_ok=true
-
+Output_Uninstaller="$Output_Install_Dir/$Program_Uninstaller_File" # Uninstaller template file.
 }
 
 ######### -- ------------ -- #########
@@ -435,6 +422,8 @@ function _PREPARE_INPUT_FILES() {
 			grep -rl "PROGRAM_EXECUTABLE_FILE" "$Temp_Dir" | xargs sed -i "s~PROGRAM_EXECUTABLE_FILE~$Program_Executable_File~g"
 			grep -rl "ADDITIONAL_CATEGORIES" "$Temp_Dir" | xargs sed -i "s~ADDITIONAL_CATEGORIES~$Additional_Categories~g"
 			grep -rl "PROGRAM_ICON_IN_MENU" "$Temp_Dir" | xargs sed -i "s~PROGRAM_ICON_IN_MENU~$Program_Icon_In_Menu~g"
+			grep -rl "PROGRAM_UNINSTALLER_FILE" "$Temp_Dir" | xargs sed -i "s~PROGRAM_UNINSTALLER_FILE~$Program_Uninstaller_File~g"
+			grep -rl "PROGRAM_UNINSTALLER_ICON" "$Temp_Dir" | xargs sed -i "s~PROGRAM_UNINSTALLER_ICON~$Program_Uninstaller_Icon~g"
 		done
 	
 		local All_Renamed=false
