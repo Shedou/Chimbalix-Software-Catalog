@@ -68,19 +68,21 @@ Info_Platform="Linux - Chimbalix 24.2 - 24.x"
 Info_Installed_Size="~1 MiB"
 Info_Licensing="Freeware - Open Source (MIT)
    Other Licensing Examples:
-    Freeware - Proprietary (EULA, Please read \"install-EULA-example.txt\")
+    Freeware - Proprietary (EULA, Please read \"EULA-example.txt\")
     Trialware - 30 days free, Proprietary (Other License Name)"
 Info_Developer="Chimbal"
 Info_URL="https://github.com/Shedou/Chimbalix-Software-Catalog"
+if [ $Use_Default_Locale == true ]; then # Use this description if there is no suitable localization file:
 Info_Description="\
-  1) This installer allows you to:
+  1) This installer (short description):
      - Suitable for installation on stand-alone PCs without Internet access.
-     - Storing installation files in a 7-zip archive (good compression and fast decompression).
+     - Stores installation files in a 7-zip archive (good compression and fast unpacking).
      - Two installation modes:
        . User - install only for the current User ($User_Name), does not require root rights.
        . System - For all users, root rights are required.
-     - Set owner and rights to the application directory (only in \"System\" mode).
+     - Allows you to set permissions for the application directory (in \"System\" mode only).
   2) Check the current \"install.sh\" file to configure the installation package."
+fi
 
 ### ------------------------ ###
  ### Basic Menu File Settings ###
@@ -191,21 +193,23 @@ function _SET_LOCALE() {
 	
 	if [ $Use_Default_Locale == true ]; then
 		if [ $Silent_Mode == false ]; then Lang_Display="Default"; fi
-		Str_ERROR="${Bold}${F_Red}ERROR${F}${rBD}" # ОШИБКА
-		Str_ATTENTION="${Bold}${F_Yellow}ATTENTION${F}${rBD}" # ВНИМАНИЕ
-		Str_WARNING="${Bold}${F_Yellow}WARNING${F}${rBD}" # ПРЕДУПРЕЖДЕНИЕ
+		Info_Description="Not used in this place... The translation is located in the \"locales/\" directory."
 		
-		Str_Interrupted_By_User="${Bold}${F_Green}Interrupted by user${F}${rBD}" # Прервано пользователем
-		Str_Complete_Install="${Bold}${F_Green}The installation process has been completed successfully.${F}${rBD}" # Процесс установки успешно завершен.
+		Str_ERROR="${Bold}${F_Red}ERROR${F}${rBD}"
+		Str_ATTENTION="${Bold}${F_Yellow}ATTENTION${F}${rBD}"
+		Str_WARNING="${Bold}${F_Yellow}WARNING${F}${rBD}"
 		
-		Str_Error_All_Ok="$Str_ERROR! ${Bold}${F_Yellow} The \"all_ok\" condition was not passed in the function:${F}${rBD}" # Условие "all_ok" не пройдено в функции:
+		Str_Interrupted_By_User="Interrupted by user"
+		Str_Complete_Install="The installation process has been completed successfully."
 		
-		Str_ABORT_Msg="Exit code -" # Код выхода -
-		Str_ABORT_Exit="Press Enter or close the window to exit." # Нажмите Enter или закройте окно, чтобы выйти.
+		Str_Error_All_Ok="The \"all_ok\" condition was not passed in the function:"
 		
-		Str_CHECKOS_No_Distro_Name="$Str_ATTENTION! ${Bold}${F_Yellow}The name of the operating system / kernel is not defined!${F}${rBD}" # Название операционной системы / ядра не определено!
+		Str_ABORT_Msg="Exit code -"
+		Str_ABORT_Exit="Press Enter or close the window to exit."
 		
-		Str_PACKAGEINFO_SoftwareInfo="Software Info:"
+		Str_CHECKOS_No_Distro_Name="The name of the operating system / kernel is not defined!"
+		
+		Str_PACKAGEINFO_Head="Software Info:"
 		Str_PACKAGEINFO_Name="Name:"
 		Str_PACKAGEINFO_ReleaseDate="Release Date:"
 		Str_PACKAGEINFO_Category="Category:"
@@ -217,9 +221,62 @@ function _SET_LOCALE() {
 		Str_PACKAGEINFO_Description="Description:"
 		Str_PACKAGEINFO_CurrentOS="Current OS:"
 		Str_PACKAGEINFO_InstallMode="Installation Mode:"
+		Str_PACKAGEINFO_Confirm="Start the application installation process? Enter \"y\" or \"yes\" to confirm."
 		
-		Str_INSTALLAPP_Error_Unpack_ProgramFiles="$Str_ERROR! ${Bold}${F_Yellow}At the stage of unpacking program files.${F}${rBD}" # На этапе распаковки файлов программы.
+		Str_CHECKMD5PRINT_Head="Integrity check:"
+		Str_CHECKMD5PRINT_Sub_Head="Checking the integrity of the installation archives, please wait..."
+		Str_CHECKMD5PRINT_Hash_Not_Match="The archives hash sum does not match the value specified in the settings!"
+		Str_CHECKMD5PRINT_Hash_Not_Match2="The files may have been copied with errors or modified! Be careful!"
+		Str_CHECKMD5PRINT_Expected_pHash="Expected MD5 hash of \"Program Files\":"
+		Str_CHECKMD5PRINT_Expected_sHash="Expected MD5 hash of \"System Files\":"
+		Str_CHECKMD5PRINT_Expected_uHash="Expected MD5 hash of \"User Files\":"
+		Str_CHECKMD5PRINT_Real_pHash="Real MD5 hash of \"Program Files\":"
+		Str_CHECKMD5PRINT_Real_sHash="Real MD5 hash of \"System Files\":"
+		Str_CHECKMD5PRINT_Real_uHash="Real MD5 hash of \"User Files\":"
+		Str_CHECKMD5PRINT_yes_To_Continue="Enter \"y\" or \"yes\" to continue installation (not recommended):"
+		Str_CHECKMD5PRINT_Enter_To_Continue="Press Enter to continue."
 		
+		Str_CHECKMD5_Head="Checking archives integrity:"
+		Str_CHECKMD5_Sub_Head="Do you want to check the integrity of the installation package?"
+		Str_CHECKMD5_Sub_Head2="(this may take some time if the application is large)"
+		Str_CHECKMD5_y_To_Check="Enter \"y\" or \"yes\" to check the integrity of the archives (recommended)."
+		
+		Str_PRINTINSTALLSETTINGS_Head="Installation settings"
+		Str_PRINTINSTALLSETTINGS_Temp_Dir="Temporary Directory:"
+		Str_PRINTINSTALLSETTINGS_App_Inst_Dir="Application install Directory:"
+		Str_PRINTINSTALLSETTINGS_Menu_Dirs="Menu files will be installed to:"
+		Str_PRINTINSTALLSETTINGS_Bin_Dir="Bin files will be installed in:"
+		Str_PRINTINSTALLSETTINGS_Copy_uData_To="User data will be installed in:"
+		Str_PRINTINSTALLSETTINGS_Copy_uData_To2="This feature is not recommended to use, but some applications require it, so be careful."
+		Str_PRINTINSTALLSETTINGS_Copy_uData_To3="To disable this feature, change the variable \"User_Data_Copy_Confirm=false\"."
+		Str_PRINTINSTALLSETTINGS_Copy_uData_To4="(if the function is required, disabling it may break the program)"
+		Str_PRINTINSTALLSETTINGS_System_Mode="Use \"System\" mode only when installing software for all users!"
+		Str_PRINTINSTALLSETTINGS_System_Mode2="Root rights are required to perform the installation!"
+		Str_PRINTINSTALLSETTINGS_Before_Install="Please close all important applications before installation."
+		Str_PRINTINSTALLSETTINGS_Confirm="Enter \"y\" or \"yes\" to begin the installation."
+		
+		Str_PREPAREINPUTFILES_Err_Unpack="Error unpacking temp files:"
+		Str_PREPAREINPUTFILES_Err_Unpack2="Try copying the installation files to another disk before running."
+		
+		Str_CHECKOUTPUTS_Head="Checking output directories:"
+		Str_CHECKOUTPUTS_Already_Present="Folders|Files already present"
+		Str_CHECKOUTPUTS_Attention="Continue installation and overwrite directories/files?"
+		Str_CHECKOUTPUTS_Attention2="Please make a backup copy of your data, if any, in the above directories."
+		Str_CHECKOUTPUTS_Confirm="Enter \"y\" or \"yes\" to continue."
+		
+		Str_INSTALLAPP_Head="Installing..."
+		Str_INSTALLAPP_No_Rights="No rights to the application installation directory?"
+		Str_INSTALLAPP_Create_Out="Create output folder if it does not exist..."
+		Str_INSTALLAPP_Unpack_App="Unpack application files..."
+		Str_INSTALLAPP_Unpack_Err="Error unpacking program files..."
+		Str_INSTALLAPP_Unpack_Err2="Broken archive? Or symbolic links with absolute paths as part of an application?"
+		Str_INSTALLAPP_Unpack_Err_Continue="Enter \"y\" or \"yes\" to continue the installation process (not recommended)..."
+		Str_INSTALLAPP_Unpack_Err_Abort="At the stage of unpacking program files."
+		Str_INSTALLAPP_Unpack_Continue="The installation continues..."
+		Str_INSTALLAPP_Set_Rights="Setting rights and owner..."
+		Str_INSTALLAPP_Install_Bin_Menu="Installing Bin files and copy menu files..."
+		Str_INSTALLAPP_Copy_uFiles="Copying user files...."
+		Str_INSTALLAPP_Copy_uFiles_Err="Error unpacking user files..."
 	fi
 	
 }
@@ -248,7 +305,7 @@ function _CHECK_OS() {
 		#if [ -f "/etc/chimbalix/sp"*"-installed" ]; then for SpVer in "/etc/chimbalix/sp"*"-installed"; do SpInstalled=$(($SpInstalled+1)); done; fi
 	else
 		if uname &>/dev/null; then DistroVersion="$(uname -sr)"
-		else _ABORT "$Str_CHECKOS_No_Distro_Name"; fi
+		else _ABORT "$Str_ATTENTION! ${Bold}${F_Yellow}$Str_CHECKOS_No_Distro_Name${F}${rBD}"; fi
 	fi
 }
 
@@ -260,7 +317,7 @@ if [ $Silent_Mode == false ]; then
 		echo -e "${BG_Black}"; clear; # A crutch to fill the background completely...
 		echo -e "\
 $Header
- ${Bold}${F_Cyan}$Str_PACKAGEINFO_SoftwareInfo${F}${rBD}
+ ${Bold}${F_Cyan}$Str_PACKAGEINFO_Head${F}${rBD}
  -${Bold}${F_DarkYellow}$Str_PACKAGEINFO_Name${F} $Info_Name${rBD} ($Info_Version,  $Architecture)
  -${Bold}${F_DarkYellow}$Str_PACKAGEINFO_ReleaseDate${rBD}${F} $Info_Release_Date
  -${Bold}${F_DarkYellow}$Str_PACKAGEINFO_Category${rBD}${F} $Info_Category
@@ -274,13 +331,13 @@ $Info_Description
 
  -${Bold}${F_DarkGreen}$Str_PACKAGEINFO_CurrentOS${F} $Distro_Full_Name${rBD}
  -${Bold}${F_DarkGreen}$Str_PACKAGEINFO_InstallMode${F} $Install_Mode${rBD}"
-		echo -e "\n Start the application installation process? Enter \"y\" or \"yes\" to confirm."
+		echo -e "\n $Str_PACKAGEINFO_Confirm"
 		read package_info_confirm
 		if [ "$package_info_confirm" == "y" ] || [ "$package_info_confirm" == "yes" ]; then all_ok=true
-		else _ABORT "$Str_Interrupted_By_User"; fi
+		else _ABORT "${Bold}${F_Green}$Str_Interrupted_By_User${F}${rBD}"; fi
 		
 		if [ $DEBUG_MODE == true ]; then echo "_PRINT_PACKAGE_INFO - all_ok = $all_ok"; read pause; fi
-	else _ABORT "$Str_Error_All_Ok \"_PRINT_PACKAGE_INFO\""; fi
+	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _PRINT_PACKAGE_INFO ${F}${rBD}"; fi
 fi
 }
 
@@ -298,7 +355,7 @@ function _CHECK_MD5_COMPARE() {
 	if [ "$System_Files_MD5" != "$Archive_System_Files_MD5" ]; then md5_sfiles_error=true; fi
 	
 	if [ $User_Data_Copy_Confirm == true ]; then
-		local User_Files_MD5=`md5sum "$Archive_User_Files" | awk '{print $1}'`
+		User_Files_MD5=`md5sum "$Archive_User_Files" | awk '{print $1}'`
 		if [ "$User_Files_MD5" != "$Archive_User_Files_MD5" ]; then md5_ufiles_error=false; fi
 	fi
 	
@@ -311,44 +368,43 @@ function _CHECK_MD5_PRINT() {
 	clear
 	echo -e "\
 $Header
- ${Bold}${F_Cyan}Integrity check:${F}${rBD}
-  Checking the integrity of the installation archives, please wait..."
+ ${Bold}${F_Cyan}$Str_CHECKMD5PRINT_Head${F}${rBD}
+  $Str_CHECKMD5PRINT_Sub_Head"
 	
 	if [ $md5_warning == true ]; then
 		echo -e "\
 
-  ${Bold}${F_DarkRed}Attention! The archives hash sum does not match the value specified in the settings!${F}
-  ${F_Red}The files may have been copied with errors or modified! Be careful!${F}${rBD}"
+  $Str_ATTENTION ${Bold}${F_DarkRed}$Str_CHECKMD5PRINT_Hash_Not_Match${F}
+  ${F_Red}$Str_CHECKMD5PRINT_Hash_Not_Match2${F}${rBD}"
 		if [ $md5_pfiles_error == true ]; then
 			echo -e "\
 
-   ${Bold}Expected Program Files MD5 hash:${rBD} \"$Archive_Program_Files_MD5\"
-   ${Bold}Real Program Files MD5 hash:${rBD}     \"$Program_Files_MD5\""; fi
+   ${Bold}$Str_CHECKMD5PRINT_Expected_pHash${rBD} \"$Archive_Program_Files_MD5\"
+   ${Bold}$Str_CHECKMD5PRINT_Real_pHash${rBD}     \"$Program_Files_MD5\""; fi
 		if [ $md5_sfiles_error == true ]; then
 			echo -e "\
 
-   ${Bold}Expected System Files MD5 hash:${rBD} \"$Archive_System_Files_MD5\"
-   ${Bold}Real System Files MD5 hash:${rBD}     \"$System_Files_MD5\""; fi
+   ${Bold}$Str_CHECKMD5PRINT_Expected_sHash${rBD} \"$Archive_System_Files_MD5\"
+   ${Bold}$Str_CHECKMD5PRINT_Real_sHash${rBD}     \"$System_Files_MD5\""; fi
 		if [ $md5_ufiles_error == true ]; then
 			echo -e "\
 
-   ${Bold}Expected User Files MD5 hash:${rBD} \"$Archive_User_Files_MD5\"
-   ${Bold}Real User Files MD5 hash:${rBD}     \"$User_Files_MD5\""; fi
-		echo -e "\n  Enter \"y\" or \"yes\" to continue installation (not recommended):"
+   ${Bold}$Str_CHECKMD5PRINT_Expected_uHash${rBD} \"$Archive_User_Files_MD5\"
+   ${Bold}$Str_CHECKMD5PRINT_Real_uHash${rBD}     \"$User_Files_MD5\""; fi
+		echo -e "\n  $Str_CHECKMD5PRINT_yes_To_Continue"
 		read errors_confirm
     	if [ "$errors_confirm" == "y" ] || [ "$errors_confirm" == "yes" ]; then all_ok=true
-		else _ABORT "$Str_Interrupted_By_User"; fi
+		else _ABORT "${Bold}${F_Green}$Str_Interrupted_By_User${F}${rBD}"; fi
 	else
 		all_ok=true
 		echo -e "
   ${F_Green}The integrity of the installation archive has been successfully verified
-   ${Bold}Program Files MD5 hash:${rBD}  \"$Program_Files_MD5\"
-   ${Bold}System Files MD5 hash:${rBD}   \"$System_Files_MD5\""
+   ${Bold}$Str_CHECKMD5PRINT_Real_pHash${rBD}  \"$Program_Files_MD5\"
+   ${Bold}$Str_CHECKMD5PRINT_Real_sHash${rBD}   \"$System_Files_MD5\""
 		if [ $User_Data_Copy_Confirm == true ]; then echo -e "\
-   ${Bold}User Files MD5 hash:${rBD}     \"$User_Files_MD5\""
-		fi
-		echo -e "
-  press ${Bold}Enter${rBD} to continue.${F}"
+   ${Bold}$Str_CHECKMD5PRINT_Real_uHash${rBD}     \"$User_Files_MD5\""; fi
+		echo -e "${F}
+  ${Bold}$Str_CHECKMD5PRINT_Enter_To_Continue${rBD}"
 		read pause
 	fi
 }
@@ -359,12 +415,11 @@ if [ $Silent_Mode == false ]; then
 		clear
 		echo -e "\
 $Header
- ${Bold}${F_Cyan}Checking archives integrity:${F}${rBD}
-  Do you want to check the integrity of the installation package?
-   (this may take some time if the application is large)
+ ${Bold}${F_Cyan}$Str_CHECKMD5_Head${F}${rBD}
+  $Str_CHECKMD5_Sub_Head
+   $Str_CHECKMD5_Sub_Head2
   
-  Enter \"y\" or \"yes\" to check the integrity of the archives (recommended)."
-	
+  $Str_CHECKMD5_y_To_Check"
 		read check_md5_confirm
 		if [ "$check_md5_confirm" == "y" ] || [ "$check_md5_confirm" == "yes" ]; then
 			_CHECK_MD5_COMPARE
@@ -372,7 +427,7 @@ $Header
 		else all_ok=true; fi
 	
 	if [ $DEBUG_MODE == true ]; then echo "_CHECK_MD5 - all_ok = $all_ok"; read pause; fi
-	else _ABORT "$Str_Error_All_Ok \"_CHECK_MD5\""; fi
+	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _CHECK_MD5 ${F}${rBD}"; fi
 else
 	_CHECK_MD5_COMPARE
 	if [ $md5_warning == true ]; then _CHECK_MD5_PRINT; fi
@@ -389,42 +444,44 @@ if [ $Silent_Mode == false ]; then
 		clear
 		echo -e "\
 $Header
- ${Bold}${F_Cyan}Installation paths (${F_DarkYellow}$Install_Mode${F_Cyan} mode):${F}${rBD}
+ ${Bold}${F_Cyan}$Str_PRINTINSTALLSETTINGS_Head (${F_DarkYellow}$Install_Mode${F_Cyan}):${F}${rBD}
 
- -${Bold}${F_DarkGreen}Temporary Directory:${F}${rBD} $Temp_Dir
+ -${Bold}${F_DarkGreen}$Str_PRINTINSTALLSETTINGS_Temp_Dir${F}${rBD} $Temp_Dir
  
- -${Bold}${F_DarkGreen}Application install Directory:
+ -${Bold}${F_DarkGreen}$Str_PRINTINSTALLSETTINGS_App_Inst_Dir
    ${F}${rBD}$Output_Install_Dir
 
- -${Bold}${F_DarkGreen}Menu files will be installed to:${F}${rBD}
+ -${Bold}${F_DarkGreen}$Str_PRINTINSTALLSETTINGS_Menu_Dirs${F}${rBD}
    $Output_Menu_Files
    $Output_Menu_DDir
    $Output_Menu_Apps
 
- -${Bold}${F_DarkGreen}Bin files will be installed in:${F}${rBD}
+ -${Bold}${F_DarkGreen}$Str_PRINTINSTALLSETTINGS_Bin_Dir${F}${rBD}
    $Output_Bin_Dir"
 
 		if [ $User_Data_Copy_Confirm == true ]; then
-			echo -e "\n -${Bold}${F_Yellow}Attention!${F}${F_DarkGreen} Copy user data to:${F}${rBD} $Output_User_Home
-   Change the variable \"User_Data_Copy_Confirm=false\" in the script if you do not want
-   to install any data to the home directory (the application may not work correctly)."
-		fi
+			echo -e "
+ -$Str_ATTENTION! ${Bold}${F_DarkGreen}$Str_PRINTINSTALLSETTINGS_Copy_uData_To${F}${rBD} $Output_User_Home
+   $Str_PRINTINSTALLSETTINGS_Copy_uData_To2
+   $Str_PRINTINSTALLSETTINGS_Copy_uData_To3
+    $Str_PRINTINSTALLSETTINGS_Copy_uData_To4"; fi
 	
 		if [ "$Install_Mode" == "System" ]; then
-			echo -e "\n -${Bold}${F_Yellow}Attention!
-   Installation mode \"System\", root rights are required!
-   During the installation process, the root password will be requested.${F}${rBD}"
-		fi
+			echo -e "
+ -$Str_ATTENTION! ${Bold}${F_Yellow}$Str_PRINTINSTALLSETTINGS_System_Mode
+   $Str_PRINTINSTALLSETTINGS_System_Mode2${F}${rBD}"; fi
 		
-		echo -e "\n Please close all important applications before installation."
-		echo -e "\n Start installation? Enter \"y\" or \"yes\" to confirm."
+		echo -e "
+ $Str_PRINTINSTALLSETTINGS_Before_Install
+
+ $Str_PRINTINSTALLSETTINGS_Confirm"
 		read install_settings_confirm
 	
 		if [ "$install_settings_confirm" == "y" ] || [ "$install_settings_confirm" == "yes" ]; then all_ok=true
-		else _ABORT "$Str_Interrupted_By_User"; fi
+		else _ABORT "${Bold}${F_Green}$Str_Interrupted_By_User${F}${rBD}"; fi
 	
 		if [ $DEBUG_MODE == true ]; then echo "_PRINT_INSTALL_SETTINGS - all_ok = $all_ok"; read pause; fi
-	else _ABORT "$Str_Error_All_Ok \"_PRINT_INSTALL_SETTINGS\""; fi
+	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _PRINT_INSTALL_SETTINGS ${F}${rBD}"; fi
 fi
 }
 
@@ -442,7 +499,7 @@ function _PREPARE_INPUT_FILES() {
 		if ! [[ -x "$Szip_bin" ]]; then chmod +x "$Szip_bin"; fi
 		
 		if ! "$Szip_bin" x "$Archive_System_Files" -o"$Temp_Dir/" &> /dev/null; then
-			_ABORT "Error unpacking temp files (_PREPARE_INPUT_FILES), try copying the installation files to another disk before running."
+			_ABORT "$Str_PREPAREINPUTFILES_Err_Unpack (_PREPARE_INPUT_FILES). $Str_PREPAREINPUTFILES_Err_Unpack2"
 		fi
 		
 		for file in "$Temp_Dir"/*; do
@@ -492,7 +549,7 @@ function _PREPARE_INPUT_FILES() {
 		all_ok=true
 		
 		if [ $DEBUG_MODE == true ]; then echo "_PREPARE_INPUT_FILES - all_ok = $all_ok"; read pause; fi
-	else _ABORT "$Str_Error_All_Ok \"_PREPARE_INPUT_FILES\""; fi
+	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _PREPARE_INPUT_FILES ${F}${rBD}"; fi
 }
 
 
@@ -510,26 +567,24 @@ function _CHECK_OUTPUTS() {
 			clear
 			echo -e "\
 $Header
- ${Bold}${F_Cyan}WARNING!${F}${rBD}"
-	
-			echo -e "\
-  Folders|Files already present:
+ ${Bold}${F_Cyan}$Str_CHECKOUTPUTS_Head${F}${rBD}"
+			echo -e "
+  $Str_ATTENTION! $Str_CHECKOUTPUTS_Already_Present
 $(for file in "${!arr_files_sorted[@]}"; do echo "   ${arr_files_sorted[$file]}"; done)"
-			echo -e "\
-  
-  Continue installation and overwrite directories/files?
-  Please make a backup copy of your data, if any, in the above directories.
-  
-  Enter \"y\" or \"yes\" to continue."
+			echo -e "
+   $Str_CHECKOUTPUTS_Attention
+   ${F_Yellow}$Str_CHECKOUTPUTS_Attention2${F}
+
+ $Str_CHECKOUTPUTS_Confirm"
 			read install_confirm
 			if [ "$install_confirm" == "y" ] || [ "$install_confirm" == "yes" ]; then all_ok=true
-			else _ABORT "$Str_Interrupted_By_User"; fi
+			else _ABORT "${Bold}${F_Green}$Str_Interrupted_By_User${F}${rBD}"; fi
 		else
 			all_ok=true
 		fi
 		
 		if [ $DEBUG_MODE == true ]; then echo "_CHECK_OUTPUTS - all_ok = $all_ok"; read pause; fi
-	else _ABORT "$Str_Error_All_Ok \"_CHECK_OUTPUTS\""; fi
+	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _CHECK_OUTPUTS ${F}${rBD}"; fi
 }
 
 
@@ -542,58 +597,58 @@ function _INSTALL_APP() {
 			clear
 			echo -e "\
 $Header
- ${Bold}${F_Cyan}Installing...${F}${rBD}"
+ ${Bold}${F_Cyan}$Str_INSTALL_APP_Head${F}${rBD}"
 		fi
 		
 		# Copy Application files
 		
 		if [ $Silent_Mode == false ]; then
-			echo " Create output folder if it does not exist..."
+			echo " $Str_INSTALL_APP_Create_Out"
 		fi
 		
 		if [ ! -e "$Output_Install_Dir" ]; then
-			if [ "$Install_Mode" == "System" ]; then if ! sudo mkdir -p "$Output_Install_Dir"; then _ABORT "No rights to continue installation?"; fi; fi
-			if [ "$Install_Mode" == "User" ]; then if ! mkdir -p "$Output_Install_Dir"; then _ABORT "No rights to continue installation?"; fi; fi
+			if [ "$Install_Mode" == "System" ]; then if ! sudo mkdir -p "$Output_Install_Dir"; then _ABORT "$Str_INSTALL_APP_No_Rights"; fi; fi
+			if [ "$Install_Mode" == "User" ]; then if ! mkdir -p "$Output_Install_Dir"; then _ABORT "$Str_INSTALL_APP_No_Rights"; fi; fi
 		else
-			if [ "$Install_Mode" == "System" ]; then if ! sudo touch "$Output_Install_Dir"; then _ABORT "No rights to continue installation?"; fi; fi
-			if [ "$Install_Mode" == "User" ]; then if ! touch "$Output_Install_Dir"; then _ABORT "No rights to continue installation?"; fi; fi
+			if [ "$Install_Mode" == "System" ]; then if ! sudo touch "$Output_Install_Dir"; then _ABORT "$Str_INSTALL_APP_No_Rights"; fi; fi
+			if [ "$Install_Mode" == "User" ]; then if ! touch "$Output_Install_Dir"; then _ABORT "$Str_INSTALL_APP_No_Rights"; fi; fi
 		fi
 		
 		if [ $Silent_Mode == false ]; then
-			echo " Unpack application files..."
+			echo " $Str_INSTALLAPP_Unpack_App"
 		fi
 		
 		if [ "$Install_Mode" == "System" ]; then
 			if ! sudo "$Szip_bin" x -aoa "$Archive_Program_Files" -o"$Output_Install_Dir/" &> /dev/null; then
-				echo -e "\n ATTENTION!!! Error unpacking program files..."
-				echo " Broken archive? Or symbolic links with absolute paths as part of an application?"
-				echo -e "\n $Str_y_or_yes_continue"
+				echo -e "\n $Str_ATTENTION $Str_INSTALLAPP_Unpack_Err"
+				echo " $Str_INSTALLAPP_Unpack_Err2"
+				echo -e "\n $Str_INSTALLAPP_Unpack_Err_Continue"
 				read confirm_error_unpacking
 				if [ "$confirm_error_unpacking" == "y" ] || [ "$confirm_error_unpacking" == "yes" ]; then
-					echo "  Continue..."
-				else _ABORT "$Str_INSTALLAPP_Error_Unpack_ProgramFiles"; fi
+					echo "  $Str_INSTALLAPP_Unpack_Continue"
+				else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_INSTALLAPP_Unpack_Err_Abort${F}${rBD}"; fi
 			fi
 		fi
 		
 		if [ "$Install_Mode" == "User" ]; then
 			if ! "$Szip_bin" x -aoa "$Archive_Program_Files" -o"$Output_Install_Dir/" &> /dev/null; then
-				echo -e "\n ATTENTION!!! Error unpacking program files..."
-				echo " Broken archive? Or symbolic links with absolute paths as part of an application?"
-				echo -e "\n $Str_y_or_yes_continue"
+				echo -e "\n $Str_ATTENTION $Str_INSTALLAPP_Unpack_Err"
+				echo " $Str_INSTALLAPP_Unpack_Err2"
+				echo -e "\n $Str_INSTALLAPP_Unpack_Err_Continue"
 				read confirm_error_unpacking
 				if [ "$confirm_error_unpacking" == "y" ] || [ "$confirm_error_unpacking" == "yes" ]; then
-					echo "  Continue..."
-				else _ABORT "$Str_INSTALLAPP_Error_Unpack_ProgramFiles"; fi
+					echo "  $Str_INSTALLAPP_Unpack_Continue"
+				else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_INSTALLAPP_Unpack_Err_Abort${F}${rBD}"; fi
 			fi
 		fi
 		
 		if [ $Silent_Mode == false ]; then
-			echo " Install Bin files and copy menu files..." 
+			echo " $Str_INSTALLAPP_Install_Bin_Menu" 
 		fi
 		
 		######### System MODE #########
 		if [ "$Install_Mode" == "System" ]; then
-			echo " Set rights and owner..."
+			echo " $Str_INSTALLAPP_Set_Rights"
 			sudo chmod -R $Out_App_Folder_Permissions "$Output_Install_Dir"
 			sudo chown -R $Out_App_Folder_Owner "$Output_Install_Dir"
 			
@@ -623,11 +678,11 @@ $Header
 		# Copy user data
 		if [ $User_Data_Copy_Confirm == true ]; then
 			if [ $Silent_Mode == false ]; then
-				echo " Copy User files..."
+				echo " $Str_INSTALLAPP_Copy_uFiles"
 			fi
 			
 			if ! "$Szip_bin" x -aoa "$Archive_User_Files" -o"$Output_User_Home/" &> /dev/null; then
-				echo "Error unpacking user files..."
+				echo " $Str_INSTALLAPP_Copy_uFiles_Err"
 				read pause
 			fi
 		fi
@@ -635,7 +690,7 @@ $Header
 		all_ok=true
 		
 		if [ $DEBUG_MODE == true ]; then echo "_INSTALL_APP - all_ok = $all_ok"; read pause; fi
-	else _ABORT "$Str_Error_All_Ok \"_INSTALL_APP\""; fi
+	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _INSTALL_APP ${F}${rBD}"; fi
 }
 
 
@@ -662,12 +717,10 @@ function _PREPARE_UNINSTALLER() {
 		# Restart taskbar
 		xfce4-panel -r
 		
-		if [ $Silent_Mode == false ]; then
-			_ABORT "$Str_Complete_Install"
-		fi
+		if [ $Silent_Mode == false ]; then _ABORT "${Bold}${F_Green}$Str_Complete_Install${F}${rBD}"; fi
 		
 		if [ $DEBUG_MODE == true ]; then echo "_PREPARE_UNINSTALLER - all_ok = $all_ok"; read pause; fi
-	else _ABORT "$Str_Error_All_Ok \"_PREPARE_UNINSTALLER\""; fi
+	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _PREPARE_UNINSTALLER ${F}${rBD}"; fi
 }
 
 ######### ---- --------- ---- #########
