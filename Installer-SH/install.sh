@@ -20,9 +20,9 @@ all_ok=true
 
 # Main function, don't change!
 function _MAIN() {
-	if [ ${Arguments[$1]} == "-silent" ]; then Silent_Mode=true; fi
+	if [ ${Arguments[$1]} == "-silent" ]; then Silent_Mode=true; Lang_Display="-silent"; fi
 	_CHECK_OS # Distro_Full_Name - Distro_Name - Distro_Version_ID
-	if [ $Silent_Mode == false ]; then _SET_LOCALE; fi
+	_SET_LOCALE
 	_PACKAGE_SETTINGS
 	
 	_PRINT_PACKAGE_INFO
@@ -35,8 +35,6 @@ function _MAIN() {
 	
 	_INSTALL_APP
 	_PREPARE_UNINSTALLER
-	
-	_ABORT "$Str_CompleteInstall"
 }
 
 ######### ---- -------- ---- #########
@@ -60,7 +58,7 @@ Unique_App_Folder_Name="example_application_16"
 ######### - ------------------- - #########
 ######### - Package Information - #########
 ######### - ------------------- - #########
-Header="${BG_Black}${F_Red}${Bold} -=: Software Installer Script for Chimbalix (Installer-SH v1.6) - Lang: ${Bold}$Language${rBD} :=-${rBD}${F}\n"
+Header="${BG_Black}${F_Red}${Bold} -=: Software Installer Script for Chimbalix (Installer-SH v1.6) - Lang: ${Bold}$Lang_Display${rBD} :=-${rBD}${F}\n"
 
 Info_Name="Example Application"
 Info_Version="1.6"
@@ -184,6 +182,7 @@ Output_Uninstaller="$Output_Install_Dir/$Program_Uninstaller_File" # Uninstaller
 
 function _SET_LOCALE() {
 	Language="${LANG%%.*}"
+	if [ $Silent_Mode == false ]; then Lang_Display="$Language"; fi
 	Locale_File="$Path_To_Script/locales/$Language"
 	if [ -e "$Locale_File" ]; then
 		if [ $(grep Locale_Version "$Locale_File") == 'Locale_Version="1.6"' ]; then
@@ -192,7 +191,7 @@ function _SET_LOCALE() {
 	else Use_Default_Locale=true; fi
 	
 	if [ $Use_Default_Locale == true ]; then
-		Language="Default string!"
+		if [ $Silent_Mode == false ]; then Lang_Display="Default"; fi
 		Str_InterruptedByUser="${Bold}${F_Green}Interrupted by user${F}${rBD}"
 		Str_ERROR_BeforeStage="${Bold}${F_Red}ERROR${F_Yellow} at the stage before:${F}${rBD}"
 		Str_ErrorUnpackingProgramFiles="${Bold}${F_Red}ERROR${F_Yellow} unpacking program files...${F}${rBD}"
@@ -369,6 +368,7 @@ fi
 ######### ---------------------------
 ######### Print installation settings
 function _PRINT_INSTALL_SETTINGS() {
+if [ $Silent_Mode == false ]; then
 	if [ $all_ok == true ]; then all_ok=false
 		clear
 		echo -e "\
@@ -407,12 +407,19 @@ $Header
 		if [ "$install_settings_confirm" == "y" ] || [ "$install_settings_confirm" == "yes" ]; then all_ok=true
 		else _ABORT "$Str_InterruptedByUser"; fi
 	
-	if [ $DEBUG_MODE == true ]; then echo "_PRINT_INSTALL_SETTINGS - all_ok = $all_ok"; read pause; fi
-else _ABORT "$Str_ERROR_BeforeStage \"Print Install Settings\""; fi
+		if [ $DEBUG_MODE == true ]; then echo "_PRINT_INSTALL_SETTINGS - all_ok = $all_ok"; read pause; fi
+	else _ABORT "$Str_ERROR_BeforeStage \"Print Install Settings\""; fi
+fi
 }
 
 ######### -------------------
 ######### Prepare Input Files
+
+function _PREPARE_INPUT_FILES_GREP() {
+	local p_text="$1"; local p_path="$2"
+	grep -rl "$p_text" "$Temp_Dir" | xargs sed -i "s~$p_text~$p_path~g" &> /dev/null
+}
+
 function _PREPARE_INPUT_FILES() {
 	if [ $all_ok == true ]; then all_ok=false
 		
@@ -423,17 +430,17 @@ function _PREPARE_INPUT_FILES() {
 		fi
 		
 		for file in "$Temp_Dir"/*; do
-			grep -rl "PATH_TO_FOLDER" "$Temp_Dir" | xargs sed -i "s~PATH_TO_FOLDER~$Output_Install_Dir~g"
-			grep -rl "UNIQUE_APP_FOLDER_NAME" "$Temp_Dir" | xargs sed -i "s~UNIQUE_APP_FOLDER_NAME~$Unique_App_Folder_Name~g"
-			grep -rl "PROGRAM_NAME_IN_MENU" "$Temp_Dir" | xargs sed -i "s~PROGRAM_NAME_IN_MENU~$Program_Name_In_Menu~g"
-			grep -rl "PROGRAM_EXECUTABLE_FILE" "$Temp_Dir" | xargs sed -i "s~PROGRAM_EXECUTABLE_FILE~$Program_Executable_File~g"
-			grep -rl "PROGRAM_EXE_RUN_IN_TERMINAL" "$Temp_Dir" | xargs sed -i "s~PROGRAM_EXE_RUN_IN_TERMINAL~$Program_Exe_Run_In_Terminal~g"
-			grep -rl "PROGRAM_ICON_IN_MENU" "$Temp_Dir" | xargs sed -i "s~PROGRAM_ICON_IN_MENU~$Program_Icon_In_Menu~g"
-			grep -rl "PROGRAM_UNINSTALLER_FILE" "$Temp_Dir" | xargs sed -i "s~PROGRAM_UNINSTALLER_FILE~$Program_Uninstaller_File~g"
-			grep -rl "PROGRAM_UNINSTALLER_ICON" "$Temp_Dir" | xargs sed -i "s~PROGRAM_UNINSTALLER_ICON~$Program_Uninstaller_Icon~g"
-			grep -rl "ADDITIONAL_CATEGORIES" "$Temp_Dir" | xargs sed -i "s~ADDITIONAL_CATEGORIES~$Additional_Categories~g"
-			grep -rl "MENU_DIRECTORY_NAME" "$Temp_Dir" | xargs sed -i "s~MENU_DIRECTORY_NAME~$Menu_Directory_Name~g"
-			grep -rl "MENU_DIRECTORY_ICON" "$Temp_Dir" | xargs sed -i "s~MENU_DIRECTORY_ICON~$Menu_Directory_Icon~g"
+			_PREPARE_INPUT_FILES_GREP "PATH_TO_FOLDER" "$Output_Install_Dir"
+			_PREPARE_INPUT_FILES_GREP "UNIQUE_APP_FOLDER_NAME" "$Unique_App_Folder_Name"
+			_PREPARE_INPUT_FILES_GREP "PROGRAM_NAME_IN_MENU" "$Program_Name_In_Menu"
+			_PREPARE_INPUT_FILES_GREP "PROGRAM_EXECUTABLE_FILE" "$Program_Executable_File"
+			_PREPARE_INPUT_FILES_GREP "PROGRAM_EXE_RUN_IN_TERMINAL" "$Program_Exe_Run_In_Terminal"
+			_PREPARE_INPUT_FILES_GREP "PROGRAM_ICON_IN_MENU" "$Program_Icon_In_Menu"
+			_PREPARE_INPUT_FILES_GREP "PROGRAM_UNINSTALLER_FILE" "$Program_Uninstaller_File"
+			_PREPARE_INPUT_FILES_GREP "PROGRAM_UNINSTALLER_ICON" "$Program_Uninstaller_Icon"
+			_PREPARE_INPUT_FILES_GREP "ADDITIONAL_CATEGORIES" "$Additional_Categories"
+			_PREPARE_INPUT_FILES_GREP "MENU_DIRECTORY_NAME" "$Menu_Directory_Name"
+			_PREPARE_INPUT_FILES_GREP "MENU_DIRECTORY_ICON" "$Menu_Directory_Icon"
 		done
 	
 		local All_Renamed=false
@@ -476,163 +483,172 @@ function _PREPARE_INPUT_FILES() {
 ######### -------------
 ######### Check outputs
 function _CHECK_OUTPUTS() {
-if [ $all_ok == true ]; then all_ok=false
-	local error=false
-	local arr_files_sorted=()
-	
-	for file in "${!All_Files[@]}"; do if [ -e "${All_Files[$file]}" ]; then arr_files_sorted[$file]="${All_Files[$file]}"; error=true; fi; done
-	
-	if [ $error == true ]; then
-		clear
-		echo -e "\
+	if [ $all_ok == true ]; then all_ok=false
+		local error=false
+		local arr_files_sorted=()
+		
+		for file in "${!All_Files[@]}"; do if [ -e "${All_Files[$file]}" ]; then arr_files_sorted[$file]="${All_Files[$file]}"; error=true; fi; done
+		
+		if [ $error == true ]; then
+			clear
+			echo -e "\
 $Header
  ${Bold}${F_Cyan}WARNING!${F}${rBD}"
 	
-		echo -e "\
+			echo -e "\
   Folders|Files already present:
 $(for file in "${!arr_files_sorted[@]}"; do echo "   ${arr_files_sorted[$file]}"; done)"
-		echo -e "\
+			echo -e "\
   
   Continue installation and overwrite directories/files?
   Please make a backup copy of your data, if any, in the above directories.
   
   Enter \"y\" or \"yes\" to continue."
-		read install_confirm
-		if [ "$install_confirm" == "y" ] || [ "$install_confirm" == "yes" ]; then all_ok=true
-		else _ABORT "$Str_InterruptedByUser"; fi
-	else
-		all_ok=true
-	fi
-	
-	if [ $DEBUG_MODE == true ]; then echo "_CHECK_OUTPUTS - all_ok = $all_ok"; read pause; fi
-else _ABORT "$Str_ERROR_BeforeStage \"Check Outputs\""; fi
+			read install_confirm
+			if [ "$install_confirm" == "y" ] || [ "$install_confirm" == "yes" ]; then all_ok=true
+			else _ABORT "$Str_InterruptedByUser"; fi
+		else
+			all_ok=true
+		fi
+		
+		if [ $DEBUG_MODE == true ]; then echo "_CHECK_OUTPUTS - all_ok = $all_ok"; read pause; fi
+	else _ABORT "$Str_ERROR_BeforeStage \"Check Outputs\""; fi
 }
 
 
 ######### -------------------
 ######### Install application
 function _INSTALL_APP() {
-if [ $all_ok == true ]; then all_ok=false
-	clear
-	echo -e "\
+	if [ $all_ok == true ]; then all_ok=false
+		if [ $Silent_Mode == false ]; then
+			clear
+			echo -e "\
 $Header
  ${Bold}${F_Cyan}Installing...${F}${rBD}"
-	
-	# Copy Application files
-	
-	echo " Create output folder if it does not exist..."
-	
-	if [ ! -e "$Output_Install_Dir" ]; then
-		if [ "$Install_Mode" == "System" ]; then if ! sudo mkdir -p "$Output_Install_Dir"; then _ABORT "No rights to continue installation?"; fi; fi
-		if [ "$Install_Mode" == "User" ]; then if ! mkdir -p "$Output_Install_Dir"; then _ABORT "No rights to continue installation?"; fi; fi
-	else
-		if [ "$Install_Mode" == "System" ]; then if ! sudo touch "$Output_Install_Dir"; then _ABORT "No rights to continue installation?"; fi; fi
-		if [ "$Install_Mode" == "User" ]; then if ! touch "$Output_Install_Dir"; then _ABORT "No rights to continue installation?"; fi; fi
-	fi
-	
-	echo " Unpack application files..."
-	
-	if [ "$Install_Mode" == "System" ]; then
-		if ! sudo "$Szip_bin" x -aoa "$Archive_Program_Files" -o"$Output_Install_Dir/" &> /dev/null; then
-			echo -e "\n ATTENTION!!! Error unpacking program files..."
-			echo " Broken archive? Or symbolic links with absolute paths as part of an application?"
-			echo -e "\n $Str_y_or_yes_continue"
-			read confirm_error_unpacking
-			if [ "$confirm_error_unpacking" == "y" ] || [ "$confirm_error_unpacking" == "yes" ]; then
-				echo "  Continue..."
-			else _ABORT "$Str_AbortCode_ErrorUnpackingProgramFiles"; fi
 		fi
-	fi
-	
-	if [ "$Install_Mode" == "User" ]; then
-		if ! "$Szip_bin" x -aoa "$Archive_Program_Files" -o"$Output_Install_Dir/" &> /dev/null; then
-			echo -e "\n ATTENTION!!! Error unpacking program files..."
-			echo " Broken archive? Or symbolic links with absolute paths as part of an application?"
-			echo -e "\n $Str_y_or_yes_continue"
-			read confirm_error_unpacking
-			if [ "$confirm_error_unpacking" == "y" ] || [ "$confirm_error_unpacking" == "yes" ]; then
-				echo "  Continue..."
-			else _ABORT "$Str_AbortCode_ErrorUnpackingProgramFiles"; fi
+		
+		# Copy Application files
+		
+		if [ $Silent_Mode == false ]; then
+			echo " Create output folder if it does not exist..."
 		fi
-	fi
-	
-	######### System MODE #########
-	if [ "$Install_Mode" == "System" ]; then
-		echo " Set rights and owner..."
-		sudo chmod -R $Out_App_Folder_Permissions "$Output_Install_Dir"
-		sudo chown -R $Out_App_Folder_Owner "$Output_Install_Dir"
 		
-		# Copy Bin files
-		echo " Install Bin files..."
-		sudo cp -rf "$Input_Bin_Dir/." "$Output_Bin_Dir"
-		
-		# Сopy Menu files
-		echo " Copy Menu files..."
-		sudo cp -rf "$Input_Menu_Files_Dir/." "$Output_Menu_Files"
-		echo " Copy Menu Dir files..."
-		sudo cp -rf "$Input_Menu_Desktop_Dir/." "$Output_Menu_DDir"
-		echo " Сopy Menu Apps..."
-		sudo cp -rf "$Input_Menu_Apps_Dir/." "$Output_Menu_Apps"
-	fi
-
-	######### User MODE #########
-	if [ "$Install_Mode" == "User" ]; then
-		
-		if [ ! -e "$Output_Bin_Dir" ]; then mkdir "$Output_Bin_Dir"; fi
-		
-		# Copy Bin files
-		echo " Install Bin files..."
-		cp -rf "$Input_Bin_Dir/." "$Output_Bin_Dir"
-		
-		# Сopy Menu files
-		echo " Copy Menu files..."
-		cp -rf "$Input_Menu_Files_Dir/." "$Output_Menu_Files"
-		echo " Copy Menu Dir files..."
-		cp -rf "$Input_Menu_Desktop_Dir/." "$Output_Menu_DDir"
-		echo " Сopy Menu Apps..."
-		cp -rf "$Input_Menu_Apps_Dir/." "$Output_Menu_Apps"
-	fi
-	
-	# Copy user data
-	if [ $User_Data_Copy_Confirm == true ]; then
-		echo " Copy User files..."
-		if ! "$Szip_bin" x -aoa "$Archive_User_Files" -o"$Output_User_Home/" &> /dev/null; then
-			echo "Error unpacking user files..."
-			read pause
+		if [ ! -e "$Output_Install_Dir" ]; then
+			if [ "$Install_Mode" == "System" ]; then if ! sudo mkdir -p "$Output_Install_Dir"; then _ABORT "No rights to continue installation?"; fi; fi
+			if [ "$Install_Mode" == "User" ]; then if ! mkdir -p "$Output_Install_Dir"; then _ABORT "No rights to continue installation?"; fi; fi
+		else
+			if [ "$Install_Mode" == "System" ]; then if ! sudo touch "$Output_Install_Dir"; then _ABORT "No rights to continue installation?"; fi; fi
+			if [ "$Install_Mode" == "User" ]; then if ! touch "$Output_Install_Dir"; then _ABORT "No rights to continue installation?"; fi; fi
 		fi
-	fi
+		
+		if [ $Silent_Mode == false ]; then
+			echo " Unpack application files..."
+		fi
+		
+		if [ "$Install_Mode" == "System" ]; then
+			if ! sudo "$Szip_bin" x -aoa "$Archive_Program_Files" -o"$Output_Install_Dir/" &> /dev/null; then
+				echo -e "\n ATTENTION!!! Error unpacking program files..."
+				echo " Broken archive? Or symbolic links with absolute paths as part of an application?"
+				echo -e "\n $Str_y_or_yes_continue"
+				read confirm_error_unpacking
+				if [ "$confirm_error_unpacking" == "y" ] || [ "$confirm_error_unpacking" == "yes" ]; then
+					echo "  Continue..."
+				else _ABORT "$Str_AbortCode_ErrorUnpackingProgramFiles"; fi
+			fi
+		fi
+		
+		if [ "$Install_Mode" == "User" ]; then
+			if ! "$Szip_bin" x -aoa "$Archive_Program_Files" -o"$Output_Install_Dir/" &> /dev/null; then
+				echo -e "\n ATTENTION!!! Error unpacking program files..."
+				echo " Broken archive? Or symbolic links with absolute paths as part of an application?"
+				echo -e "\n $Str_y_or_yes_continue"
+				read confirm_error_unpacking
+				if [ "$confirm_error_unpacking" == "y" ] || [ "$confirm_error_unpacking" == "yes" ]; then
+					echo "  Continue..."
+				else _ABORT "$Str_AbortCode_ErrorUnpackingProgramFiles"; fi
+			fi
+		fi
+		
+		if [ $Silent_Mode == false ]; then
+			echo " Install Bin files and copy menu files..." 
+		fi
+		
+		######### System MODE #########
+		if [ "$Install_Mode" == "System" ]; then
+			echo " Set rights and owner..."
+			sudo chmod -R $Out_App_Folder_Permissions "$Output_Install_Dir"
+			sudo chown -R $Out_App_Folder_Owner "$Output_Install_Dir"
+			
+			# Copy Bin files
+			sudo cp -rf "$Input_Bin_Dir/." "$Output_Bin_Dir"
+			
+			# Сopy Menu files
+			sudo cp -rf "$Input_Menu_Files_Dir/." "$Output_Menu_Files"
+			sudo cp -rf "$Input_Menu_Desktop_Dir/." "$Output_Menu_DDir"
+			sudo cp -rf "$Input_Menu_Apps_Dir/." "$Output_Menu_Apps"
+		fi
 	
-	all_ok=true
-	
-	if [ $DEBUG_MODE == true ]; then echo "_INSTALL_APP - all_ok = $all_ok"; read pause; fi
-else _ABORT "$Str_ERROR_BeforeStage \"Install Application\""; fi
+		######### User MODE #########
+		if [ "$Install_Mode" == "User" ]; then
+			
+			if [ ! -e "$Output_Bin_Dir" ]; then mkdir "$Output_Bin_Dir"; fi
+			
+			# Copy Bin files
+			cp -rf "$Input_Bin_Dir/." "$Output_Bin_Dir"
+			
+			# Сopy Menu files
+			cp -rf "$Input_Menu_Files_Dir/." "$Output_Menu_Files"
+			cp -rf "$Input_Menu_Desktop_Dir/." "$Output_Menu_DDir"
+			cp -rf "$Input_Menu_Apps_Dir/." "$Output_Menu_Apps"
+		fi
+		
+		# Copy user data
+		if [ $User_Data_Copy_Confirm == true ]; then
+			if [ $Silent_Mode == false ]; then
+				echo " Copy User files..."
+			fi
+			
+			if ! "$Szip_bin" x -aoa "$Archive_User_Files" -o"$Output_User_Home/" &> /dev/null; then
+				echo "Error unpacking user files..."
+				read pause
+			fi
+		fi
+		
+		all_ok=true
+		
+		if [ $DEBUG_MODE == true ]; then echo "_INSTALL_APP - all_ok = $all_ok"; read pause; fi
+	else _ABORT "$Str_ERROR_BeforeStage \"Install Application\""; fi
 }
 
 
 ######### ------------------------
 ######### Prepare uninstaller file
 function _PREPARE_UNINSTALLER() {
-if [ $all_ok == true ]; then
-	if [ "$Install_Mode" == "System" ]; then
-		sudo chmod 755 "$Output_Uninstaller"
-		sudo chown $Out_App_Folder_Owner "$Output_Uninstaller"
-		for filename in "${!All_Files[@]}"; do
-			CurrentFile="${All_Files[$filename]}"
-			sudo awk -i inplace '{if($0=="FilesToDelete=(") $0=$0"\n\"'"$CurrentFile"'\"";print}' "$Output_Uninstaller"
-		done
-	fi
-	if [ "$Install_Mode" == "User" ]; then
-		chmod 744 "$Output_Uninstaller"
-		for filename in "${!All_Files[@]}"; do
-			CurrentFile="${All_Files[$filename]}"
-			awk -i inplace '{if($0=="FilesToDelete=(") $0=$0"\n\"'"$CurrentFile"'\"";print}' "$Output_Uninstaller"
-		done
-	fi
-	# Restart taskbar
-	xfce4-panel -r
-	
-	if [ $DEBUG_MODE == true ]; then echo "_PREPARE_UNINSTALLER - all_ok = $all_ok"; read pause; fi
-else _ABORT "$Str_ERROR_BeforeStage \"Prepare Uninstaller file\""; fi
+	if [ $all_ok == true ]; then
+		if [ "$Install_Mode" == "System" ]; then
+			sudo chmod 755 "$Output_Uninstaller"
+			sudo chown $Out_App_Folder_Owner "$Output_Uninstaller"
+			for filename in "${!All_Files[@]}"; do
+				CurrentFile="${All_Files[$filename]}"
+				sudo awk -i inplace '{if($0=="FilesToDelete=(") $0=$0"\n\"'"$CurrentFile"'\"";print}' "$Output_Uninstaller"
+			done
+		fi
+		if [ "$Install_Mode" == "User" ]; then
+			chmod 744 "$Output_Uninstaller"
+			for filename in "${!All_Files[@]}"; do
+				CurrentFile="${All_Files[$filename]}"
+				awk -i inplace '{if($0=="FilesToDelete=(") $0=$0"\n\"'"$CurrentFile"'\"";print}' "$Output_Uninstaller"
+			done
+		fi
+		# Restart taskbar
+		xfce4-panel -r
+		
+		if [ $Silent_Mode == false ]; then
+			_ABORT "$Str_CompleteInstall"
+		fi
+		
+		if [ $DEBUG_MODE == true ]; then echo "_PREPARE_UNINSTALLER - all_ok = $all_ok"; read pause; fi
+	else _ABORT "$Str_ERROR_BeforeStage \"Prepare Uninstaller file\""; fi
 }
 
 ######### ---- --------- ---- #########
