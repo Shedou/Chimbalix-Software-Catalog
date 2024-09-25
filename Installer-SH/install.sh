@@ -229,7 +229,6 @@ function _SET_LOCALE() {
 function _CLEAR_TEMP() { if [ -e "$Temp_Dir" ]; then rm -rf "$Temp_Dir"; fi; }
 function _CREATE_TEMP() { _CLEAR_TEMP; mkdir "$Temp_Dir"; }
 
-######### ------------------------------------------------
 function _ABORT() {
 	clear
 	echo -e "\
@@ -252,12 +251,6 @@ function _CHECK_OS() {
 		else _ABORT "$Str_CHECKOS_No_Distro_Name"; fi
 	fi
 }
-
-#########
-#########
-#########
-#########
-#########
 
 ######### -------------------------
 ######### Print package information
@@ -389,6 +382,7 @@ fi
 
 ######### ---------------------------
 ######### Print installation settings
+
 function _PRINT_INSTALL_SETTINGS() {
 if [ $Silent_Mode == false ]; then
 	if [ $all_ok == true ]; then all_ok=false
@@ -504,6 +498,7 @@ function _PREPARE_INPUT_FILES() {
 
 ######### -------------
 ######### Check outputs
+
 function _CHECK_OUTPUTS() {
 	if [ $all_ok == true ]; then all_ok=false
 		local error=false
@@ -540,6 +535,7 @@ $(for file in "${!arr_files_sorted[@]}"; do echo "   ${arr_files_sorted[$file]}"
 
 ######### -------------------
 ######### Install application
+
 function _INSTALL_APP() {
 	if [ $all_ok == true ]; then all_ok=false
 		if [ $Silent_Mode == false ]; then
@@ -645,6 +641,7 @@ $Header
 
 ######### ------------------------
 ######### Prepare uninstaller file
+
 function _PREPARE_UNINSTALLER() {
 	if [ $all_ok == true ]; then
 		if [ "$Install_Mode" == "System" ]; then
