@@ -185,17 +185,41 @@ function _SET_LOCALE() {
 	if [ $Silent_Mode == false ]; then Lang_Display="$Language"; fi
 	Locale_File="$Path_To_Script/locales/$Language"
 	if [ -e "$Locale_File" ]; then
-		if [ $(grep Locale_Version "$Locale_File") == 'Locale_Version="1.6"' ]; then
-			source "$Locale_File";
+		if [ $(grep Locale_Version "$Locale_File") == 'Locale_Version="1.6"' ]; then source "$Locale_File";
 		else Use_Default_Locale=true; fi
 	else Use_Default_Locale=true; fi
 	
 	if [ $Use_Default_Locale == true ]; then
 		if [ $Silent_Mode == false ]; then Lang_Display="Default"; fi
-		Str_InterruptedByUser="${Bold}${F_Green}Interrupted by user${F}${rBD}"
-		Str_ERROR_BeforeStage="${Bold}${F_Red}ERROR${F_Yellow} at the stage before:${F}${rBD}"
-		Str_ErrorUnpackingProgramFiles="${Bold}${F_Red}ERROR${F_Yellow} unpacking program files...${F}${rBD}"
-		Str_CompleteInstall="${Bold}${F_Green}The installation process has been completed successfully.${F}${rBD}"
+		Str_ERROR="${Bold}${F_Red}ERROR${F}${rBD}" # ОШИБКА
+		Str_ATTENTION="${Bold}${F_Yellow}ATTENTION${F}${rBD}" # ВНИМАНИЕ
+		Str_WARNING="${Bold}${F_Yellow}WARNING${F}${rBD}" # ПРЕДУПРЕЖДЕНИЕ
+		
+		Str_Interrupted_By_User="${Bold}${F_Green}Interrupted by user${F}${rBD}" # Прервано пользователем
+		Str_Complete_Install="${Bold}${F_Green}The installation process has been completed successfully.${F}${rBD}" # Процесс установки успешно завершен.
+		
+		Str_Error_All_Ok="$Str_ERROR! ${Bold}${F_Yellow} The \"all_ok\" condition was not passed in the function:${F}${rBD}" # Условие "all_ok" не пройдено в функции:
+		
+		Str_ABORT_Msg="Exit code -" # Код выхода -
+		Str_ABORT_Exit="Press Enter or close the window to exit." # Нажмите Enter или закройте окно, чтобы выйти.
+		
+		Str_CHECKOS_No_Distro_Name="$Str_ATTENTION! ${Bold}${F_Yellow}The name of the operating system / kernel is not defined!${F}${rBD}" # Название операционной системы / ядра не определено!
+		
+		Str_PACKAGEINFO_SoftwareInfo="Software Info:"
+		Str_PACKAGEINFO_Name="Name:"
+		Str_PACKAGEINFO_ReleaseDate="Release Date:"
+		Str_PACKAGEINFO_Category="Category:"
+		Str_PACKAGEINFO_Platform="Platform:"
+		Str_PACKAGEINFO_InstalledSize="Installed Size:"
+		Str_PACKAGEINFO_Licensing="Licensing:"
+		Str_PACKAGEINFO_Developer="Developer:"
+		Str_PACKAGEINFO_URL="URL:"
+		Str_PACKAGEINFO_Description="Description:"
+		Str_PACKAGEINFO_CurrentOS="Current OS:"
+		Str_PACKAGEINFO_InstallMode="Installation Mode:"
+		
+		Str_INSTALLAPP_Error_Unpack_ProgramFiles="$Str_ERROR! ${Bold}${F_Yellow}At the stage of unpacking program files.${F}${rBD}" # На этапе распаковки файлов программы.
+		
 	fi
 	
 }
@@ -210,9 +234,9 @@ function _ABORT() {
 	clear
 	echo -e "\
 $Header
-  Exit message - $1
+  $Str_ABORT_Msg $1
 
-  Press Enter or close the window to exit."
+  $Str_ABORT_Exit"
 	_CLEAR_TEMP
 	read pause; clear; exit 1 # Double clear resets styles before going to the system terminal window.
 }
@@ -225,7 +249,7 @@ function _CHECK_OS() {
 		#if [ -f "/etc/chimbalix/sp"*"-installed" ]; then for SpVer in "/etc/chimbalix/sp"*"-installed"; do SpInstalled=$(($SpInstalled+1)); done; fi
 	else
 		if uname &>/dev/null; then DistroVersion="$(uname -sr)"
-		else _ABORT "Unexpected error in function _CHECK_OS"; fi
+		else _ABORT "$Str_CHECKOS_No_Distro_Name"; fi
 	fi
 }
 
@@ -243,27 +267,27 @@ if [ $Silent_Mode == false ]; then
 		echo -e "${BG_Black}"; clear; # A crutch to fill the background completely...
 		echo -e "\
 $Header
- ${Bold}${F_Cyan}Software Info:${F}${rBD}
- -${Bold}${F_DarkYellow}Name:${F} $Info_Name${rBD} ($Info_Version,  $Architecture)
- -${Bold}${F_DarkYellow}Release Date:${rBD}${F} $Info_Release_Date
- -${Bold}${F_DarkYellow}Category:${rBD}${F} $Info_Category
- -${Bold}${F_DarkYellow}Platform:${rBD}${F} $Info_Platform
- -${Bold}${F_DarkYellow}Installed Size:${rBD}${F} $Info_Installed_Size
- -${Bold}${F_DarkYellow}Licensing:${rBD}${F} $Info_Licensing
- -${Bold}${F_DarkYellow}Developer:${rBD}${F} $Info_Developer
- -${Bold}${F_DarkYellow}URL:${rBD}${F} $Info_URL
- -${Bold}${F_DarkYellow}Description:${F}${rBD}
+ ${Bold}${F_Cyan}$Str_PACKAGEINFO_SoftwareInfo${F}${rBD}
+ -${Bold}${F_DarkYellow}$Str_PACKAGEINFO_Name${F} $Info_Name${rBD} ($Info_Version,  $Architecture)
+ -${Bold}${F_DarkYellow}$Str_PACKAGEINFO_ReleaseDate${rBD}${F} $Info_Release_Date
+ -${Bold}${F_DarkYellow}$Str_PACKAGEINFO_Category${rBD}${F} $Info_Category
+ -${Bold}${F_DarkYellow}$Str_PACKAGEINFO_Platform${rBD}${F} $Info_Platform
+ -${Bold}${F_DarkYellow}$Str_PACKAGEINFO_InstalledSize${rBD}${F} $Info_Installed_Size
+ -${Bold}${F_DarkYellow}$Str_PACKAGEINFO_Licensing${rBD}${F} $Info_Licensing
+ -${Bold}${F_DarkYellow}$Str_PACKAGEINFO_Developer${rBD}${F} $Info_Developer
+ -${Bold}${F_DarkYellow}$Str_PACKAGEINFO_URL${rBD}${F} $Info_URL
+ -${Bold}${F_DarkYellow}$Str_PACKAGEINFO_Description${F}${rBD}
 $Info_Description
 
- -${Bold}${F_DarkGreen}Current OS:${F} $Distro_Full_Name${rBD}
- -${Bold}${F_DarkGreen}Installation Mode:${F} $Install_Mode${rBD}"
+ -${Bold}${F_DarkGreen}$Str_PACKAGEINFO_CurrentOS${F} $Distro_Full_Name${rBD}
+ -${Bold}${F_DarkGreen}$Str_PACKAGEINFO_InstallMode${F} $Install_Mode${rBD}"
 		echo -e "\n Start the application installation process? Enter \"y\" or \"yes\" to confirm."
 		read package_info_confirm
 		if [ "$package_info_confirm" == "y" ] || [ "$package_info_confirm" == "yes" ]; then all_ok=true
-		else _ABORT "$Str_InterruptedByUser"; fi
+		else _ABORT "$Str_Interrupted_By_User"; fi
 		
 		if [ $DEBUG_MODE == true ]; then echo "_PRINT_PACKAGE_INFO - all_ok = $all_ok"; read pause; fi
-	else _ABORT "$Str_ERROR_BeforeStage \"Print Package Info\""; fi
+	else _ABORT "$Str_Error_All_Ok \"_PRINT_PACKAGE_INFO\""; fi
 fi
 }
 
@@ -271,7 +295,6 @@ fi
 ######### Check and compare MD5 of archive
 
 function _CHECK_MD5_COMPARE() {
-	
 	md5_pfiles_error=false; md5_sfiles_error=false; md5_ufiles_error=false
 	md5_warning=false;
 	
@@ -289,7 +312,6 @@ function _CHECK_MD5_COMPARE() {
 	if [ $md5_pfiles_error == true ] || [ $md5_sfiles_error == true ] || [ $md5_ufiles_error == true ]; then
 		md5_warning=true
 	fi
-	
 }
 
 function _CHECK_MD5_PRINT() {
@@ -322,7 +344,7 @@ $Header
 		echo -e "\n  Enter \"y\" or \"yes\" to continue installation (not recommended):"
 		read errors_confirm
     	if [ "$errors_confirm" == "y" ] || [ "$errors_confirm" == "yes" ]; then all_ok=true
-		else _ABORT "$Str_InterruptedByUser"; fi
+		else _ABORT "$Str_Interrupted_By_User"; fi
 	else
 		all_ok=true
 		echo -e "
@@ -357,7 +379,7 @@ $Header
 		else all_ok=true; fi
 	
 	if [ $DEBUG_MODE == true ]; then echo "_CHECK_MD5 - all_ok = $all_ok"; read pause; fi
-	else _ABORT "$Str_ERROR_BeforeStage \"MD5 Check\""; fi
+	else _ABORT "$Str_Error_All_Ok \"_CHECK_MD5\""; fi
 else
 	_CHECK_MD5_COMPARE
 	if [ $md5_warning == true ]; then _CHECK_MD5_PRINT; fi
@@ -405,10 +427,10 @@ $Header
 		read install_settings_confirm
 	
 		if [ "$install_settings_confirm" == "y" ] || [ "$install_settings_confirm" == "yes" ]; then all_ok=true
-		else _ABORT "$Str_InterruptedByUser"; fi
+		else _ABORT "$Str_Interrupted_By_User"; fi
 	
 		if [ $DEBUG_MODE == true ]; then echo "_PRINT_INSTALL_SETTINGS - all_ok = $all_ok"; read pause; fi
-	else _ABORT "$Str_ERROR_BeforeStage \"Print Install Settings\""; fi
+	else _ABORT "$Str_Error_All_Ok \"_PRINT_INSTALL_SETTINGS\""; fi
 fi
 }
 
@@ -476,7 +498,7 @@ function _PREPARE_INPUT_FILES() {
 		all_ok=true
 		
 		if [ $DEBUG_MODE == true ]; then echo "_PREPARE_INPUT_FILES - all_ok = $all_ok"; read pause; fi
-	else _ABORT "$Str_ERROR_BeforeStage \"Prepare Input Files\""; fi
+	else _ABORT "$Str_Error_All_Ok \"_PREPARE_INPUT_FILES\""; fi
 }
 
 
@@ -506,13 +528,13 @@ $(for file in "${!arr_files_sorted[@]}"; do echo "   ${arr_files_sorted[$file]}"
   Enter \"y\" or \"yes\" to continue."
 			read install_confirm
 			if [ "$install_confirm" == "y" ] || [ "$install_confirm" == "yes" ]; then all_ok=true
-			else _ABORT "$Str_InterruptedByUser"; fi
+			else _ABORT "$Str_Interrupted_By_User"; fi
 		else
 			all_ok=true
 		fi
 		
 		if [ $DEBUG_MODE == true ]; then echo "_CHECK_OUTPUTS - all_ok = $all_ok"; read pause; fi
-	else _ABORT "$Str_ERROR_BeforeStage \"Check Outputs\""; fi
+	else _ABORT "$Str_Error_All_Ok \"_CHECK_OUTPUTS\""; fi
 }
 
 
@@ -553,7 +575,7 @@ $Header
 				read confirm_error_unpacking
 				if [ "$confirm_error_unpacking" == "y" ] || [ "$confirm_error_unpacking" == "yes" ]; then
 					echo "  Continue..."
-				else _ABORT "$Str_AbortCode_ErrorUnpackingProgramFiles"; fi
+				else _ABORT "$Str_INSTALLAPP_Error_Unpack_ProgramFiles"; fi
 			fi
 		fi
 		
@@ -565,7 +587,7 @@ $Header
 				read confirm_error_unpacking
 				if [ "$confirm_error_unpacking" == "y" ] || [ "$confirm_error_unpacking" == "yes" ]; then
 					echo "  Continue..."
-				else _ABORT "$Str_AbortCode_ErrorUnpackingProgramFiles"; fi
+				else _ABORT "$Str_INSTALLAPP_Error_Unpack_ProgramFiles"; fi
 			fi
 		fi
 		
@@ -617,7 +639,7 @@ $Header
 		all_ok=true
 		
 		if [ $DEBUG_MODE == true ]; then echo "_INSTALL_APP - all_ok = $all_ok"; read pause; fi
-	else _ABORT "$Str_ERROR_BeforeStage \"Install Application\""; fi
+	else _ABORT "$Str_Error_All_Ok \"_INSTALL_APP\""; fi
 }
 
 
@@ -644,11 +666,11 @@ function _PREPARE_UNINSTALLER() {
 		xfce4-panel -r
 		
 		if [ $Silent_Mode == false ]; then
-			_ABORT "$Str_CompleteInstall"
+			_ABORT "$Str_Complete_Install"
 		fi
 		
 		if [ $DEBUG_MODE == true ]; then echo "_PREPARE_UNINSTALLER - all_ok = $all_ok"; read pause; fi
-	else _ABORT "$Str_ERROR_BeforeStage \"Prepare Uninstaller file\""; fi
+	else _ABORT "$Str_Error_All_Ok \"_PREPARE_UNINSTALLER\""; fi
 }
 
 ######### ---- --------- ---- #########
