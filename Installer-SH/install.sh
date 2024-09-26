@@ -619,7 +619,7 @@ $Header
 		fi
 		
 		if [ "$Install_Mode" == "System" ]; then
-			if ! sudo "$Szip_bin" x -aoa "$Archive_Program_Files" -o"$Output_Install_Dir/" &> /dev/null; then
+			if ! sudo "$Szip_bin" x -snld -aoa "$Archive_Program_Files" -o"$Output_Install_Dir/" &> /dev/null; then
 				echo -e "\n $Str_ATTENTION $Str_INSTALLAPP_Unpack_Err"
 				echo " $Str_INSTALLAPP_Unpack_Err2"
 				echo -e "\n $Str_INSTALLAPP_Unpack_Err_Continue"
@@ -631,7 +631,7 @@ $Header
 		fi
 		
 		if [ "$Install_Mode" == "User" ]; then
-			if ! "$Szip_bin" x -aoa "$Archive_Program_Files" -o"$Output_Install_Dir/" &> /dev/null; then
+			if ! "$Szip_bin" x -snld -aoa "$Archive_Program_Files" -o"$Output_Install_Dir/" &> /dev/null; then
 				echo -e "\n $Str_ATTENTION $Str_INSTALLAPP_Unpack_Err"
 				echo " $Str_INSTALLAPP_Unpack_Err2"
 				echo -e "\n $Str_INSTALLAPP_Unpack_Err_Continue"
