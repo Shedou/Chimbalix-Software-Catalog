@@ -24,3 +24,4 @@ Silent installation, no output if everything is installed without errors:
 6) Then configure the "install.sh" file and fill in the application information.
 7) Checking that everything worked correctly.
 8) If everything is correct, in the "installer-data" directory, delete everything except the "tools" folder and the "program_files.7z / system_files.7z" archives
+9) Checking that everything worked correctly.
