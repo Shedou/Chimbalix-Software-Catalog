@@ -1,33 +1,13 @@
 # Chimbalix-Software-Catalog
 
+## Installer-SH
+The Installer-SH directory contains the main script and tools (including examples) for preparing standalone installation packages.
+
 ## Software packages for Chimbalix 24.2 and later
 
-### IDE
+| 3D Editors | Video Editors | Image Editors |
+|:-:|:-:|:-:|
+| [Blender v4.2.0 - (ISH v1.4)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/blender420)<br>[![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Software-Catalog/blender420/total.svg)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/blender420)<br><br>[Blender v3.6.7 - (ISH v1.4)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/blender367)<br>[![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Software-Catalog/blender367/total.svg)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/blender367) | [kdenlive v24.05.2 - (ISH v1.4)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/kdenlive24052)<br>[![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Software-Catalog/kdenlive24052/total.svg)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/kdenlive24052) | [Inkscape 1.3.2 - (ISH v1.6)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/Inkscape132)<br>[![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Software-Catalog/Inkscape132/total.svg)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/Inkscape132)<br><br>[Krita 5.2.2 - (ISH v1.5)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/krita522)<br>[![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Software-Catalog/krita522/total.svg)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/krita522)<br><br>[RawTherapee 5.11 - (ISH v1.5)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/rawtherapee511)<br>[![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Software-Catalog/rawtherapee511/total.svg)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/rawtherapee511) |
+| IDE | System Utilities | Other |
+| [Apache NetBeans 22 - (ISH v1.5a)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/apache_netbeans22)<br>[![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Software-Catalog/apache_netbeans22/total.svg)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/apache_netbeans22) | [Chimbalix Tweaker v1.0a - (ISH v1.4)](https://github.com/Shedou/Chimbalix-Tweaker/releases/tag/ctweaker_v10a)<br>[![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Tweaker/ctweaker_v10a/total.svg)](https://github.com/Shedou/Chimbalix-Tweaker/releases/tag/ctweaker_v10a) | [Arduino IDE v2.2.1 - (ISH v1.4)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/arduino221)<br>[![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Software-Catalog/arduino221/total.svg)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/arduino221) |
 
-[Apache NetBeans 22 - (ISH v1.5a)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/apache_netbeans22) - [![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Software-Catalog/apache_netbeans22/total.svg)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/apache_netbeans22)
-
-### Video Editors:
-
-[kdenlive v24.05.2 - (ISH v1.4)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/kdenlive24052) - [![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Software-Catalog/kdenlive24052/total.svg)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/kdenlive24052)
-
-### Image Editors:
-
-[Inkscape 1.3.2 - (ISH v1.6)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/Inkscape132) - [![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Software-Catalog/Inkscape132/total.svg)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/Inkscape132)
-
-[Krita 5.2.2 - (ISH v1.5)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/krita522) - [![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Software-Catalog/krita522/total.svg)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/krita522)
-
-[RawTherapee 5.11 - (ISH v1.5)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/rawtherapee511) - [![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Software-Catalog/rawtherapee511/total.svg)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/rawtherapee511)
-
-### 3D Editors:
-
-[Blender v4.2.0 - (ISH v1.4)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/blender420) - [![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Software-Catalog/blender420/total.svg)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/blender420)
-
-[Blender v3.6.7 - (ISH v1.4)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/blender367) - [![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Software-Catalog/blender367/total.svg)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/blender367)
-
-### Other:
-
-[Arduino IDE v2.2.1 - (ISH v1.4)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/arduino221) - [![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Software-Catalog/arduino221/total.svg)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/arduino221)
-
-### System Utilities
-
-[Chimbalix Tweaker v1.0a - (ISH v1.4)](https://github.com/Shedou/Chimbalix-Tweaker/releases/tag/ctweaker_v10a) - [![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Tweaker/ctweaker_v10a/total.svg)](https://github.com/Shedou/Chimbalix-Tweaker/releases/tag/ctweaker_v10a)
