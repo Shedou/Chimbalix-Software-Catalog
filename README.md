@@ -1,13 +1,13 @@
 # Chimbalix-Software-Catalog
 
+## Menu:
+- Home
+- [Image Editors - Krita, Inkscape and others...](Image-Editors.md)
+
 ## Installer-SH
 The Installer-SH directory contains the main script and tools (including examples) for preparing standalone installation packages.
 
 ## Software packages for Chimbalix 24.2 and later
-
-## Menu:
-- Home
-- [Image Editors - Krita, Inkscape and others...](Image-Editors.md)
 
 ##
 
