@@ -1,0 +1,14 @@
+# Chimbalix-Software-Catalog
+
+## Image Editors
+
+### For Chimbalix 24.2+
+
+---
+
+| | |
+|:-:|:-:|
+| **Krita** v5.2.2 <br><br> [Download](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/krita522)<br>[![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Software-Catalog/krita522/total.svg)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/krita522) <br><br> ![](icons/krita-522.jpg) <br><br> | |
+| **Inkscape** v1.3.2 <br><br> [Download](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/Inkscape132)<br>[![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Software-Catalog/Inkscape132/total.svg)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/Inkscape132) <br><br> ![](icons/inkscape-132.jpg) <br><br> | **RawTherapee v5.11** <br><br> [Download](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/rawtherapee511)<br>[![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Software-Catalog/rawtherapee511/total.svg)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/rawtherapee511) <br><br> ![](icons/rawtherapee-511.jpg) <br><br> |
+
+---
