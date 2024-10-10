@@ -1,8 +1,10 @@
 # Chimbalix-Software-Catalog
 
-## Image Editors
+## Menu:
+- [Home](README.md)
+- Image Editors - Krita, Inkscape and others...
 
-### For Chimbalix 24.2+
+## Image Editors
 
 ---
 
