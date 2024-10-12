@@ -53,7 +53,9 @@ Install_Mode="User" # In "User" mode, root rights are not required.
 Architecture="script"
 
  # Unique name of the output directory. Template for automatic replacement in menu files: UNIQUE_APP_FOLDER_NAME
-Unique_App_Folder_Name="example_application_16"
+Unique_App_Folder_Name="example_application_16" # WARNING! Do not use capital letters in this place!
+ # Good: exapp, exApp.
+ # Bad: Exapp, ExApp.
 
 ######### - ------------------- - #########
 ######### - Package Information - #########
