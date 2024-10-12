@@ -54,8 +54,9 @@ Architecture="script"
 
  # Unique name of the output directory. Template for automatic replacement in menu files: UNIQUE_APP_FOLDER_NAME
 Unique_App_Folder_Name="example_application_16" # WARNING! Do not use capital letters in this place!
- # Good: exapp, exApp.
- # Bad: Exapp, ExApp.
+ # WARNING! This name is also used as a template for "bin" files in the "/usr/bin" directory.
+ # good: exapp-16, exApp-16.
+ # BAD: Exapp-16, ExApp-16.
 
 ######### - ------------------- - #########
 ######### - Package Information - #########
