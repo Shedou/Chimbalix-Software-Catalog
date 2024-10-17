@@ -1,0 +1,2 @@
+/usr/share/xfce4/helpers/
+/home/$USER/.local/share/xfce4/helpers/
