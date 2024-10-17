@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Script version 1.6
+# Script version 1.7
 # LICENSE for this script is at the end of this file
 # FreeSpace=$(df -m "$Out_InstallDir" | grep "/" | awk '{print $4}')
 # Font styles: "${Bold} BLACK TEXT ${rBD} normal text."
@@ -53,7 +53,7 @@ Install_Mode="User" # In "User" mode, root rights are not required.
 Architecture="script"
 
  # Unique name of the output directory. Template for automatic replacement in menu files: UNIQUE_APP_FOLDER_NAME
-Unique_App_Folder_Name="example_application_16" # WARNING! Do not use capital letters in this place!
+Unique_App_Folder_Name="example_application_17a" # WARNING! Do not use capital letters in this place!
  # WARNING! This name is also used as a template for "bin" files in the "/usr/bin" directory.
  # good: exapp-16, exApp-16.
  # BAD: Exapp-16, ExApp-16.
@@ -61,10 +61,10 @@ Unique_App_Folder_Name="example_application_16" # WARNING! Do not use capital le
 ######### - ------------------- - #########
 ######### - Package Information - #########
 ######### - ------------------- - #########
-Header="${BG_Black}${F_Red}${Bold} -=: Software Installer Script for Chimbalix (Installer-SH v1.6) - Lang: ${Bold}$Lang_Display${rBD} :=-${rBD}${F}\n"
+Header="${BG_Black}${F_Red}${Bold} -=: Software Installer Script for Chimbalix (Installer-SH v1.7a) - Lang: ${Bold}$Lang_Display${rBD} :=-${rBD}${F}\n"
 
 Info_Name="Example Application"
-Info_Version="1.6"
+Info_Version="1.7a"
 Info_Release_Date="2024-09-22"
 Info_Category="Other"
 Info_Platform="Linux - Chimbalix 24.2 - 24.x"
@@ -94,12 +94,12 @@ fi
  # this functionality does not allow you to fully customize the menu files.
  # Use the variable names given in the comments to simplify the preparation of menu files.
 Program_Executable_File="example-application" # PROGRAM_EXECUTABLE_FILE
-Program_Name_In_Menu="Example Application 1.6" # PROGRAM_NAME_IN_MENU
+Program_Name_In_Menu="Example Application 1.7" # PROGRAM_NAME_IN_MENU
 Program_Icon_In_Menu="icon.png" # PROGRAM_ICON_IN_MENU
 Program_Exe_Run_In_Terminal="true" # PROGRAM_EXE_RUN_IN_TERMINAL
 Program_Uninstaller_File="uninstall.sh"  # PROGRAM_UNINSTALLER_FILE
 Program_Uninstaller_Icon="icon-uninstall.png"  # PROGRAM_UNINSTALLER_ICON
-Menu_Directory_Name="Example Application (v1.6)" # MENU_DIRECTORY_NAME
+Menu_Directory_Name="Example Application 1.7" # MENU_DIRECTORY_NAME
 Menu_Directory_Icon="icon.png" # MENU_DIRECTORY_ICON
 
  # Additional menu categories that will include the main application shortcuts.
@@ -125,7 +125,7 @@ Archive_System_Files_MD5="0b02ea89b3899def0ea3fd67f6737fdd"
 
  # Not used if "User_Data_Copy_Confirm=false"
 Archive_User_Files="$Installer_Data_Path/user_files.7z"
-Archive_User_Files_MD5="983ed40a5041a142b3c96859978f9f2a"
+Archive_User_Files_MD5=""
 
  # Extra check
 if [ ! -e "$Archive_User_Files" ] && [ $User_Data_Copy_Confirm == true ]; then User_Data_Copy_Confirm=false; fi
@@ -190,7 +190,7 @@ function _SET_LOCALE() {
 	if [ $Silent_Mode == false ]; then Lang_Display="$Language"; fi
 	Locale_File="$Path_To_Script/locales/$Language"
 	if [ -e "$Locale_File" ]; then
-		if [ $(grep Locale_Version "$Locale_File") == 'Locale_Version="1.6"' ]; then source "$Locale_File";
+		if [ $(grep Locale_Version "$Locale_File") == 'Locale_Version="1.7"' ]; then source "$Locale_File";
 		else Use_Default_Locale=true; fi
 	else Use_Default_Locale=true; fi
 	
