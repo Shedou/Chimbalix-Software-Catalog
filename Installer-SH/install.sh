@@ -144,35 +144,27 @@ Out_App_Folder_Permissions=755	# Only for "System" mode.
 Temp_Dir="/tmp/$Unique_App_Folder_Name""_$RANDOM""_$RANDOM" # TEMP Directory
 
 Out_User_Bin_Dir="$User_Home/.local/bin" # Works starting from Chimbalix 24.4
+Out_User_Helpers_Dir="$User_Home/.local/share/xfce4/helpers"
 Out_User_Menu_files="$User_Home/.config/menus/applications-merged"
 Out_User_Menu_DDir="$User_Home/.local/share/desktop-directories/apps"
 Out_User_Menu_Apps="$User_Home/.local/share/applications/apps"
 
 Out_System_Bin_Dir="/usr/bin"
+Out_System_Helpers_Dir="/usr/share/xfce4/helpers"
 Out_System_Menu_Files="/etc/xdg/menus/applications-merged"
 Out_System_Menu_DDir="/usr/share/desktop-directories/apps"
 Out_System_Menu_Apps="/usr/share/applications/apps"
 
 # The "PATH_TO_FOLDER" variable points to the application installation directory without the trailing slash (Output_Install_Dir), for example "/portsoft/x86_64/example_application".
-Output_Install_Dir="DONtCHANGE"
-Output_Bin_Dir="DONtCHANGE"
-Output_Menu_Files="DONtCHANGE"
-Output_Menu_DDir="DONtCHANGE"
-Output_Menu_Apps="DONtCHANGE"
-Output_User_Home="$User_Home"
+Output_Install_Dir="DONtCHANGE"; Output_Bin_Dir="DONtCHANGE"; Output_Helpers_Dir="DONtCHANGE"
+Output_Menu_Files="DONtCHANGE"; Output_Menu_DDir="DONtCHANGE"; Output_Menu_Apps="DONtCHANGE"; Output_User_Home="$User_Home"
 
 if [ "$Install_Mode" == "System" ]; then
-	Output_Install_Dir="$Out_Install_Dir_System"
-	Output_Bin_Dir="$Out_System_Bin_Dir"
-	Output_Menu_Files="$Out_System_Menu_Files"
-	Output_Menu_DDir="$Out_System_Menu_DDir"
-	Output_Menu_Apps="$Out_System_Menu_Apps"
+	Output_Install_Dir="$Out_Install_Dir_System"; Output_Bin_Dir="$Out_System_Bin_Dir"; Output_Helpers_Dir="$Out_System_Helpers_Dir"
+	Output_Menu_Files="$Out_System_Menu_Files"; Output_Menu_DDir="$Out_System_Menu_DDir"; Output_Menu_Apps="$Out_System_Menu_Apps"
 else
-	Output_Install_Dir="$Out_Install_Dir_User"
-	Output_Bin_Dir="$Out_User_Bin_Dir"
-	Output_Menu_Files="$Out_User_Menu_files"
-	Output_Menu_DDir="$Out_User_Menu_DDir"
-	Output_Menu_Apps="$Out_User_Menu_Apps"
+	Output_Install_Dir="$Out_Install_Dir_User"; Output_Bin_Dir="$Out_User_Bin_Dir"; Output_Helpers_Dir="$Out_User_Helpers_Dir"
+	Output_Menu_Files="$Out_User_Menu_files"; Output_Menu_DDir="$Out_User_Menu_DDir"; Output_Menu_Apps="$Out_User_Menu_Apps"
 fi
 
 Output_Uninstaller="$Output_Install_Dir/$Program_Uninstaller_File" # Uninstaller template file.
