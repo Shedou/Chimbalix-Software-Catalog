@@ -43,14 +43,12 @@ function _MAIN() {
 
 function _PACKAGE_SETTINGS() {
 
- # Copy other data to the user's home directory: "true" / "false". Do not use this function unless necessary!
-User_Data_Copy_Confirm=false
+User_Data_Copy_Confirm=false # Copy other data to the user's home directory: "true" / "false". Do not use this function unless necessary!
+Install_Helpers=false # Adds "Default Applications" associations, please prepare files in "installer-data/system_files/helpers/" before using.
 
- # Installation mode: "System" / "User"
-Install_Mode="User" # In "User" mode, root rights are not required.
+Install_Mode="User" # "System" / "User", In "User" mode, root rights are not required.
 
- # x86_64, x86, script, other
-Architecture="script"
+Architecture="script" # x86_64, x86, script, other
 
  # Unique name of the output directory. Template for automatic replacement in menu files: UNIQUE_APP_FOLDER_NAME
 Unique_App_Folder_Name="example_application_17a" # WARNING! Do not use capital letters in this place!
@@ -104,7 +102,7 @@ Menu_Directory_Icon="icon.png" # MENU_DIRECTORY_ICON
 
  # Additional menu categories that will include the main application shortcuts.
  # Please do not use this variable in the uninstaller shortcut file.
-Additional_Categories="chi-other;" #ADDITIONAL_CATEGORIES
+Additional_Categories="chi-other;" # ADDITIONAL_CATEGORIES
  # -=== Chimbalix 24.4 main categories:
  # chi-ai  chi-accessories  chi-accessories-fm  chi-view  chi-admin  chi-info  chi-info-bench  chi-info-help
  # chi-dev  chi-dev-other  chi-dev-ide  chi-edit  chi-edit-audiovideo  chi-edit-image  chi-edit-text  chi-games
@@ -277,7 +275,7 @@ function _SET_LOCALE() {
 }
 
 ######### ------------------------------------------------
-
+######### ------------------------------------------------
 function _CLEAR_TEMP() { if [ -e "$Temp_Dir" ]; then rm -rf "$Temp_Dir"; fi; }
 function _CREATE_TEMP() { _CLEAR_TEMP; mkdir "$Temp_Dir"; }
 
@@ -292,12 +290,11 @@ $Header
 	read pause; clear; exit 1 # Double clear resets styles before going to the system terminal window.
 }
 
-######### ------------------------------------------------
-######### Check Distro version and installed Service Packs
+######### --------------------
+######### Check Distro version
 function _CHECK_OS() {
-	Distro_Full_Name="Unknown"; Distro_Name="Unknown"; Distro_Version_ID="Unknown"; #SpInstalled=0
+	Distro_Full_Name="Unknown"; Distro_Name="Unknown"; Distro_Version_ID="Unknown";
 	if [ -f /etc/os-release ]; then . /etc/os-release; Distro_Full_Name=$PRETTY_NAME; Distro_Name=$NAME; Distro_Version_ID=$VERSION_ID
-		#if [ -f "/etc/chimbalix/sp"*"-installed" ]; then for SpVer in "/etc/chimbalix/sp"*"-installed"; do SpInstalled=$(($SpInstalled+1)); done; fi
 	else
 		if uname &>/dev/null; then DistroVersion="$(uname -sr)"
 		else _ABORT "$Str_ATTENTION! ${Bold}${F_Yellow}$Str_CHECKOS_No_Distro_Name${F}${rBD}"; fi
