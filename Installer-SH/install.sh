@@ -43,12 +43,12 @@ function _MAIN() {
 
 function _PACKAGE_SETTINGS() {
 
-User_Data_Copy_Confirm=false # Copy other data to the user's home directory: "true" / "false". Do not use this function unless necessary!
-Install_Helpers=false # Adds "Default Applications" associations, please prepare files in "installer-data/system_files/helpers/" before using.
+User_Data_Copy_Confirm=false	# Copy other data to the user's home directory: "true" / "false". Do not use this function unless necessary!
+Install_Helpers=false			# Adds "Default Applications" associations, please prepare files in "installer-data/system_files/helpers/" before using.
+Install_Desktop_Icons=true		# Place icons on the desktop (only for current user).
 
-Install_Mode="User" # "System" / "User", In "User" mode, root rights are not required.
-
-Architecture="script" # x86_64, x86, script, other
+Install_Mode="User"		# "System" / "User", In "User" mode, root rights are not required.
+Architecture="script"	# x86_64, x86, script, other
 
  # Unique name of the output directory. Template for automatic replacement in menu files: UNIQUE_APP_FOLDER_NAME
 Unique_App_Folder_Name="example_application_17a" # WARNING! Do not use capital letters in this place!
@@ -143,6 +143,7 @@ Temp_Dir="/tmp/$Unique_App_Folder_Name""_$RANDOM""_$RANDOM" # TEMP Directory
 
 Out_User_Bin_Dir="$User_Home/.local/bin" # Works starting from Chimbalix 24.4
 Out_User_Helpers_Dir="$User_Home/.local/share/xfce4/helpers"
+Out_User_Desktop_Dir="$User_Home/Desktop"
 Out_User_Menu_files="$User_Home/.config/menus/applications-merged"
 Out_User_Menu_DDir="$User_Home/.local/share/desktop-directories/apps"
 Out_User_Menu_Apps="$User_Home/.local/share/applications/apps"
@@ -154,7 +155,7 @@ Out_System_Menu_DDir="/usr/share/desktop-directories/apps"
 Out_System_Menu_Apps="/usr/share/applications/apps"
 
 # The "PATH_TO_FOLDER" variable points to the application installation directory without the trailing slash (Output_Install_Dir), for example "/portsoft/x86_64/example_application".
-Output_Install_Dir="DONtCHANGE"; Output_Bin_Dir="DONtCHANGE"; Output_Helpers_Dir="DONtCHANGE"
+Output_Install_Dir="DONtCHANGE"; Output_Bin_Dir="DONtCHANGE"; Output_Helpers_Dir="DONtCHANGE"; Output_Desktop_Dir="$Out_User_Desktop_Dir"
 Output_Menu_Files="DONtCHANGE"; Output_Menu_DDir="DONtCHANGE"; Output_Menu_Apps="DONtCHANGE"; Output_User_Home="$User_Home"
 
 if [ "$Install_Mode" == "System" ]; then
