@@ -27,7 +27,7 @@ function _pack_archive() {
 			echo -e "$Spacer"
 			"$Szip_bin" a -snl -mx9 -m0=LZMA2:d$DSize -ms=8g -mqs=on -mmt=3 "$Name_File.7z" "$Name_File/."
 			MD5_DATA=`md5sum "$Name_File.7z" | awk '{print $1}'`
-			echo "$Name_File.7z: $MD5_DATA" >> "$MD5_File"
+			echo "$(basename $Name_File.7z): $MD5_DATA" >> "$MD5_File"
 		fi
 	else echo " 7-Zip binary not found, abort."
 	fi
