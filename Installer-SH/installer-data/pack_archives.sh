@@ -1,24 +1,41 @@
 #!/usr/bin/env bash
 # This Script part of "Installer-SH"
 
+# Larger size - better compression and more RAM required for unpacking. (256m dictionary requires 256+ MB of RAM for unpacking)
+# For applications 150-200 MiB in size, use a dictionary size of 32 - 128m, it is not recommended to use a dictionary size greater than 256m.
+Dictionary_Size_Program_Files="32m"
+Dictionary_Size_System_Files="8m"
+Dictionary_Size_User_Files="8m"
+
+
 Path_To_Script="$( dirname "$(readlink -f "$0")")"
 Spacer="\n ===========================================\n ===========================================\n ==========================================="
 
-Folders_to_Archive=(
-"program_files"
-"system_files"
-"user_files"
-)
+Szip_bin="$Path_To_Script/tools/7zip/7zzs"
+MD5_File="$Path_To_Script/MD5-Hash.txt"
 
-for foldername in "${!Folders_to_Archive[@]}"; do
-	Current="${Folders_to_Archive[$foldername]}"
-	if [ -e "$Current" ]; then
-		echo -e "$Spacer"
-		"$Path_To_Script/tools/7zip/7zzs" a -snl -mx9 -m0=LZMA2:d256m -ms=16g -mqs=on -mmt=3 "$Current.7z" "$Path_To_Script/$Current/."
-		MD5_DATA=`md5sum "$Path_To_Script/$Current.7z" | awk '{print $1}'`
-		echo "$MD5_DATA" > "$Path_To_Script/$Current-md5.txt"
+Program_Files="$Path_To_Script/program_files"
+System_Files="$Path_To_Script/system_files"
+User_Files="$Path_To_Script/user_files"
+
+function _pack_archive() {
+	Name_File="$1"
+	DSize="$2"
+	if [ -e "$Szip_bin" ]; then
+		if [ -e "$Name_File" ]; then
+			if [ -e "$Name_File.7z" ]; then mv -T "$Name_File.7z" "$Name_File-old""_$RANDOM""_$RANDOM"".7z"; fi
+			echo -e "$Spacer"
+			"$Szip_bin" a -snl -mx9 -m0=LZMA2:d$DSize -ms=8g -mqs=on -mmt=3 "$Name_File.7z" "$Name_File/."
+			MD5_DATA=`md5sum "$Name_File.7z" | awk '{print $1}'`
+			echo "$Name_File.7z: $MD5_DATA" >> "$MD5_File"
+		fi
+	else echo " 7-Zip binary not found, abort."
 	fi
-done
+}
+
+_pack_archive "$Program_Files" "$Dictionary_Size_Program_Files"
+_pack_archive "$System_Files" "$Dictionary_Size_System_Files"
+_pack_archive "$User_Files" "$Dictionary_Size_User_Files"
 
 echo -e "$Spacer"
 echo -e "\n Pause..."
