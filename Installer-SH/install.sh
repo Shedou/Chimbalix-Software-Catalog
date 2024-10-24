@@ -15,15 +15,13 @@ BG_Red='\033[101m'; BG_Green='\033[102m'; BG_Yellow='\033[103m'; BG_Blue='\033[1
 ######### Base vars #########
 Arguments=("$@"); Path_To_Script="$( dirname "$(readlink -f "$0")")"
 User_Home=~; User_Name=$USER; DEBUG_MODE=false; Silent_Mode=false; Use_Default_Locale=false
-Installer_Data_Path="$Path_To_Script/installer-data"; Szip_bin="$Installer_Data_Path/tools/7zip/7zzs"
-all_ok=true
+Installer_Data_Path="$Path_To_Script/installer-data"; Szip_bin="$Installer_Data_Path/tools/7zip/7zzs"; all_ok=true
 
 # Main function, don't change!
 function _MAIN() {
 	if [ ${Arguments[$1]} == "-silent" ]; then Silent_Mode=true; Lang_Display="-silent"; fi
 	_CHECK_OS; _SET_LOCALE; _PACKAGE_SETTINGS; _PRINT_PACKAGE_INFO; _CHECK_MD5; _PRINT_INSTALL_SETTINGS; _CREATE_TEMP; _PREPARE_INPUT_FILES; _CHECK_OUTPUTS
-	if [ "$Install_Mode" == "System" ]; then _INSTALL_APP_SYSTEM; else _INSTALL_APP_USER; fi
-	_PREPARE_UNINSTALLER
+	if [ "$Install_Mode" == "System" ]; then _INSTALL_APP_SYSTEM; else _INSTALL_APP_USER; fi; _PREPARE_UNINSTALLER
 }
 
 ######### ---- -------- ---- #########
@@ -39,8 +37,9 @@ Install_Desktop_Icons=true		# Place icons on the desktop (only for current user)
 Install_Mode="User"		# "System" / "User", In "User" mode, root rights are not required.
 Architecture="script"	# x86_64, x86, script, other
 
- # Unique name of the output directory. Template for automatic replacement in menu files: # UNIQUE_APP_FOLDER_NAME
-Unique_App_Folder_Name="example_application_17" # WARNING! Do not use capital letters in this place!
+ # Unique name of the output directory.
+Unique_App_Folder_Name="example_application_17" #=> UNIQUE_APP_FOLDER_NAME
+ # WARNING! Do not use capital letters in this place!
  # WARNING! This name is also used as a template for "bin" files in the "/usr/bin" directory.
  # good: ex_app-16, exapp-16.
  # BAD: Ex_app-16, ExApp-16.
@@ -51,7 +50,7 @@ Unique_App_Folder_Name="example_application_17" # WARNING! Do not use capital le
 Header="${BG_Black}${F_Red}${Bold} -=: Software Installer Script for Chimbalix (Installer-SH v1.7) - Lang: ${Bold}$Lang_Display${rBD} :=-${rBD}${F}\n"
 
 Info_Name="Example Application"
-Info_Version="1.7a"
+Info_Version="1.7"
 Info_Release_Date="2024-10-24"
 Info_Category="Other"
 Info_Platform="Linux - Chimbalix 24.2 - 24.x"
@@ -80,21 +79,21 @@ fi
  # Please manually prepare the menu files in the "installer-data/system_files/" directory before packaging the application,
  # this functionality does not allow you to fully customize the menu files.
  # Use the variable names given in the comments to simplify the preparation of menu files.
-Menu_Directory_Name="Example Application 1.7"	# MENU_DIRECTORY_NAME
-Menu_Directory_Icon="icon.png"					# MENU_DIRECTORY_ICON
+Menu_Directory_Name="Example Application 1.7"	#=> MENU_DIRECTORY_NAME
+Menu_Directory_Icon="icon.png"					#=> MENU_DIRECTORY_ICON
 
-Program_Executable_File="example-application"	# PROGRAM_EXECUTABLE_FILE
-Program_Name_In_Menu="Example Application 1.7"	# PROGRAM_NAME_IN_MENU
-Program_Icon_In_Menu="icon.png"					# PROGRAM_ICON_IN_MENU
-Program_Exe_Run_In_Terminal="true"				# PROGRAM_EXE_RUN_IN_TERMINAL
+Program_Executable_File="example-application"	#=> PROGRAM_EXECUTABLE_FILE
+Program_Name_In_Menu="Example Application 1.7"	#=> PROGRAM_NAME_IN_MENU
+Program_Icon_In_Menu="icon.png"					#=> PROGRAM_ICON_IN_MENU
+Program_Exe_Run_In_Terminal="true"				#=> PROGRAM_EXE_RUN_IN_TERMINAL
 
-Program_Uninstaller_File="uninstall.sh"			# PROGRAM_UNINSTALLER_FILE
-Program_Uninstaller_Icon="icon-uninstall.png"	# PROGRAM_UNINSTALLER_ICON
+Program_Uninstaller_File="uninstall.sh"			#=> PROGRAM_UNINSTALLER_FILE
+Program_Uninstaller_Icon="icon-uninstall.png"	#=> PROGRAM_UNINSTALLER_ICON
 
 
  # Additional menu categories that will include the main application shortcuts.
  # Please do not use this variable in the uninstaller shortcut file.
-Additional_Categories="chi-other;" # ADDITIONAL_CATEGORIES
+Additional_Categories="chi-other;" #=> ADDITIONAL_CATEGORIES
  # -=== Chimbalix 24.4 main categories:
  # chi-ai  chi-accessories  chi-accessories-fm  chi-view  chi-admin  chi-info  chi-info-bench  chi-info-help
  # chi-dev  chi-dev-other  chi-dev-ide  chi-edit  chi-edit-audiovideo  chi-edit-image  chi-edit-text  chi-games
@@ -652,7 +651,10 @@ $Header
 		cp -rf "$Input_Menu_Apps_Dir/." "$Output_Menu_Apps"
 		
 		# Install Helpers
-		if [ $Install_Helpers == true ]; then cp -rf "$Input_Helpers_Dir/." "$Output_Helpers_Dir"; fi
+		if [ $Install_Helpers == true ]; then
+			if [ ! -e "$Output_Helpers_Dir" ]; then mkdir -p "$Output_Helpers_Dir"; fi
+			cp -rf "$Input_Helpers_Dir/." "$Output_Helpers_Dir"
+		fi
 		
 		# Install Desktop files
 		if [ $Install_Desktop_Icons == true ]; then
