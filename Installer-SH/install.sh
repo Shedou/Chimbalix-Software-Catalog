@@ -87,8 +87,8 @@ Program_Name_In_Menu="Example Application 1.7"	#=> PROGRAM_NAME_IN_MENU
 Program_Icon_In_Menu="icon.png"					#=> PROGRAM_ICON_IN_MENU
 Program_Exe_Run_In_Terminal="true"				#=> PROGRAM_EXE_RUN_IN_TERMINAL
 
-Program_Uninstaller_File="uninstall.sh"			#=> PROGRAM_UNINSTALLER_FILE
-Program_Uninstaller_Icon="icon-uninstall.png"	#=> PROGRAM_UNINSTALLER_ICON
+Program_Uninstaller_File="ish-software-uninstaller.sh"			#=> PROGRAM_UNINSTALLER_FILE
+Program_Uninstaller_Icon="ish-software-uninstaller-icon.png"	#=> PROGRAM_UNINSTALLER_ICON
 
 
  # Additional menu categories that will include the main application shortcuts.
@@ -595,6 +595,9 @@ $(for file in "${!arr_files_sorted[@]}"; do echo "   ${arr_files_sorted[$file]}"
 		if [ $DEBUG_MODE == true ]; then echo "_CHECK_OUTPUTS - all_ok = $all_ok"; read pause; fi
 	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _CHECK_OUTPUTS ${F}${rBD}"; fi
 }
+
+######### -----------------
+######### Install USER DATA
 
 function _INSTALL_USER_DATA() {
 	# Copy user data
