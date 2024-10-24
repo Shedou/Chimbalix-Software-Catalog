@@ -21,19 +21,8 @@ all_ok=true
 # Main function, don't change!
 function _MAIN() {
 	if [ ${Arguments[$1]} == "-silent" ]; then Silent_Mode=true; Lang_Display="-silent"; fi
-	_CHECK_OS # Distro_Full_Name - Distro_Name - Distro_Version_ID
-	_SET_LOCALE
-	_PACKAGE_SETTINGS
-	
-	_PRINT_PACKAGE_INFO
-	_CHECK_MD5
-	_PRINT_INSTALL_SETTINGS
-	
-	_CREATE_TEMP
-	_PREPARE_INPUT_FILES
-	_CHECK_OUTPUTS
-	
-	_INSTALL_APP
+	_CHECK_OS; _SET_LOCALE; _PACKAGE_SETTINGS; _PRINT_PACKAGE_INFO; _CHECK_MD5; _PRINT_INSTALL_SETTINGS; _CREATE_TEMP; _PREPARE_INPUT_FILES; _CHECK_OUTPUTS
+	if [ "$Install_Mode" == "System" ]; then _INSTALL_APP_SYSTEM; else _INSTALL_APP_USER; fi
 	_PREPARE_UNINSTALLER
 }
 
@@ -44,14 +33,14 @@ function _MAIN() {
 function _PACKAGE_SETTINGS() {
 
 User_Data_Copy_Confirm=false	# Copy other data to the user's home directory: "true" / "false". Do not use this function unless necessary!
-Install_Helpers=false			# Adds "Default Applications" associations, please prepare files in "installer-data/system_files/helpers/" before using.
+Install_Helpers=true			# Adds "Default Applications" associations, please prepare files in "installer-data/system_files/helpers/" before using.
 Install_Desktop_Icons=true		# Place icons on the desktop (only for current user).
 
 Install_Mode="User"		# "System" / "User", In "User" mode, root rights are not required.
 Architecture="script"	# x86_64, x86, script, other
 
- # Unique name of the output directory. Template for automatic replacement in menu files: UNIQUE_APP_FOLDER_NAME
-Unique_App_Folder_Name="example_application_17a" # WARNING! Do not use capital letters in this place!
+ # Unique name of the output directory. Template for automatic replacement in menu files: # UNIQUE_APP_FOLDER_NAME
+Unique_App_Folder_Name="example_application_17" # WARNING! Do not use capital letters in this place!
  # WARNING! This name is also used as a template for "bin" files in the "/usr/bin" directory.
  # good: exapp-16, exApp-16.
  # BAD: Exapp-16, ExApp-16.
@@ -59,11 +48,11 @@ Unique_App_Folder_Name="example_application_17a" # WARNING! Do not use capital l
 ######### - ------------------- - #########
 ######### - Package Information - #########
 ######### - ------------------- - #########
-Header="${BG_Black}${F_Red}${Bold} -=: Software Installer Script for Chimbalix (Installer-SH v1.7a) - Lang: ${Bold}$Lang_Display${rBD} :=-${rBD}${F}\n"
+Header="${BG_Black}${F_Red}${Bold} -=: Software Installer Script for Chimbalix (Installer-SH v1.7) - Lang: ${Bold}$Lang_Display${rBD} :=-${rBD}${F}\n"
 
 Info_Name="Example Application"
 Info_Version="1.7a"
-Info_Release_Date="2024-09-22"
+Info_Release_Date="2024-10-24"
 Info_Category="Other"
 Info_Platform="Linux - Chimbalix 24.2 - 24.x"
 Info_Installed_Size="~1 MiB"
@@ -116,10 +105,10 @@ Additional_Categories="chi-other;" # ADDITIONAL_CATEGORIES
 ######### - -------------- - #########
 
 Archive_Program_Files="$Installer_Data_Path/program_files.7z"
-Archive_Program_Files_MD5="b0140093e2c9e72698b7d4f8ad9af83d"
+Archive_Program_Files_MD5=""
 
 Archive_System_Files="$Installer_Data_Path/system_files.7z"
-Archive_System_Files_MD5="0b02ea89b3899def0ea3fd67f6737fdd"
+Archive_System_Files_MD5=""
 
  # Not used if "User_Data_Copy_Confirm=false"
 Archive_User_Files="$Installer_Data_Path/user_files.7z"
@@ -239,7 +228,7 @@ function _SET_LOCALE() {
 		Str_PRINTINSTALLSETTINGS_Temp_Dir="Temporary Directory:"
 		Str_PRINTINSTALLSETTINGS_App_Inst_Dir="Application install Directory:"
 		Str_PRINTINSTALLSETTINGS_Menu_Dirs="Menu files will be installed to:"
-		Str_PRINTINSTALLSETTINGS_Bin_Dir="Bin files will be installed in:"
+		Str_PRINTINSTALLSETTINGS_Bin_Dir="Bin files will be installed to:"
 		Str_PRINTINSTALLSETTINGS_Copy_uData_To="User data will be installed in:"
 		Str_PRINTINSTALLSETTINGS_Copy_uData_To2="This feature is not recommended to use, but some applications require it, so be careful."
 		Str_PRINTINSTALLSETTINGS_Copy_uData_To3="To disable this feature, change the variable \"User_Data_Copy_Confirm=false\"."
@@ -248,6 +237,8 @@ function _SET_LOCALE() {
 		Str_PRINTINSTALLSETTINGS_System_Mode2="Root rights are required to perform the installation!"
 		Str_PRINTINSTALLSETTINGS_Before_Install="Please close all important applications before installation."
 		Str_PRINTINSTALLSETTINGS_Confirm="Enter \"y\" or \"yes\" to begin the installation."
+		Str_PRINTINSTALLSETTINGS_Helpers_Dir="Helper files will be installed to:"
+		Str_PRINTINSTALLSETTINGS_Desktop_Dir="Desktop shortcuts will be installed to:"
 		
 		Str_PREPAREINPUTFILES_Err_Unpack="Error unpacking temp files:"
 		Str_PREPAREINPUTFILES_Err_Unpack2="Try copying the installation files to another disk before running."
@@ -452,6 +443,16 @@ $Header
  -${Bold}${F_DarkGreen}$Str_PRINTINSTALLSETTINGS_Bin_Dir${F}${rBD}
    $Output_Bin_Dir"
 
+		if [ $Install_Helpers == true ]; then
+			echo -e "
+ -${Bold}${F_DarkGreen}$Str_PRINTINSTALLSETTINGS_Helpers_Dir${F}${rBD}
+   $Output_Helpers_Dir"; fi
+
+		if [ $Install_Desktop_Icons == true ]; then
+			echo -e "
+ -${Bold}${F_DarkGreen}$Str_PRINTINSTALLSETTINGS_Desktop_Dir${F}${rBD}
+   $Output_Desktop_Dir"; fi
+
 		if [ $User_Data_Copy_Confirm == true ]; then
 			echo -e "
  -$Str_ATTENTION! ${Bold}${F_DarkGreen}$Str_PRINTINSTALLSETTINGS_Copy_uData_To${F}${rBD} $Output_User_Home
@@ -521,6 +522,8 @@ function _PREPARE_INPUT_FILES() {
 		#done
 		
 		Input_Bin_Dir="$Temp_Dir/bin"
+		Input_Helpers_Dir="$Temp_Dir/helpers"
+		Input_Desktop_Dir="$Temp_Dir/desktop"
 		Input_Menu_Files_Dir="$Temp_Dir/menu/applications-merged"
 		Input_Menu_Desktop_Dir="$Temp_Dir/menu/desktop-directories/apps"
 		Input_Menu_Apps_Dir="$Temp_Dir/menu/apps"
@@ -530,15 +533,26 @@ function _PREPARE_INPUT_FILES() {
 		Files_Menu_Dir=( $(ls "$Input_Menu_Desktop_Dir") )
 		Files_Menu_Apps=( $(ls "$Input_Menu_Apps_Dir") )
 		
-		local arr_0=(); local arr_1=(); local arr_2=(); local arr_3=()
+		local arr_0=(); local arr_1=(); local arr_2=(); local arr_3=(); local arr_4=(); local arr_5=()
 		All_Files=()
 		
 		for file in "${!Files_Bin_Dir[@]}"; do arr_0[$file]="$Output_Bin_Dir/${Files_Bin_Dir[$file]}"; done
-		for file in "${!Files_Menu[@]}"; do arr_1[$file]="$Output_Menu_Files/${Files_Menu[$file]}"; done
-		for file in "${!Files_Menu_Dir[@]}"; do arr_2[$file]="$Output_Menu_DDir/${Files_Menu_Dir[$file]}"; done
-		for file in "${!Files_Menu_Apps[@]}"; do arr_3[$file]="$Output_Menu_Apps/${Files_Menu_Apps[$file]}"; done
 		
-		All_Files=("$Output_Install_Dir" "${arr_0[@]}" "${arr_1[@]}" "${arr_2[@]}" "${arr_3[@]}")
+		if [ $Install_Helpers == true ]; then 
+			Files_Helpers_Dir=( $(ls "$Input_Helpers_Dir") )
+			for file in "${!Files_Helpers_Dir[@]}"; do arr_1[$file]="$Output_Helpers_Dir/${Files_Helpers_Dir[$file]}"; done
+		fi
+		
+		if [ $Install_Desktop_Icons == true ]; then 
+			Files_Desktop_Dir=( $(ls "$Input_Desktop_Dir") )
+			for file in "${!Files_Desktop_Dir[@]}"; do arr_2[$file]="$Output_Desktop_Dir/${Files_Desktop_Dir[$file]}"; done
+		fi
+		
+		for file in "${!Files_Menu[@]}"; do arr_3[$file]="$Output_Menu_Files/${Files_Menu[$file]}"; done
+		for file in "${!Files_Menu_Dir[@]}"; do arr_4[$file]="$Output_Menu_DDir/${Files_Menu_Dir[$file]}"; done
+		for file in "${!Files_Menu_Apps[@]}"; do arr_5[$file]="$Output_Menu_Apps/${Files_Menu_Apps[$file]}"; done
+		
+		All_Files=("$Output_Install_Dir" "${arr_0[@]}" "${arr_1[@]}" "${arr_2[@]}" "${arr_3[@]}" "${arr_4[@]}" "${arr_5[@]}")
 		all_ok=true
 		
 		if [ $DEBUG_MODE == true ]; then echo "_PREPARE_INPUT_FILES - all_ok = $all_ok"; read pause; fi
@@ -580,105 +594,75 @@ $(for file in "${!arr_files_sorted[@]}"; do echo "   ${arr_files_sorted[$file]}"
 	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _CHECK_OUTPUTS ${F}${rBD}"; fi
 }
 
+function _INSTALL_USER_DATA() {
+	# Copy user data
+	if [ $User_Data_Copy_Confirm == true ]; then
+		if [ $Silent_Mode == false ]; then echo " $Str_INSTALLAPP_Copy_uFiles"; fi
+		
+		if ! "$Szip_bin" x -aoa "$Archive_User_Files" -o"$Output_User_Home/" &> /dev/null; then
+			echo " $Str_INSTALLAPP_Copy_uFiles_Err"
+			read pause
+		fi
+	fi
+	if [ $DEBUG_MODE == true ]; then echo "_INSTALL_APP - all_ok = $all_ok"; read pause; fi
+}
 
-######### -------------------
-######### Install application
+######### -------------------------------
+######### Install application (USER MODE)
 
-function _INSTALL_APP() {
+function _INSTALL_APP_USER() {
 	if [ $all_ok == true ]; then all_ok=false
 		if [ $Silent_Mode == false ]; then
 			clear
 			echo -e "\
 $Header
- ${Bold}${F_Cyan}$Str_INSTALL_APP_Head${F}${rBD}"
+ ${Bold}${F_Cyan}$Str_INSTALL_APP_Head${F}${rBD}"; fi
+		
+		if [ $Silent_Mode == false ]; then echo " $Str_INSTALL_APP_Create_Out"; fi
+		
+		# Check Output Folder
+		if [ ! -e "$Output_Install_Dir" ]; then if ! mkdir -p "$Output_Install_Dir"; then _ABORT "$Str_INSTALL_APP_No_Rights"; fi
+		else if ! touch "$Output_Install_Dir"; then _ABORT "$Str_INSTALL_APP_No_Rights"; fi; fi
+		
+		if [ $Silent_Mode == false ]; then echo " $Str_INSTALLAPP_Unpack_App"; fi
+		
+		if ! "$Szip_bin" x -snld -aoa "$Archive_Program_Files" -o"$Output_Install_Dir/" &> /dev/null; then
+			echo -e "\n $Str_ATTENTION $Str_INSTALLAPP_Unpack_Err"
+			echo " $Str_INSTALLAPP_Unpack_Err2"
+			echo -e "\n $Str_INSTALLAPP_Unpack_Err_Continue"
+			read confirm_unpack
+			if [ "$confirm_unpack" == "y" ] || [ "$confirm_unpack" == "yes" ]; then echo "  $Str_INSTALLAPP_Unpack_Continue"
+			else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_INSTALLAPP_Unpack_Err_Abort${F}${rBD}"; fi
 		fi
 		
-		# Copy Application files
+		if [ $Silent_Mode == false ]; then echo " $Str_INSTALLAPP_Install_Bin_Menu"; fi
 		
-		if [ $Silent_Mode == false ]; then
-			echo " $Str_INSTALL_APP_Create_Out"
-		fi
+		# Check Bin folder
+		if [ ! -e "$Output_Bin_Dir" ]; then mkdir "$Output_Bin_Dir"; fi
 		
-		if [ ! -e "$Output_Install_Dir" ]; then
-			if [ "$Install_Mode" == "System" ]; then if ! sudo mkdir -p "$Output_Install_Dir"; then _ABORT "$Str_INSTALL_APP_No_Rights"; fi; fi
-			if [ "$Install_Mode" == "User" ]; then if ! mkdir -p "$Output_Install_Dir"; then _ABORT "$Str_INSTALL_APP_No_Rights"; fi; fi
-		else
-			if [ "$Install_Mode" == "System" ]; then if ! sudo touch "$Output_Install_Dir"; then _ABORT "$Str_INSTALL_APP_No_Rights"; fi; fi
-			if [ "$Install_Mode" == "User" ]; then if ! touch "$Output_Install_Dir"; then _ABORT "$Str_INSTALL_APP_No_Rights"; fi; fi
-		fi
+		# Copy Bin files
+		cp -rf "$Input_Bin_Dir/." "$Output_Bin_Dir"
 		
-		if [ $Silent_Mode == false ]; then
-			echo " $Str_INSTALLAPP_Unpack_App"
-		fi
+		# Сopy Menu files
+		cp -rf "$Input_Menu_Files_Dir/." "$Output_Menu_Files"
+		cp -rf "$Input_Menu_Desktop_Dir/." "$Output_Menu_DDir"
+		cp -rf "$Input_Menu_Apps_Dir/." "$Output_Menu_Apps"
 		
-		if [ "$Install_Mode" == "System" ]; then
-			if ! sudo "$Szip_bin" x -snld -aoa "$Archive_Program_Files" -o"$Output_Install_Dir/" &> /dev/null; then
-				echo -e "\n $Str_ATTENTION $Str_INSTALLAPP_Unpack_Err"
-				echo " $Str_INSTALLAPP_Unpack_Err2"
-				echo -e "\n $Str_INSTALLAPP_Unpack_Err_Continue"
-				read confirm_error_unpacking
-				if [ "$confirm_error_unpacking" == "y" ] || [ "$confirm_error_unpacking" == "yes" ]; then
-					echo "  $Str_INSTALLAPP_Unpack_Continue"
-				else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_INSTALLAPP_Unpack_Err_Abort${F}${rBD}"; fi
-			fi
-		fi
+		# Install Helpers
+		if [ $Install_Helpers == true ]; then cp -rf "$Input_Helpers_Dir/." "$Output_Helpers_Dir"; fi
 		
-		if [ "$Install_Mode" == "User" ]; then
-			if ! "$Szip_bin" x -snld -aoa "$Archive_Program_Files" -o"$Output_Install_Dir/" &> /dev/null; then
-				echo -e "\n $Str_ATTENTION $Str_INSTALLAPP_Unpack_Err"
-				echo " $Str_INSTALLAPP_Unpack_Err2"
-				echo -e "\n $Str_INSTALLAPP_Unpack_Err_Continue"
-				read confirm_error_unpacking
-				if [ "$confirm_error_unpacking" == "y" ] || [ "$confirm_error_unpacking" == "yes" ]; then
-					echo "  $Str_INSTALLAPP_Unpack_Continue"
-				else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_INSTALLAPP_Unpack_Err_Abort${F}${rBD}"; fi
-			fi
-		fi
-		
-		if [ $Silent_Mode == false ]; then
-			echo " $Str_INSTALLAPP_Install_Bin_Menu" 
-		fi
-		
-		######### System MODE #########
-		if [ "$Install_Mode" == "System" ]; then
-			echo " $Str_INSTALLAPP_Set_Rights"
-			sudo chmod -R $Out_App_Folder_Permissions "$Output_Install_Dir"
-			sudo chown -R $Out_App_Folder_Owner "$Output_Install_Dir"
+		# Install Desktop files
+		if [ $Install_Desktop_Icons == true ]; then
+			cp -rf "$Input_Desktop_Dir/." "$Output_Desktop_Dir"
 			
-			# Copy Bin files
-			sudo cp -rf "$Input_Bin_Dir/." "$Output_Bin_Dir"
-			
-			# Сopy Menu files
-			sudo cp -rf "$Input_Menu_Files_Dir/." "$Output_Menu_Files"
-			sudo cp -rf "$Input_Menu_Desktop_Dir/." "$Output_Menu_DDir"
-			sudo cp -rf "$Input_Menu_Apps_Dir/." "$Output_Menu_Apps"
-		fi
-	
-		######### User MODE #########
-		if [ "$Install_Mode" == "User" ]; then
-			
-			if [ ! -e "$Output_Bin_Dir" ]; then mkdir "$Output_Bin_Dir"; fi
-			
-			# Copy Bin files
-			cp -rf "$Input_Bin_Dir/." "$Output_Bin_Dir"
-			
-			# Сopy Menu files
-			cp -rf "$Input_Menu_Files_Dir/." "$Output_Menu_Files"
-			cp -rf "$Input_Menu_Desktop_Dir/." "$Output_Menu_DDir"
-			cp -rf "$Input_Menu_Apps_Dir/." "$Output_Menu_Apps"
+			# Trust Desktop files
+			for file in "${!Files_Desktop_Dir[@]}"; do
+				"/portsoft/script/chimbalix-scripts/context-menu/tools/gio-trust.sh" -trust --silent "$Output_Desktop_Dir/${Files_Desktop_Dir[$file]}"
+			done
 		fi
 		
 		# Copy user data
-		if [ $User_Data_Copy_Confirm == true ]; then
-			if [ $Silent_Mode == false ]; then
-				echo " $Str_INSTALLAPP_Copy_uFiles"
-			fi
-			
-			if ! "$Szip_bin" x -aoa "$Archive_User_Files" -o"$Output_User_Home/" &> /dev/null; then
-				echo " $Str_INSTALLAPP_Copy_uFiles_Err"
-				read pause
-			fi
-		fi
+		if [ $User_Data_Copy_Confirm == true ]; then _INSTALL_USER_DATA; fi
 		
 		all_ok=true
 		
@@ -686,6 +670,69 @@ $Header
 	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _INSTALL_APP ${F}${rBD}"; fi
 }
 
+######### ---------------------------------
+######### Install application (SYSTEM MODE)
+
+function _INSTALL_APP_SYSTEM() {
+	if [ $all_ok == true ]; then all_ok=false
+		if [ $Silent_Mode == false ]; then
+			clear
+			echo -e "\
+$Header
+ ${Bold}${F_Cyan}$Str_INSTALL_APP_Head${F}${rBD}"; fi
+		
+		if [ $Silent_Mode == false ]; then echo " $Str_INSTALL_APP_Create_Out"; fi
+		
+		# Check Output Folder
+		if [ ! -e "$Output_Install_Dir" ]; then if ! sudo mkdir -p "$Output_Install_Dir"; then _ABORT "$Str_INSTALL_APP_No_Rights"; fi
+		else if ! sudo touch "$Output_Install_Dir"; then _ABORT "$Str_INSTALL_APP_No_Rights"; fi; fi
+		
+		if [ $Silent_Mode == false ]; then echo " $Str_INSTALLAPP_Unpack_App"; fi
+		
+		if ! sudo "$Szip_bin" x -snld -aoa "$Archive_Program_Files" -o"$Output_Install_Dir/" &> /dev/null; then
+			echo -e "\n $Str_ATTENTION $Str_INSTALLAPP_Unpack_Err"
+			echo " $Str_INSTALLAPP_Unpack_Err2"
+			echo -e "\n $Str_INSTALLAPP_Unpack_Err_Continue"
+			read confirm_error_unpacking
+			if [ "$confirm_error_unpacking" == "y" ] || [ "$confirm_error_unpacking" == "yes" ]; then echo "  $Str_INSTALLAPP_Unpack_Continue"
+			else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_INSTALLAPP_Unpack_Err_Abort${F}${rBD}"; fi
+		fi
+		
+		if [ $Silent_Mode == false ]; then echo " $Str_INSTALLAPP_Install_Bin_Menu"; fi
+		
+		echo " $Str_INSTALLAPP_Set_Rights"
+		sudo chmod -R $Out_App_Folder_Permissions "$Output_Install_Dir"
+		sudo chown -R $Out_App_Folder_Owner "$Output_Install_Dir"
+		
+		# Copy Bin files
+		sudo cp -rf "$Input_Bin_Dir/." "$Output_Bin_Dir"
+		
+		# Сopy Menu files
+		sudo cp -rf "$Input_Menu_Files_Dir/." "$Output_Menu_Files"
+		sudo cp -rf "$Input_Menu_Desktop_Dir/." "$Output_Menu_DDir"
+		sudo cp -rf "$Input_Menu_Apps_Dir/." "$Output_Menu_Apps"
+		
+		# Install Helpers
+		if [ $Install_Helpers == true ]; then sudo cp -rf "$Input_Helpers_Dir/." "$Output_Helpers_Dir"; fi
+		
+		# Install Desktop files
+		if [ $Install_Desktop_Icons == true ]; then
+			cp -rf "$Input_Desktop_Dir/." "$Output_Desktop_Dir"
+			
+			# Trust Desktop files
+			for file in "${!Files_Desktop_Dir[@]}"; do
+				"/portsoft/script/chimbalix-scripts/context-menu/tools/gio-trust.sh" -trust --silent "$Output_Desktop_Dir/${Files_Desktop_Dir[$file]}"
+			done
+		fi
+		
+		# Copy user data
+		if [ $User_Data_Copy_Confirm == true ]; then _INSTALL_USER_DATA; fi
+		
+		all_ok=true
+		
+		if [ $DEBUG_MODE == true ]; then echo "_INSTALL_APP - all_ok = $all_ok"; read pause; fi
+	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _INSTALL_APP ${F}${rBD}"; fi
+}
 
 ######### ------------------------
 ######### Prepare uninstaller file

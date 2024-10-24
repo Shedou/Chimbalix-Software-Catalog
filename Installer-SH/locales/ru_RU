@@ -74,6 +74,8 @@ Str_PRINTINSTALLSETTINGS_System_Mode="Используйте режим \"System
 Str_PRINTINSTALLSETTINGS_System_Mode2="Для установки требуются права root!"
 Str_PRINTINSTALLSETTINGS_Before_Install="Перед установкой закройте все важные приложения."
 Str_PRINTINSTALLSETTINGS_Confirm="Введите \"y\" or \"yes\" для начала установки."
+Str_PRINTINSTALLSETTINGS_Helpers_Dir="Файлы \"приложений по умолчанию\" (Helpers) будут установлены в:"
+Str_PRINTINSTALLSETTINGS_Desktop_Dir="Ярлыки рабочего стола будут установлены в:"
 
 Str_PREPAREINPUTFILES_Err_Unpack="Ошибка распаковки временных файлов:"
 Str_PREPAREINPUTFILES_Err_Unpack2="Попробуйте перед запуском скопировать установочные файлы на другой диск."
