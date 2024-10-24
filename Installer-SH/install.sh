@@ -42,8 +42,8 @@ Architecture="script"	# x86_64, x86, script, other
  # Unique name of the output directory. Template for automatic replacement in menu files: # UNIQUE_APP_FOLDER_NAME
 Unique_App_Folder_Name="example_application_17" # WARNING! Do not use capital letters in this place!
  # WARNING! This name is also used as a template for "bin" files in the "/usr/bin" directory.
- # good: exapp-16, exApp-16.
- # BAD: Exapp-16, ExApp-16.
+ # good: ex_app-16, exapp-16.
+ # BAD: Ex_app-16, ExApp-16.
 
 ######### - ------------------- - #########
 ######### - Package Information - #########
@@ -80,14 +80,17 @@ fi
  # Please manually prepare the menu files in the "installer-data/system_files/" directory before packaging the application,
  # this functionality does not allow you to fully customize the menu files.
  # Use the variable names given in the comments to simplify the preparation of menu files.
-Program_Executable_File="example-application" # PROGRAM_EXECUTABLE_FILE
-Program_Name_In_Menu="Example Application 1.7" # PROGRAM_NAME_IN_MENU
-Program_Icon_In_Menu="icon.png" # PROGRAM_ICON_IN_MENU
-Program_Exe_Run_In_Terminal="true" # PROGRAM_EXE_RUN_IN_TERMINAL
-Program_Uninstaller_File="uninstall.sh"  # PROGRAM_UNINSTALLER_FILE
-Program_Uninstaller_Icon="icon-uninstall.png"  # PROGRAM_UNINSTALLER_ICON
-Menu_Directory_Name="Example Application 1.7" # MENU_DIRECTORY_NAME
-Menu_Directory_Icon="icon.png" # MENU_DIRECTORY_ICON
+Menu_Directory_Name="Example Application 1.7"	# MENU_DIRECTORY_NAME
+Menu_Directory_Icon="icon.png"					# MENU_DIRECTORY_ICON
+
+Program_Executable_File="example-application"	# PROGRAM_EXECUTABLE_FILE
+Program_Name_In_Menu="Example Application 1.7"	# PROGRAM_NAME_IN_MENU
+Program_Icon_In_Menu="icon.png"					# PROGRAM_ICON_IN_MENU
+Program_Exe_Run_In_Terminal="true"				# PROGRAM_EXE_RUN_IN_TERMINAL
+
+Program_Uninstaller_File="uninstall.sh"			# PROGRAM_UNINSTALLER_FILE
+Program_Uninstaller_Icon="icon-uninstall.png"	# PROGRAM_UNINSTALLER_ICON
+
 
  # Additional menu categories that will include the main application shortcuts.
  # Please do not use this variable in the uninstaller shortcut file.
