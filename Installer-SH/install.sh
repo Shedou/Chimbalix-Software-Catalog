@@ -86,6 +86,7 @@ Program_Executable_File="example-application"	#=> PROGRAM_EXECUTABLE_FILE
 Program_Name_In_Menu="Example Application 1.7"	#=> PROGRAM_NAME_IN_MENU
 Program_Icon_In_Menu="icon.png"					#=> PROGRAM_ICON_IN_MENU
 Program_Exe_Run_In_Terminal="true"				#=> PROGRAM_EXE_RUN_IN_TERMINAL
+Program_Install_Mode="$Install_Mode"			#=> PROGRAM_INSTALL_MODE
 
 Program_Uninstaller_File="ish-software-uninstaller.sh"			#=> PROGRAM_UNINSTALLER_FILE
 Program_Uninstaller_Icon="ish-software-uninstaller-icon.png"	#=> PROGRAM_UNINSTALLER_ICON
@@ -505,6 +506,7 @@ function _PREPARE_INPUT_FILES() {
 			_PREPARE_INPUT_FILES_GREP "PROGRAM_EXECUTABLE_FILE" "$Program_Executable_File"
 			_PREPARE_INPUT_FILES_GREP "PROGRAM_EXE_RUN_IN_TERMINAL" "$Program_Exe_Run_In_Terminal"
 			_PREPARE_INPUT_FILES_GREP "PROGRAM_ICON_IN_MENU" "$Program_Icon_In_Menu"
+			_PREPARE_INPUT_FILES_GREP "PROGRAM_INSTALL_MODE" "$Program_Install_Mode"
 			_PREPARE_INPUT_FILES_GREP "PROGRAM_UNINSTALLER_FILE" "$Program_Uninstaller_File"
 			_PREPARE_INPUT_FILES_GREP "PROGRAM_UNINSTALLER_ICON" "$Program_Uninstaller_Icon"
 			_PREPARE_INPUT_FILES_GREP "ADDITIONAL_CATEGORIES" "$Additional_Categories"
