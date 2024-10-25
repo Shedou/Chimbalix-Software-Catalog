@@ -14,7 +14,7 @@ BG_Red='\033[101m'; BG_Green='\033[102m'; BG_Yellow='\033[103m'; BG_Blue='\033[1
 ######### --------- #########
 ######### Base vars #########
 Arguments=("$@"); Path_To_Script="$( dirname "$(readlink -f "$0")")"
-User_Home=~; User_Name=$USER; DEBUG_MODE=false; Silent_Mode=false; Use_Default_Locale=false
+User_Home=$HOME; User_Name=$USER; DEBUG_MODE=false; Silent_Mode=false; Use_Default_Locale=false
 Installer_Data_Path="$Path_To_Script/installer-data"; Szip_bin="$Installer_Data_Path/tools/7zip/7zzs"; all_ok=true
 source "$User_Home/.config/user-dirs.dirs"
 
