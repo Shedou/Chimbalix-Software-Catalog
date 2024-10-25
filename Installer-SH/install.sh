@@ -16,6 +16,7 @@ BG_Red='\033[101m'; BG_Green='\033[102m'; BG_Yellow='\033[103m'; BG_Blue='\033[1
 Arguments=("$@"); Path_To_Script="$( dirname "$(readlink -f "$0")")"
 User_Home=~; User_Name=$USER; DEBUG_MODE=false; Silent_Mode=false; Use_Default_Locale=false
 Installer_Data_Path="$Path_To_Script/installer-data"; Szip_bin="$Installer_Data_Path/tools/7zip/7zzs"; all_ok=true
+source "$User_Home/.config/user-dirs.dirs"
 
 # Main function, don't change!
 function _MAIN() {
@@ -135,7 +136,7 @@ Temp_Dir="/tmp/$Unique_App_Folder_Name""_$RANDOM""_$RANDOM" # TEMP Directory
 
 Out_User_Bin_Dir="$User_Home/.local/bin" # Works starting from Chimbalix 24.4
 Out_User_Helpers_Dir="$User_Home/.local/share/xfce4/helpers"
-Out_User_Desktop_Dir="$User_Home/Desktop"
+Out_User_Desktop_Dir="$XDG_DESKTOP_DIR"
 Out_User_Menu_files="$User_Home/.config/menus/applications-merged"
 Out_User_Menu_DDir="$User_Home/.local/share/desktop-directories/apps"
 Out_User_Menu_Apps="$User_Home/.local/share/applications/apps"
