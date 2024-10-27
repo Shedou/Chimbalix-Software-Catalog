@@ -31,9 +31,10 @@
 
 Path_To_Script="$( dirname "$(readlink -f "$0")")"
 
-cp -r "$Path_To_Script/test/applications/". "$HOME/.local/share/applications"
+rm -r "$HOME/.local/share/applications/apps"
 
-cp -r "$Path_To_Script/test/desktop-directories/". "$HOME/.local/share/desktop-directories"
+rm -r "$HOME/.local/share/desktop-directories/apps"
 
-cp -r "$Path_To_Script/test/menus/applications-merged/". "$HOME/.config/menus/applications-merged"
+rm -r "$HOME/.config/menus/applications-merged/apps.menu"
+rm -r "$HOME/.config/menus//applications-merged/test.menu"
 
