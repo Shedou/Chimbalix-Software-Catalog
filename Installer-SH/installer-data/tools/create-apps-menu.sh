@@ -31,6 +31,10 @@
 
 Path_To_Script="$( dirname "$(readlink -f "$0")")"
 
+if [ ! -e "$HOME/.local/share/applications" ]; then mkdir -p "$HOME/.local/share/applications"; fi
+if [ ! -e "$HOME/.local/share/desktop-directories" ]; then mkdir -p "$HOME/.local/share/desktop-directories"; fi
+if [ ! -e "$HOME/.config/menus/applications-merged" ]; then mkdir -p "$HOME/.config/menus/applications-merged"; fi
+
 cp -r "$Path_To_Script/test/applications/". "$HOME/.local/share/applications"
 
 cp -r "$Path_To_Script/test/desktop-directories/". "$HOME/.local/share/desktop-directories"
