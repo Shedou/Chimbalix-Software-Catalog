@@ -8,12 +8,12 @@ Encoding=UTF-8
 NoDisplay=false
 Hidden=false
 
-Name=Applications test
+Name=Applications
 Comment=Other third-party applications
 #GenericName=
 
 Icon=firefox
 
 # - Translations:
-Name[ru]=Приложения test
+Name[ru]=Приложения
 Comment[ru]=Прочие сторонние приложения

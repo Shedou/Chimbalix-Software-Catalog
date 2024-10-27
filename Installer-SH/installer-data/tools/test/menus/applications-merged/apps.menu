@@ -2,8 +2,8 @@
 <Menu><!-- Level 0 -->
 	<Name>Applications</Name>
 	<Menu><!-- Applications -->
-		<Name>apps2</Name>
-		<Directory>apps2/apps2.directory</Directory>
+		<Name>apps</Name>
+		<Directory>apps/apps.directory</Directory>
 		<Include><Category>apps</Category></Include>
 	</Menu>
 </Menu>

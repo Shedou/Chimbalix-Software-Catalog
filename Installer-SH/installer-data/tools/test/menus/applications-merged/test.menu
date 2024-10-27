@@ -2,15 +2,12 @@
 <Menu><!-- Level 0 -->
 	<Name>Applications</Name>
 	<Menu><!-- apps category -->
-		<Name>apps2</Name>
+		<Name>apps</Name>
 		<Menu><!-- SubMenu -->
 			<Name>test</Name>
-			<Directory>apps2/test/test.directory</Directory>
+			<Directory>apps/test/test.directory</Directory>
 			<Include>
 				<Category>test</Category>
-				<!-- Example
-				<Filename>apps-Apache_NetBeans_v22-Apache_NetBeans_v22-uninstall.desktop</Filename>
-				-->
 			</Include>
 		</Menu>
 	</Menu>
