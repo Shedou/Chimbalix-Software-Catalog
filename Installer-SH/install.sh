@@ -21,7 +21,9 @@ source "$User_Home/.config/user-dirs.dirs"
 # Main function, don't change!
 function _MAIN() {
 	if [ ${Arguments[$1]} == "-silent" ]; then Silent_Mode=true; Lang_Display="-silent"; fi
-	_CHECK_OS; _SET_LOCALE; _PACKAGE_SETTINGS; _PRINT_PACKAGE_INFO; _CHECK_MD5; _PRINT_INSTALL_SETTINGS; _CREATE_TEMP; _PREPARE_INPUT_FILES; _CHECK_OUTPUTS
+	_CHECK_OS; _SET_LOCALE; _PACKAGE_SETTINGS;
+	# TEST # source "$Installer_Data_Path/tools/prepare-portsoft-menu.sh"
+	_PRINT_PACKAGE_INFO; _CHECK_MD5; _PRINT_INSTALL_SETTINGS; _CREATE_TEMP; _PREPARE_INPUT_FILES; _CHECK_OUTPUTS
 	if [ "$Install_Mode" == "System" ]; then _INSTALL_APP_SYSTEM; else _INSTALL_APP_USER; fi; _PREPARE_UNINSTALLER
 }
 
@@ -39,7 +41,7 @@ Install_Mode="User"		# "System" / "User", In "User" mode, root rights are not re
 Architecture="script"	# x86_64, x86, script, other
 
  # Unique name of the output directory.
-Unique_App_Folder_Name="example_application_17" #=> UNIQUE_APP_FOLDER_NAME
+Unique_App_Folder_Name="example_application_18" #=> UNIQUE_APP_FOLDER_NAME
  # WARNING! Do not use capital letters in this place!
  # WARNING! This name is also used as a template for "bin" files in the "/usr/bin" directory.
  # good: ex_app-16, exapp-16.
@@ -48,7 +50,7 @@ Unique_App_Folder_Name="example_application_17" #=> UNIQUE_APP_FOLDER_NAME
 ######### - ------------------- - #########
 ######### - Package Information - #########
 ######### - ------------------- - #########
-Header="${BG_Black}${F_Red}${Bold} -=: Software Installer Script for Chimbalix (Installer-SH v1.7) - Lang: ${Bold}$Lang_Display${rBD} :=-${rBD}${F}\n"
+Header="${BG_Black}${F_Red}${Bold} -=: Software Installer Script for Chimbalix (Installer-SH v1.8) - Lang: ${Bold}$Lang_Display${rBD} :=-${rBD}${F}\n"
 
 Info_Name="Example Application"
 Info_Version="1.8"
@@ -195,6 +197,20 @@ function _SET_LOCALE() {
 		Str_ABORT_Exit="Press Enter or close the window to exit."
 		
 		Str_CHECKOS_No_Distro_Name="The name of the operating system / kernel is not defined!"
+		
+		Str_BASEINFO_Head="Installing basic components:"
+		Str_BASEINFO_Warning="Warning! If you are here - you are not using Chimbalix,\n  other Linux distributions require some preparation, the following components must be installed:"
+		Str_BASEINFO_PortSoft="PortSoft directory:"
+		Str_BASEINFO_PortSoft_Full="The base directory for placing program files, first appeared in the Chimbalix distribution."
+		Str_BASEINFO_MenuApps="Stable \"Applications\" menu category:"
+		Str_BASEINFO_MenuApps_Full="Stable \"Applications\" category in the menu for placing shortcuts to installed programs.\n   Support for XDG standards is required."
+		Str_BASEINFO_Attention="Attention! The above components will be installed according to the current installation mode.\n  AFTER CONFIRMATION, THIS ACTION CANNOT BE CANCELLED!\n  For proper operation, your distribution must support the XDG standard!\n  The menu must also support subcategories!"
+		Str_BASEINFO_Confirm="Start the installation process? Enter \"y\" or \"yes\" to confirm."
+		
+		Str_BASECHECKMD5PRINT_Hash_Not_Match="The Base Data archive hash sum does not match the value specified in the settings!"
+		Str_BASECHECKMD5PRINT_Hash_Not_Match2="The files may have been copied with errors or modified! Be careful!"
+		Str_BASECHECKMD5PRINT_Expected_bHash="Expected MD5 hash of \"Base Data\":"
+		Str_BASECHECKMD5PRINT_Real_bHash="Real MD5 hash of \"Base Data\":"
 		
 		Str_PACKAGEINFO_Head="Software Info:"
 		Str_PACKAGEINFO_Name="Name:"

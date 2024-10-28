@@ -3,20 +3,15 @@
 
 # Larger size - better compression and more RAM required for unpacking. (256m dictionary requires 256+ MB of RAM for unpacking)
 # For applications 150-200 MiB in size, use a dictionary size of 32 - 128m, it is not recommended to use a dictionary size greater than 256m.
-Dictionary_Size_Program_Files="32m"
-Dictionary_Size_System_Files="8m"
-Dictionary_Size_User_Files="8m"
-
+Dictionary_Size_Base_Data="8m"
 
 Path_To_Script="$( dirname "$(readlink -f "$0")")"
 Spacer="\n ===========================================\n ===========================================\n ==========================================="
 
-Szip_bin="$Path_To_Script/tools/7zip/7zzs"
+Szip_bin="$Path_To_Script/7zip/7zzs"
 MD5_File="$Path_To_Script/MD5-Hash.txt"
 
-Program_Files="$Path_To_Script/program_files"
-System_Files="$Path_To_Script/system_files"
-User_Files="$Path_To_Script/user_files"
+Base_Data="$Path_To_Script/base_data"
 
 function _pack_archive() {
 	Name_File="$1"
@@ -33,9 +28,7 @@ function _pack_archive() {
 	fi
 }
 
-_pack_archive "$Program_Files" "$Dictionary_Size_Program_Files"
-_pack_archive "$System_Files" "$Dictionary_Size_System_Files"
-_pack_archive "$User_Files" "$Dictionary_Size_User_Files"
+_pack_archive "$Base_Data" "$Dictionary_Size_Base_Data"
 
 echo -e "$Spacer"
 echo -e "\n Pause..."
