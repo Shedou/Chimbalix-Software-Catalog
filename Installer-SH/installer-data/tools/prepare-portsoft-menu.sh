@@ -111,6 +111,9 @@ function _BASE_INSTALL_SYSTEM() {
 	
 	sudo cp -rf "$Base_Temp_Dir/desktop-directories/apps/". "$Output_Menu_DDir"
 	sudo cp -rf "$Base_Temp_Dir/menus/applications-merged/". "$Output_Menu_Files"
+	
+	if [ ! -e "$Out_PortSoft_System" ]; then sudo mkdir -p "$Out_PortSoft_System"; fi
+	sudo cp -rf "$Base_Temp_Dir/portsoft". "$Out_PortSoft_System"
 }
 
 function _BASE_INSTALL_USER() {
@@ -120,6 +123,9 @@ function _BASE_INSTALL_USER() {
 	
 	cp -rf "$Base_Temp_Dir/desktop-directories/apps/". "$Output_Menu_DDir"
 	cp -rf "$Base_Temp_Dir/menus/applications-merged/". "$Output_Menu_Files"
+	
+	if [ ! -e "$Out_PortSoft_User" ]; then mkdir -p "$Out_PortSoft_User"; fi
+	cp -rf "$Base_Temp_Dir/portsoft". "$Out_PortSoft_User"
 }
 
 _BASE_MAIN
