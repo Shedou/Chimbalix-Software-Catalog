@@ -26,7 +26,7 @@ function _MAIN() {
 	_CHECK_OS; _SET_LOCALE; _PACKAGE_SETTINGS;
 	printf '\033[8;30;110t' # Resize terminal Window
 	if [ "$Distro_Name" != "Chimbalix" ]; then
-		if [ ! -e "$Output_PortSoft" ]; then
+		if [ ! -e "$Output_PortSoft" ] || [ ! -e "$Output_Menu_DDir" ]; then
 			if ! [[ -x "$Tool_Prepare_Base" ]]; then chmod +x "$Tool_Prepare_Base"; fi
 			source "$Tool_Prepare_Base"
 		fi
@@ -62,7 +62,7 @@ Header="${BG_Black}${F_Red}${Bold} -=: Software Installer Script for Chimbalix (
 
 Info_Name="Example Application"
 Info_Version="1.8"
-Info_Release_Date="2024-10-26"
+Info_Release_Date="2024-10-29"
 Info_Category="Other"
 Info_Platform="Linux - Chimbalix 24.2+, Linux Mint 21.1 xfce"
 Info_Installed_Size="~1 MiB"
