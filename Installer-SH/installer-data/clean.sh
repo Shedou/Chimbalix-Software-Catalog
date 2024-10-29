@@ -4,7 +4,7 @@
 Path_To_Script="$( dirname "$(readlink -f "$0")")"
 remove_ok=false
 
-echo "Removes unnecessary files and directories. USE ONLY AFTER COMPLETING AND TESTING THE PACKAGE. \"y\" to delete..."
+echo -e " Removes unnecessary files and directories.\n USE ONLY AFTER COMPLETING AND TESTING THE PACKAGE.\n \"y\" to delete..."
 
 read confirm
 if [ "$confirm" == "y" ] || [ "$confirm" == "yes" ]; then remove_ok=true
