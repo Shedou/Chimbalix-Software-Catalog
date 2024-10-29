@@ -16,13 +16,18 @@ BG_Red='\033[101m'; BG_Green='\033[102m'; BG_Yellow='\033[103m'; BG_Blue='\033[1
 Arguments=("$@"); Path_To_Script="$( dirname "$(readlink -f "$0")")"
 User_Home=$HOME; User_Name=$USER; DEBUG_MODE=false; Silent_Mode=false; Use_Default_Locale=false
 Installer_Data_Path="$Path_To_Script/installer-data"; Szip_bin="$Installer_Data_Path/tools/7zip/7zzs"; all_ok=true
+Tool_Gio_Trust="$Installer_Data_Path/tools/gio-trust.sh"; Tool_Prepare_Base="$Installer_Data_Path/tools/prepare-portsoft-menu.sh"
+Current_DE="$XDG_CURRENT_DESKTOP"
 source "$User_Home/.config/user-dirs.dirs"
 
 # Main function, don't change!
 function _MAIN() {
 	if [ ${Arguments[$1]} == "-silent" ]; then Silent_Mode=true; Lang_Display="-silent"; fi
 	_CHECK_OS; _SET_LOCALE; _PACKAGE_SETTINGS;
-	# TEST # source "$Installer_Data_Path/tools/prepare-portsoft-menu.sh"
+	if [ "$Distro_Name" != "Chimbalix" ]; then
+		if ! [[ -x "$Tool_Prepare_Base" ]]; then chmod +x "$Tool_Prepare_Base"; fi
+		source "$Tool_Prepare_Base"
+	fi
 	_PRINT_PACKAGE_INFO; _CHECK_MD5; _PRINT_INSTALL_SETTINGS; _CREATE_TEMP; _PREPARE_INPUT_FILES; _CHECK_OUTPUTS
 	if [ "$Install_Mode" == "System" ]; then _INSTALL_APP_SYSTEM; else _INSTALL_APP_USER; fi; _PREPARE_UNINSTALLER
 }
@@ -128,8 +133,11 @@ if [ ! -e "$Archive_User_Files" ] && [ $User_Data_Copy_Confirm == true ]; then U
 ######### - ------------ - #########
 
  # Application installation directory.
-Out_Install_Dir_System="/portsoft/$Architecture/$Unique_App_Folder_Name"
-Out_Install_Dir_User="$User_Home/.local/portsoft/$Architecture/$Unique_App_Folder_Name"
+Out_PortSoft_System="/portsoft"
+Out_PortSoft_User="$User_Home/.local/portsoft"
+
+Out_Install_Dir_System="$Out_PortSoft_System/$Architecture/$Unique_App_Folder_Name"
+Out_Install_Dir_User="$Out_PortSoft_User/$Architecture/$Unique_App_Folder_Name"
 
 Out_App_Folder_Owner=root:root	# Only for "System" mode, username:group
 Out_App_Folder_Permissions=755	# Only for "System" mode.
@@ -152,13 +160,16 @@ Out_System_Menu_Apps="/usr/share/applications/apps"
 # The "PATH_TO_FOLDER" variable points to the application installation directory without the trailing slash (Output_Install_Dir), for example "/portsoft/x86_64/example_application".
 Output_Install_Dir="DONtCHANGE"; Output_Bin_Dir="DONtCHANGE"; Output_Helpers_Dir="DONtCHANGE"; Output_Desktop_Dir="$Out_User_Desktop_Dir"
 Output_Menu_Files="DONtCHANGE"; Output_Menu_DDir="DONtCHANGE"; Output_Menu_Apps="DONtCHANGE"; Output_User_Home="$User_Home"
+Output_PortSoft="DONtCHANGE"
 
 if [ "$Install_Mode" == "System" ]; then
 	Output_Install_Dir="$Out_Install_Dir_System"; Output_Bin_Dir="$Out_System_Bin_Dir"; Output_Helpers_Dir="$Out_System_Helpers_Dir"
 	Output_Menu_Files="$Out_System_Menu_Files"; Output_Menu_DDir="$Out_System_Menu_DDir"; Output_Menu_Apps="$Out_System_Menu_Apps"
+	Output_PortSoft="$Out_PortSoft_System"
 else
 	Output_Install_Dir="$Out_Install_Dir_User"; Output_Bin_Dir="$Out_User_Bin_Dir"; Output_Helpers_Dir="$Out_User_Helpers_Dir"
 	Output_Menu_Files="$Out_User_Menu_files"; Output_Menu_DDir="$Out_User_Menu_DDir"; Output_Menu_Apps="$Out_User_Menu_Apps"
+	Output_PortSoft="$Out_PortSoft_User"
 fi
 
 Output_Uninstaller="$Output_Install_Dir/$Program_Uninstaller_File" # Uninstaller template file.
@@ -201,10 +212,10 @@ function _SET_LOCALE() {
 		Str_BASEINFO_Head="Installing basic components:"
 		Str_BASEINFO_Warning="Warning! If you are here - you are not using Chimbalix,\n  other Linux distributions require some preparation, the following components must be installed:"
 		Str_BASEINFO_PortSoft="PortSoft directory:"
-		Str_BASEINFO_PortSoft_Full="The base directory for placing program files, first appeared in the Chimbalix distribution."
+		Str_BASEINFO_PortSoft_Full="Base directory for placing program files, the main application directory in the Chimbalix distribution."
 		Str_BASEINFO_MenuApps="Stable \"Applications\" menu category:"
-		Str_BASEINFO_MenuApps_Full="Stable \"Applications\" category in the menu for placing shortcuts to installed programs.\n   Support for XDG standards is required."
-		Str_BASEINFO_Attention="Attention! The above components will be installed according to the current installation mode.\n  AFTER CONFIRMATION, THIS ACTION CANNOT BE CANCELLED!\n  For proper operation, your distribution must support the XDG standard!\n  The menu must also support subcategories!"
+		Str_BASEINFO_MenuApps_Full="Stable \"Applications\" category in the menu for placing shortcuts to installed programs."
+		Str_BASEINFO_Attention="Attention! The above components will be installed according to the current installation mode.\n  AFTER CONFIRMATION, THIS ACTION CANNOT BE CANCELLED!\n  For proper operation, your distribution must support the XDG standard!\n  The menu must also support subcategories!\n  You may also need to Log Out to refresh the menu after installation."
 		Str_BASEINFO_Confirm="Start the installation process? Enter \"y\" or \"yes\" to confirm."
 		
 		Str_BASECHECKMD5PRINT_Hash_Not_Match="The Base Data archive hash sum does not match the value specified in the settings!"
@@ -684,7 +695,8 @@ $Header
 			
 			# Trust Desktop files
 			for file in "${!Files_Desktop_Dir[@]}"; do
-				"/portsoft/script/chimbalix-scripts/context-menu/tools/gio-trust.sh" -trust --silent "$Output_Desktop_Dir/${Files_Desktop_Dir[$file]}"
+				if ! [[ -x "$Tool_Gio_Trust" ]]; then chmod +x "$Tool_Gio_Trust"; fi
+				"$Tool_Gio_Trust" -trust --silent "$Output_Desktop_Dir/${Files_Desktop_Dir[$file]}"
 			done
 		fi
 		
@@ -748,7 +760,8 @@ $Header
 			
 			# Trust Desktop files
 			for file in "${!Files_Desktop_Dir[@]}"; do
-				"/portsoft/script/chimbalix-scripts/context-menu/tools/gio-trust.sh" -trust --silent "$Output_Desktop_Dir/${Files_Desktop_Dir[$file]}"
+				if ! [[ -x "$Tool_Gio_Trust" ]]; then chmod +x "$Tool_Gio_Trust"; fi
+				"$Tool_Gio_Trust" -trust --silent "$Output_Desktop_Dir/${Files_Desktop_Dir[$file]}"
 			done
 		fi
 		

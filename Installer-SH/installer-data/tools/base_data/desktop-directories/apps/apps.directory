@@ -12,7 +12,7 @@ Name=Applications
 Comment=Other third-party applications
 #GenericName=
 
-Icon=firefox
+Icon=BASE_PATH_TO_SHARE_DDIR/apps.png
 
 # - Translations:
 Name[ru]=Приложения

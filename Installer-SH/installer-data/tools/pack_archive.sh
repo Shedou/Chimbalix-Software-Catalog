@@ -3,7 +3,7 @@
 
 # Larger size - better compression and more RAM required for unpacking. (256m dictionary requires 256+ MB of RAM for unpacking)
 # For applications 150-200 MiB in size, use a dictionary size of 32 - 128m, it is not recommended to use a dictionary size greater than 256m.
-Dictionary_Size_Base_Data="8m"
+Dictionary_Size_Base_Data="2m"
 
 Path_To_Script="$( dirname "$(readlink -f "$0")")"
 Spacer="\n ===========================================\n ===========================================\n ==========================================="
@@ -20,7 +20,7 @@ function _pack_archive() {
 		if [ -e "$Name_File" ]; then
 			if [ -e "$Name_File.7z" ]; then mv -T "$Name_File.7z" "$Name_File-old""_$RANDOM""_$RANDOM"".7z"; fi
 			echo -e "$Spacer"
-			"$Szip_bin" a -snl -mx9 -m0=LZMA2:d$DSize -ms=1g -mqs=on -mmt=3 "$Name_File.7z" "$Name_File/."
+			"$Szip_bin" a -snl -mx6 -m0=LZMA2:d$DSize -ms=8m -mqs=on -mmt=3 "$Name_File.7z" "$Name_File/."
 			MD5_DATA=`md5sum "$Name_File.7z" | awk '{print $1}'`
 			echo "$(basename $Name_File.7z): $MD5_DATA" >> "$MD5_File"
 		fi

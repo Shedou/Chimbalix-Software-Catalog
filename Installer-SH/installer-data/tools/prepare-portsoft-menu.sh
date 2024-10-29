@@ -2,19 +2,18 @@
 # This Script part of "Installer-SH"
 ######### --------- #########
 all_ok=true
-Base_Header="${BG_Black}${F_Red}${Bold} -=: Prepare PortSoft-Menu for Chimbalix Installer Script (Installer-SH v1.8) :=-${rBD}${F}\n"
+Base_Header="${BG_Black}${F_Red}${Bold} -=: Prepare PortSoft and Menu (Installer-SH v1.8) :=-${rBD}${F}\n"
+Base_Temp_Dir="/tmp/chimbalix-portsoft-menu-prepare""_$RANDOM""_$RANDOM" # TEMP Directory
 
 ######### - Archive path - #########
-Archive_Base_Data="$Installer_Data_Path/base_data.7z"
+Archive_Base_Data="$Installer_Data_Path/tools/base_data.7z"
 Archive_Base_Data_MD5="681403d911cda4449e116fdf1a7c0517"
 
 function _BASE_MAIN() {
 	_BASE_PRINT_INFO
 	_BASE_CHECK_MD5
-	_BASE_PRINT_CONFIRM
 	_BASE_CREATE_TEMP
 	_BASE_PREPARE_FILES
-	_BASE_CHECK_OUTPUTS
 	if [ "$Install_Mode" == "System" ]; then _BASE_INSTALL_SYSTEM; else _BASE_INSTALL_USER; fi;
 }
 
@@ -30,9 +29,13 @@ $Base_Header
 
  -${Bold}${F_DarkYellow}$Str_BASEINFO_PortSoft${F}${rBD}
    $Str_BASEINFO_PortSoft_Full
+     $Output_PortSoft
   
  -${Bold}${F_DarkYellow}$Str_BASEINFO_MenuApps${F}${rBD}
    $Str_BASEINFO_MenuApps_Full
+     $Output_Menu_Files/apps.menu
+     $Output_Menu_DDir/apps.directory
+     $Output_Menu_DDir/apps.png
   
   $Str_BASEINFO_Attention
 
@@ -75,25 +78,48 @@ $Base_Header
 else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _BASE_CHECK_MD5 ${F}${rBD}"; fi
 }
 
-function _BASE_PRINT_CONFIRM() {
-	echo ""
+
+function _BASE_CREATE_TEMP() {
+if [ $all_ok == true ]; then all_ok=false
+	if [ -e "$Base_Temp_Dir" ]; then rm -rf "$Base_Temp_Dir"; fi;
+	mkdir "$Base_Temp_Dir"
+	all_ok=true
+	if [ $DEBUG_MODE == true ]; then echo "_BASE_CREATE_TEMP - all_ok = $all_ok"; read pause; fi
+else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _BASE_CREATE_TEMP ${F}${rBD}"; fi
+}
+
+
+function _BASE_PREPARE_INPUT_FILES_GREP() {
+	local p_text="$1"; local p_path="$2"
+	grep -rl "$p_text" "$Base_Temp_Dir" | xargs sed -i "s~$p_text~$p_path~g" &> /dev/null
 }
 
 function _BASE_PREPARE_FILES() {
-	echo ""
-}
-
-function _BASE_CHECK_OUTPUTS() {
-	echo ""
+	if ! [[ -x "$Szip_bin" ]]; then chmod +x "$Szip_bin"; fi
+	
+	if ! "$Szip_bin" x "$Archive_Base_Data" -o"$Base_Temp_Dir/" &> /dev/null; then
+		_ABORT "$Str_PREPAREINPUTFILES_Err_Unpack (_PREPARE_INPUT_FILES). $Str_PREPAREINPUTFILES_Err_Unpack2"
+	fi
+	
+	_BASE_PREPARE_INPUT_FILES_GREP "BASE_PATH_TO_SHARE_DDIR" "$Output_Menu_DDir"
 }
 
 function _BASE_INSTALL_SYSTEM() {
-	echo ""
+	if [ ! -e "$Output_Menu_Apps" ]; then sudo mkdir -p "$Output_Menu_Apps"; fi
+	if [ ! -e "$Output_Menu_DDir" ]; then sudo mkdir -p "$Output_Menu_DDir"; fi
+	if [ ! -e "$Output_Menu_Files" ]; then sudo mkdir -p "$Output_Menu_Files"; fi
+	
+	sudo cp -rf "$Base_Temp_Dir/desktop-directories/apps/". "$Output_Menu_DDir"
+	sudo cp -rf "$Base_Temp_Dir/menus/applications-merged/". "$Output_Menu_Files"
 }
 
 function _BASE_INSTALL_USER() {
-	echo ""
+	if [ ! -e "$Output_Menu_Apps" ]; then mkdir -p "$Output_Menu_Apps"; fi
+	if [ ! -e "$Output_Menu_DDir" ]; then mkdir -p "$Output_Menu_DDir"; fi
+	if [ ! -e "$Output_Menu_Files" ]; then mkdir -p "$Output_Menu_Files"; fi
+	
+	cp -rf "$Base_Temp_Dir/desktop-directories/apps/". "$Output_Menu_DDir"
+	cp -rf "$Base_Temp_Dir/menus/applications-merged/". "$Output_Menu_Files"
 }
-
 
 _BASE_MAIN
