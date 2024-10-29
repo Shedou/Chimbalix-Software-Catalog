@@ -16,6 +16,7 @@ function _BASE_MAIN() {
 	_BASE_PREPARE_FILES
 	if [ "$Install_Mode" == "System" ]; then _BASE_INSTALL_SYSTEM; else _BASE_INSTALL_USER; fi;
 	_BASE_DELETE_TEMP
+	_BASE_INSTALL_COMPLETE
 }
 
 function _BASE_PRINT_INFO() {
@@ -130,6 +131,12 @@ function _BASE_INSTALL_USER() {
 	
 	if [ ! -e "$Out_PortSoft_User" ]; then mkdir -p "$Out_PortSoft_User"; fi
 	cp -rf "$Base_Temp_Dir/portsoft/". "$Out_PortSoft_User"
+}
+
+function _BASE_INSTALL_COMPLETE() {
+	if [ "$Current_DE" == "xfce" ]; then xfce4-panel -r &> /dev/null; fi
+	echo " $Str_BASE_COMPLETE"
+	read pause
 }
 
 _BASE_MAIN

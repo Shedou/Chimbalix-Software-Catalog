@@ -37,6 +37,7 @@ Str_BASEINFO_MenuApps="Стабильная категория меню \"При
 Str_BASEINFO_MenuApps_Full="Стабильная категория \"Приложения\" в меню для размещения ярлыков установленных программ."
 Str_BASEINFO_Attention="Внимание! Вышеперечисленные компоненты будут установлены в соответствии с текущим режимом установки.\n  ПОСЛЕ ПОДТВЕРЖДЕНИЯ ЭТО ДЕЙСТВИЕ НЕЛЬЗЯ ОТМЕНИТЬ!\n  Для корректной работы ваш дистрибутив должен поддерживать стандарт XDG!\n  Меню также должно поддерживать подкатегории!\n  Вам также может потребоваться выйти из системы, чтобы обновить меню после установки."
 Str_BASEINFO_Confirm="Начать процесс установки? Введите \"y\" или \"yes\" для подтверждения."
+Str_BASE_COMPLETE="Готово, в зависимости от дистрибутива меню может появиться только после повторного входа в систему.\n Нажмите \"Enter\" чтобы продолжить."
 
 Str_BASECHECKMD5PRINT_Hash_Not_Match="The Base Data archive hash sum does not match the value specified in the settings!"
 Str_BASECHECKMD5PRINT_Hash_Not_Match2="The files may have been copied with errors or modified! Be careful!"

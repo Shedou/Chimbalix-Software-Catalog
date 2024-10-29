@@ -220,6 +220,7 @@ function _SET_LOCALE() {
 		Str_BASEINFO_MenuApps_Full="Stable \"Applications\" category in the menu for placing shortcuts to installed programs."
 		Str_BASEINFO_Attention="Attention! The above components will be installed according to the current installation mode.\n  AFTER CONFIRMATION, THIS ACTION CANNOT BE CANCELLED!\n  For proper operation, your distribution must support the XDG standard!\n  The menu must also support subcategories!\n  You may also need to Log Out to refresh the menu after installation."
 		Str_BASEINFO_Confirm="Start the installation process? Enter \"y\" or \"yes\" to confirm."
+		Str_BASE_COMPLETE="Done, depending on the distribution the menu may not appear until you log in again.\n Press \"Enter\" to continue."
 		
 		Str_BASECHECKMD5PRINT_Hash_Not_Match="The Base Data archive hash sum does not match the value specified in the settings!"
 		Str_BASECHECKMD5PRINT_Hash_Not_Match2="The files may have been copied with errors or modified! Be careful!"
@@ -802,7 +803,7 @@ function _PREPARE_UNINSTALLER() {
 			done
 		fi
 		# Restart taskbar
-		xfce4-panel -r
+		if [ "$Current_DE" == "xfce" ]; then xfce4-panel -r &> /dev/null; fi
 		
 		if [ $Silent_Mode == false ]; then _ABORT "${Bold}${F_Green}$Str_Complete_Install${F}${rBD}"; fi
 		
