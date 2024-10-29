@@ -17,7 +17,7 @@ Arguments=("$@"); Path_To_Script="$( dirname "$(readlink -f "$0")")"
 User_Home=$HOME; User_Name=$USER; DEBUG_MODE=false; Silent_Mode=false; Use_Default_Locale=false
 Installer_Data_Path="$Path_To_Script/installer-data"; Szip_bin="$Installer_Data_Path/tools/7zip/7zzs"; all_ok=true
 Tool_Gio_Trust_Xfce="$Installer_Data_Path/tools/gio-trust.sh"; Tool_Prepare_Base="$Installer_Data_Path/tools/prepare-portsoft-menu.sh"
-Current_DE="$XDG_CURRENT_DESKTOP"
+Current_DE="$XDG_SESSION_DESKTOP"
 source "$User_Home/.config/user-dirs.dirs"
 
 # Main function, don't change!
@@ -695,7 +695,7 @@ $Header
 			cp -rf "$Input_Desktop_Dir/." "$Output_Desktop_Dir"
 			
 			# Trust Desktop files
-			if [ "$Current_DE" == "XFCE" ]; then
+			if [ "$Current_DE" == "xfce" ]; then
 				for file in "${!Files_Desktop_Dir[@]}"; do
 					if ! [[ -x "$Tool_Gio_Trust_Xfce" ]]; then chmod +x "$Tool_Gio_Trust_Xfce"; fi
 					"$Tool_Gio_Trust_Xfce" -trust --silent "$Output_Desktop_Dir/${Files_Desktop_Dir[$file]}"
@@ -762,7 +762,7 @@ $Header
 			cp -rf "$Input_Desktop_Dir/." "$Output_Desktop_Dir"
 			
 			# Trust Desktop files
-			if [ "$Current_DE" == "XFCE" ]; then
+			if [ "$Current_DE" == "xfce" ]; then
 				for file in "${!Files_Desktop_Dir[@]}"; do
 					if ! [[ -x "$Tool_Gio_Trust_Xfce" ]]; then chmod +x "$Tool_Gio_Trust_Xfce"; fi
 					"$Tool_Gio_Trust_Xfce" -trust --silent "$Output_Desktop_Dir/${Files_Desktop_Dir[$file]}"
