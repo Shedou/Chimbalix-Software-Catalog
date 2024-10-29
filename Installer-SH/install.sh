@@ -16,7 +16,7 @@ BG_Red='\033[101m'; BG_Green='\033[102m'; BG_Yellow='\033[103m'; BG_Blue='\033[1
 Arguments=("$@"); Path_To_Script="$( dirname "$(readlink -f "$0")")"
 User_Home=$HOME; User_Name=$USER; DEBUG_MODE=false; Silent_Mode=false; Use_Default_Locale=false
 Installer_Data_Path="$Path_To_Script/installer-data"; Szip_bin="$Installer_Data_Path/tools/7zip/7zzs"; all_ok=true
-Tool_Gio_Trust="$Installer_Data_Path/tools/gio-trust.sh"; Tool_Prepare_Base="$Installer_Data_Path/tools/prepare-portsoft-menu.sh"
+Tool_Gio_Trust_Xfce="$Installer_Data_Path/tools/gio-trust.sh"; Tool_Prepare_Base="$Installer_Data_Path/tools/prepare-portsoft-menu.sh"
 Current_DE="$XDG_CURRENT_DESKTOP"
 source "$User_Home/.config/user-dirs.dirs"
 
@@ -24,6 +24,7 @@ source "$User_Home/.config/user-dirs.dirs"
 function _MAIN() {
 	if [ ${Arguments[$1]} == "-silent" ]; then Silent_Mode=true; Lang_Display="-silent"; fi
 	_CHECK_OS; _SET_LOCALE; _PACKAGE_SETTINGS;
+	printf '\033[8;30;110t' # Resize terminal Window
 	if [ "$Distro_Name" != "Chimbalix" ]; then
 		if ! [[ -x "$Tool_Prepare_Base" ]]; then chmod +x "$Tool_Prepare_Base"; fi
 		source "$Tool_Prepare_Base"
@@ -344,7 +345,7 @@ $Header
  -${Bold}${F_DarkYellow}$Str_PACKAGEINFO_Description${F}${rBD}
 $Info_Description
 
- -${Bold}${F_DarkGreen}$Str_PACKAGEINFO_CurrentOS${F} $Distro_Full_Name${rBD}
+ -${Bold}${F_DarkGreen}$Str_PACKAGEINFO_CurrentOS${F} $Distro_Full_Name ($Current_DE)${rBD}
  -${Bold}${F_DarkGreen}$Str_PACKAGEINFO_InstallMode${F} $Install_Mode${rBD}"
 		echo -e "\n $Str_PACKAGEINFO_Confirm"
 		read package_info_confirm
@@ -694,10 +695,12 @@ $Header
 			cp -rf "$Input_Desktop_Dir/." "$Output_Desktop_Dir"
 			
 			# Trust Desktop files
-			for file in "${!Files_Desktop_Dir[@]}"; do
-				if ! [[ -x "$Tool_Gio_Trust" ]]; then chmod +x "$Tool_Gio_Trust"; fi
-				"$Tool_Gio_Trust" -trust --silent "$Output_Desktop_Dir/${Files_Desktop_Dir[$file]}"
-			done
+			if [ "$Current_DE" == "XFCE" ]; then
+				for file in "${!Files_Desktop_Dir[@]}"; do
+					if ! [[ -x "$Tool_Gio_Trust_Xfce" ]]; then chmod +x "$Tool_Gio_Trust_Xfce"; fi
+					"$Tool_Gio_Trust_Xfce" -trust --silent "$Output_Desktop_Dir/${Files_Desktop_Dir[$file]}"
+				done
+			fi
 		fi
 		
 		# Copy user data
@@ -759,10 +762,12 @@ $Header
 			cp -rf "$Input_Desktop_Dir/." "$Output_Desktop_Dir"
 			
 			# Trust Desktop files
-			for file in "${!Files_Desktop_Dir[@]}"; do
-				if ! [[ -x "$Tool_Gio_Trust" ]]; then chmod +x "$Tool_Gio_Trust"; fi
-				"$Tool_Gio_Trust" -trust --silent "$Output_Desktop_Dir/${Files_Desktop_Dir[$file]}"
-			done
+			if [ "$Current_DE" == "XFCE" ]; then
+				for file in "${!Files_Desktop_Dir[@]}"; do
+					if ! [[ -x "$Tool_Gio_Trust_Xfce" ]]; then chmod +x "$Tool_Gio_Trust_Xfce"; fi
+					"$Tool_Gio_Trust_Xfce" -trust --silent "$Output_Desktop_Dir/${Files_Desktop_Dir[$file]}"
+				done
+			fi
 		fi
 		
 		# Copy user data
