@@ -135,7 +135,7 @@ function _BASE_INSTALL_USER() {
 
 function _BASE_INSTALL_COMPLETE() {
 	if [ "$Current_DE" == "xfce" ]; then xfce4-panel -r &> /dev/null; fi
-	echo " $Str_BASE_COMPLETE"
+	echo -e " $Str_BASE_COMPLETE"
 	read pause
 }
 

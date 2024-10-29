@@ -19,7 +19,8 @@ BG_Red='\033[101m'; BG_Green='\033[102m'; BG_Yellow='\033[103m'; BG_Blue='\033[1
 ## ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ##
 ## ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ##
 
-Header="${F_Red}${Bold} -=: Software Uninstaller Script (Installer-SH v1.6) :=-${rBD}${F}\n"
+Header="${F_Red}${Bold} -=: Software Uninstaller Script (Installer-SH v1.8) :=-${rBD}${F}\n"
+printf '\033[8;30;110t' # Resize terminal Window
 
 # Welcome message
 clear
