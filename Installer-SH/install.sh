@@ -16,7 +16,7 @@ BG_Red='\033[101m'; BG_Green='\033[102m'; BG_Yellow='\033[103m'; BG_Blue='\033[1
 Arguments=("$@"); Path_To_Script="$( dirname "$(readlink -f "$0")")"
 User_Home=$HOME; User_Name=$USER; DEBUG_MODE=false; Silent_Mode=false; Use_Default_Locale=false
 Installer_Data_Path="$Path_To_Script/installer-data"; Szip_bin="$Installer_Data_Path/tools/7zip/7zzs"; all_ok=true
-Tool_Gio_Trust_Xfce="$Installer_Data_Path/tools/gio-trust.sh"; Tool_Prepare_Base="$Installer_Data_Path/tools/prepare-portsoft-menu.sh"
+Tool_Gio_Trust_Xfce="$Installer_Data_Path/tools/gio-trust-xfce.sh"; Tool_Prepare_Base="$Installer_Data_Path/tools/prepare-portsoft-menu.sh"
 Current_DE="$XDG_SESSION_DESKTOP"
 source "$User_Home/.config/user-dirs.dirs"
 
@@ -26,8 +26,10 @@ function _MAIN() {
 	_CHECK_OS; _SET_LOCALE; _PACKAGE_SETTINGS;
 	printf '\033[8;30;110t' # Resize terminal Window
 	if [ "$Distro_Name" != "Chimbalix" ]; then
-		if ! [[ -x "$Tool_Prepare_Base" ]]; then chmod +x "$Tool_Prepare_Base"; fi
-		source "$Tool_Prepare_Base"
+		if [ ! -e "$Output_PortSoft" ]; then
+			if ! [[ -x "$Tool_Prepare_Base" ]]; then chmod +x "$Tool_Prepare_Base"; fi
+			source "$Tool_Prepare_Base"
+		fi
 	fi
 	_PRINT_PACKAGE_INFO; _CHECK_MD5; _PRINT_INSTALL_SETTINGS; _CREATE_TEMP; _PREPARE_INPUT_FILES; _CHECK_OUTPUTS
 	if [ "$Install_Mode" == "System" ]; then _INSTALL_APP_SYSTEM; else _INSTALL_APP_USER; fi; _PREPARE_UNINSTALLER
@@ -62,7 +64,7 @@ Info_Name="Example Application"
 Info_Version="1.8"
 Info_Release_Date="2024-10-26"
 Info_Category="Other"
-Info_Platform="Linux - Chimbalix 24.2 - 24.x"
+Info_Platform="Linux - Chimbalix 24.2+, Linux Mint 21.1 xfce"
 Info_Installed_Size="~1 MiB"
 Info_Licensing="Freeware - Open Source (MIT)
    Other Licensing Examples:

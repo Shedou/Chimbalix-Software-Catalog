@@ -15,6 +15,7 @@ function _BASE_MAIN() {
 	_BASE_CREATE_TEMP
 	_BASE_PREPARE_FILES
 	if [ "$Install_Mode" == "System" ]; then _BASE_INSTALL_SYSTEM; else _BASE_INSTALL_USER; fi;
+	_BASE_DELETE_TEMP
 }
 
 function _BASE_PRINT_INFO() {
@@ -87,6 +88,9 @@ if [ $all_ok == true ]; then all_ok=false
 	if [ $DEBUG_MODE == true ]; then echo "_BASE_CREATE_TEMP - all_ok = $all_ok"; read pause; fi
 else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _BASE_CREATE_TEMP ${F}${rBD}"; fi
 }
+function _BASE_DELETE_TEMP() {
+if [ -e "$Base_Temp_Dir" ]; then rm -rf "$Base_Temp_Dir"; fi;
+}
 
 
 function _BASE_PREPARE_INPUT_FILES_GREP() {
@@ -113,7 +117,7 @@ function _BASE_INSTALL_SYSTEM() {
 	sudo cp -rf "$Base_Temp_Dir/menus/applications-merged/". "$Output_Menu_Files"
 	
 	if [ ! -e "$Out_PortSoft_System" ]; then sudo mkdir -p "$Out_PortSoft_System"; fi
-	sudo cp -rf "$Base_Temp_Dir/portsoft". "$Out_PortSoft_System"
+	sudo cp -rf "$Base_Temp_Dir/portsoft/". "$Out_PortSoft_System"
 }
 
 function _BASE_INSTALL_USER() {
@@ -125,7 +129,7 @@ function _BASE_INSTALL_USER() {
 	cp -rf "$Base_Temp_Dir/menus/applications-merged/". "$Output_Menu_Files"
 	
 	if [ ! -e "$Out_PortSoft_User" ]; then mkdir -p "$Out_PortSoft_User"; fi
-	cp -rf "$Base_Temp_Dir/portsoft". "$Out_PortSoft_User"
+	cp -rf "$Base_Temp_Dir/portsoft/". "$Out_PortSoft_User"
 }
 
 _BASE_MAIN
