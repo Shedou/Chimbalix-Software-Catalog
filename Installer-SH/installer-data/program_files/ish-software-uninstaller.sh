@@ -19,6 +19,7 @@ BG_Red='\033[101m'; BG_Green='\033[102m'; BG_Yellow='\033[103m'; BG_Blue='\033[1
 ## ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ##
 ## ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ##
 
+Current_DE="$XDG_SESSION_DESKTOP"
 Header="${F_Red}${Bold} -=: Software Uninstaller Script (Installer-SH v1.8) :=-${rBD}${F}\n"
 printf '\033[8;30;110t' # Resize terminal Window
 
@@ -67,7 +68,7 @@ read Confirm
 # Run if confirm
 if [ "$Confirm" == "y" ] || [ "$Confirm" == "yes" ]; then
 	for i in "${!FilesToDelete[@]}"; do _remove "${FilesToDelete[$i]}"; done
-	xfce4-panel -r
+	if [ "$Current_DE" == "xfce" ]; then xfce4-panel -r &> /dev/null; fi
 	echo -e "\n ${Bold}${F_Green}Uninstallation completed.${F}${rBD}\n"
 fi
 
