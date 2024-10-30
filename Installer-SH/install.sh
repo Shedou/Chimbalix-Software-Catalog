@@ -792,14 +792,14 @@ function _PREPARE_UNINSTALLER() {
 			sudo chown $Out_App_Folder_Owner "$Output_Uninstaller"
 			for filename in "${!All_Files[@]}"; do
 				CurrentFile="${All_Files[$filename]}"
-				sudo awk -i inplace '{if($0=="FilesToDelete=(") $0=$0"\n\"'"$CurrentFile"'\"";print}' "$Output_Uninstaller"
+				sudo sed -i "s~FilesToDelete=(~&\n$CurrentFile~" "$Output_Uninstaller"
 			done
 		fi
 		if [ "$Install_Mode" == "User" ]; then
 			chmod 744 "$Output_Uninstaller"
 			for filename in "${!All_Files[@]}"; do
 				CurrentFile="${All_Files[$filename]}"
-				awk -i inplace '{if($0=="FilesToDelete=(") $0=$0"\n\"'"$CurrentFile"'\"";print}' "$Output_Uninstaller"
+				sed -i "s~FilesToDelete=(~&\n$CurrentFile~" "$Output_Uninstaller"
 			done
 		fi
 		# Restart taskbar
