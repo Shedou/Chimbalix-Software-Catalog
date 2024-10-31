@@ -17,7 +17,8 @@ Arguments=("$@"); Path_To_Script="$( dirname "$(readlink -f "$0")")"
 User_Home=$HOME; User_Name=$USER; DEBUG_MODE=false; Silent_Mode=false; Use_Default_Locale=false
 Installer_Data_Path="$Path_To_Script/installer-data"; Szip_bin="$Installer_Data_Path/tools/7zip/7zzs"; all_ok=true
 Tool_Gio_Trust_Xfce="$Installer_Data_Path/tools/gio-trust-xfce.sh"; Tool_Prepare_Base="$Installer_Data_Path/tools/prepare-portsoft-menu.sh"
-Current_DE="$XDG_SESSION_DESKTOP"
+if [ $XDG_SESSION_DESKTOP ]; then Current_DE="$XDG_SESSION_DESKTOP"; else
+	if [ $DESKTOP_SESSION ]; then Current_DE="$DESKTOP_SESSION"; else Current_DE="Unknown"; fi; fi
 source "$User_Home/.config/user-dirs.dirs"
 
 # Main function, don't change!
