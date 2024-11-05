@@ -6,7 +6,7 @@ Base_Header="${BG_Black}${F_Red}${Bold} -=: Prepare PortSoft and Menu (Installer
 Base_Temp_Dir="/tmp/chimbalix-portsoft-menu-prepare""_$RANDOM""_$RANDOM" # TEMP Directory
 
 ######### - Archive path - #########
-Archive_Base_Data="$Installer_Data_Path/tools/base_data.7z"
+Archive_Base_Data="$Path_Installer_Data/tools/base_data.7z"
 Archive_Base_Data_MD5="ce6a991ac1fcc596308e943c58369c11"
 
 function _BASE_MAIN() {
@@ -20,7 +20,7 @@ function _BASE_MAIN() {
 }
 
 function _BASE_PRINT_INFO() {
-if [ $Silent_Mode == false ]; then
+if [ $MODE_SILENT == false ]; then
 	if [ $all_ok == true ]; then all_ok=false
 		echo -e "${BG_Black}"; clear;
 		echo -e "\
@@ -41,14 +41,14 @@ $Base_Header
   
   $Str_BASEINFO_Attention
 
- -${Bold}${F_DarkGreen}$Str_PACKAGEINFO_CurrentOS${F} $Distro_Full_Name ($Current_DE)${rBD}
+ -${Bold}${F_DarkGreen}$Str_PACKAGEINFO_CurrentOS${F} $Current_OS_Full_Name ($Current_DE)${rBD}
  -${Bold}${F_DarkGreen}$Str_PACKAGEINFO_InstallMode${F} $Install_Mode${rBD}"
 		echo -e "\n $Str_BASEINFO_Confirm"
 		read base_info_confirm
 		if [ "$base_info_confirm" == "y" ] || [ "$base_info_confirm" == "yes" ]; then all_ok=true
 		else _ABORT "${Bold}${F_Green}$Str_Interrupted_By_User${F}${rBD}"; fi
 		
-		if [ $DEBUG_MODE == true ]; then echo "_PRINT_PACKAGE_INFO - all_ok = $all_ok"; read pause; fi
+		if [ $MODE_DEBUG == true ]; then echo "_PRINT_PACKAGE_INFO - all_ok = $all_ok"; read pause; fi
 	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _PRINT_PACKAGE_INFO ${F}${rBD}"; fi
 fi
 }
@@ -76,7 +76,7 @@ $Base_Header
 		if [ "$base_errors_confirm" == "y" ] || [ "$base_errors_confirm" == "yes" ]; then all_ok=true
 		else _ABORT "${Bold}${F_Green}$Str_Interrupted_By_User${F}${rBD}"; fi
 	else all_ok=true; fi
-	if [ $DEBUG_MODE == true ]; then echo "_BASE_CHECK_MD5 - all_ok = $all_ok"; read pause; fi
+	if [ $MODE_DEBUG == true ]; then echo "_BASE_CHECK_MD5 - all_ok = $all_ok"; read pause; fi
 else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _BASE_CHECK_MD5 ${F}${rBD}"; fi
 }
 
@@ -86,7 +86,7 @@ if [ $all_ok == true ]; then all_ok=false
 	if [ -e "$Base_Temp_Dir" ]; then rm -rf "$Base_Temp_Dir"; fi;
 	mkdir "$Base_Temp_Dir"
 	all_ok=true
-	if [ $DEBUG_MODE == true ]; then echo "_BASE_CREATE_TEMP - all_ok = $all_ok"; read pause; fi
+	if [ $MODE_DEBUG == true ]; then echo "_BASE_CREATE_TEMP - all_ok = $all_ok"; read pause; fi
 else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _BASE_CREATE_TEMP ${F}${rBD}"; fi
 }
 function _BASE_DELETE_TEMP() {
@@ -100,9 +100,9 @@ function _BASE_PREPARE_INPUT_FILES_GREP() {
 }
 
 function _BASE_PREPARE_FILES() {
-	if ! [[ -x "$Szip_bin" ]]; then chmod +x "$Szip_bin"; fi
+	if ! [[ -x "$Tool_SevenZip_bin" ]]; then chmod +x "$Tool_SevenZip_bin"; fi
 	
-	if ! "$Szip_bin" x "$Archive_Base_Data" -o"$Base_Temp_Dir/" &> /dev/null; then
+	if ! "$Tool_SevenZip_bin" x "$Archive_Base_Data" -o"$Base_Temp_Dir/" &> /dev/null; then
 		_ABORT "$Str_PREPAREINPUTFILES_Err_Unpack (_PREPARE_INPUT_FILES). $Str_PREPAREINPUTFILES_Err_Unpack2"
 	fi
 	

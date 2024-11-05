@@ -13,20 +13,36 @@ BG_DarkRed='\033[41m'; BG_DarkGreen='\033[42m'; BG_DarkYellow='\033[43m'; BG_Dar
 BG_Red='\033[101m'; BG_Green='\033[102m'; BG_Yellow='\033[103m'; BG_Blue='\033[104m'; BG_Magenta='\033[105m'; BG_Cyan='\033[106m';
 ######### --------- #########
 ######### Base vars #########
-Arguments=("$@"); Path_To_Script="$( dirname "$(readlink -f "$0")")"
-User_Home=$HOME; User_Name=$USER; DEBUG_MODE=false; Silent_Mode=false; Use_Default_Locale=false
-Installer_Data_Path="$Path_To_Script/installer-data"; Szip_bin="$Installer_Data_Path/tools/7zip/7zzs"; all_ok=true
-Tool_Gio_Trust_Xfce="$Installer_Data_Path/tools/gio-trust-xfce.sh"; Tool_Prepare_Base="$Installer_Data_Path/tools/prepare-portsoft-menu.sh"
-if [ $XDG_SESSION_DESKTOP ]; then Current_DE="$XDG_SESSION_DESKTOP"; else
-	if [ $DESKTOP_SESSION ]; then Current_DE="$DESKTOP_SESSION"; else Current_DE="Unknown DE"; fi; fi
+all_ok=true
+Arguments=("$@")
+Locale_Use_Default=false
+User_Home=$HOME
+User_Name=$USER
+MODE_DEBUG=false
+MODE_SILENT=false
+Path_To_Script="$( dirname "$(readlink -f "$0")")"
+Path_Installer_Data="$Path_To_Script/installer-data"
+Tool_SevenZip_bin="$Path_Installer_Data/tools/7zip/7zzs"
+Tool_Gio_Trust_Xfce="$Path_Installer_Data/tools/gio-trust-xfce.sh"
+Tool_Prepare_Base="$Path_Installer_Data/tools/prepare-portsoft-menu.sh"
+
+Current_DE="Unknown DE"
+Current_OS_Full_Name="Unknown"
+Current_OS_Name="Unknown"
+Current_OS_Version_ID="Unknown"
+if [ $XDG_SESSION_DESKTOP ]; then Current_DE="$XDG_SESSION_DESKTOP"
+else if [ $DESKTOP_SESSION ]; then Current_DE="$DESKTOP_SESSION"; fi; fi
 source "$User_Home/.config/user-dirs.dirs"
+if [ -f /etc/os-release ]; then . /etc/os-release; Current_OS_Full_Name=$PRETTY_NAME; Current_OS_Name=$NAME; Current_OS_Version_ID=$VERSION_ID
+else if uname &>/dev/null; then DistroVersion="$(uname -sr)"; else _ABORT "$Str_ATTENTION! ${Bold}${F_Yellow}$Str_CHECKOS_No_Current_OS_Name${F}${rBD}"; fi
+fi
 
 # Main function, don't change!
 function _MAIN() {
-	if [ ${Arguments[$1]} == "-silent" ]; then Silent_Mode=true; Lang_Display="-silent"; fi
-	_CHECK_OS; _SET_LOCALE; _PACKAGE_SETTINGS;
+	if [ ${Arguments[$1]} == "-silent" ]; then MODE_SILENT=true; Lang_Display="-silent"; fi
+	_SET_LOCALE; _PACKAGE_SETTINGS;
 	printf '\033[8;30;110t' # Resize terminal Window
-	if [ "$Distro_Name" != "Chimbalix" ]; then
+	if [ "$Current_OS_Name" != "Chimbalix" ]; then
 		if [ ! -e "$Output_PortSoft" ] || [ ! -e "$Output_Menu_DDir" ]; then
 			if ! [[ -x "$Tool_Prepare_Base" ]]; then chmod +x "$Tool_Prepare_Base"; fi
 			source "$Tool_Prepare_Base"
@@ -73,7 +89,7 @@ Info_Licensing="Freeware - Open Source (MIT)
     Trialware - 30 days free, Proprietary (Other License Name)"
 Info_Developer="Chimbal"
 Info_URL="https://github.com/Shedou/Chimbalix-Software-Catalog"
-if [ $Use_Default_Locale == true ]; then # Use this description if there is no suitable localization file:
+if [ $Locale_Use_Default == true ]; then # Use this description if there is no suitable localization file:
 Info_Description="\
   1) This installer (short description):
      - Suitable for installation on stand-alone PCs without Internet access.
@@ -119,14 +135,14 @@ Additional_Categories="chi-other;" #=> ADDITIONAL_CATEGORIES
 ######### - Archives paths - #########
 ######### - -------------- - #########
 
-Archive_Program_Files="$Installer_Data_Path/program_files.7z"
+Archive_Program_Files="$Path_Installer_Data/program_files.7z"
 Archive_Program_Files_MD5=""
 
-Archive_System_Files="$Installer_Data_Path/system_files.7z"
+Archive_System_Files="$Path_Installer_Data/system_files.7z"
 Archive_System_Files_MD5=""
 
  # Not used if "User_Data_Copy_Confirm=false"
-Archive_User_Files="$Installer_Data_Path/user_files.7z"
+Archive_User_Files="$Path_Installer_Data/user_files.7z"
 Archive_User_Files_MD5=""
 
  # Extra check
@@ -188,15 +204,15 @@ Output_Uninstaller="$Output_Install_Dir/$Program_Uninstaller_File" # Uninstaller
 
 function _SET_LOCALE() {
 	Language="${LANG%%.*}"
-	if [ $Silent_Mode == false ]; then Lang_Display="$Language"; fi
+	if [ $MODE_SILENT == false ]; then Lang_Display="$Language"; fi
 	Locale_File="$Path_To_Script/locales/$Language"
 	if [ -e "$Locale_File" ]; then
 		if [ $(grep Locale_Version "$Locale_File") == 'Locale_Version="1.7"' ]; then source "$Locale_File";
-		else Use_Default_Locale=true; fi
-	else Use_Default_Locale=true; fi
+		else Locale_Use_Default=true; fi
+	else Locale_Use_Default=true; fi
 	
-	if [ $Use_Default_Locale == true ]; then
-		if [ $Silent_Mode == false ]; then Lang_Display="Default"; fi
+	if [ $Locale_Use_Default == true ]; then
+		if [ $MODE_SILENT == false ]; then Lang_Display="Default"; fi
 		Info_Description="Not used in this place... The translation is located in the \"locales/\" directory."
 		
 		Str_ERROR="${Bold}${F_Red}ERROR${F}${rBD}"
@@ -318,21 +334,10 @@ $Header
 	read pause; clear; exit 1 # Double clear resets styles before going to the system terminal window.
 }
 
-######### --------------------
-######### Check Distro version
-function _CHECK_OS() {
-	Distro_Full_Name="Unknown"; Distro_Name="Unknown"; Distro_Version_ID="Unknown";
-	if [ -f /etc/os-release ]; then . /etc/os-release; Distro_Full_Name=$PRETTY_NAME; Distro_Name=$NAME; Distro_Version_ID=$VERSION_ID
-	else
-		if uname &>/dev/null; then DistroVersion="$(uname -sr)"
-		else _ABORT "$Str_ATTENTION! ${Bold}${F_Yellow}$Str_CHECKOS_No_Distro_Name${F}${rBD}"; fi
-	fi
-}
-
 ######### -------------------------
 ######### Print package information
 function _PRINT_PACKAGE_INFO() {
-if [ $Silent_Mode == false ]; then
+if [ $MODE_SILENT == false ]; then
 	if [ $all_ok == true ]; then all_ok=false
 		echo -e "${BG_Black}"; clear; # A crutch to fill the background completely...
 		echo -e "\
@@ -349,14 +354,14 @@ $Header
  -${Bold}${F_DarkYellow}$Str_PACKAGEINFO_Description${F}${rBD}
 $Info_Description
 
- -${Bold}${F_DarkGreen}$Str_PACKAGEINFO_CurrentOS${F} $Distro_Full_Name ($Current_DE)${rBD}
+ -${Bold}${F_DarkGreen}$Str_PACKAGEINFO_CurrentOS${F} $Current_OS_Full_Name ($Current_DE)${rBD}
  -${Bold}${F_DarkGreen}$Str_PACKAGEINFO_InstallMode${F} $Install_Mode${rBD}"
 		echo -e "\n $Str_PACKAGEINFO_Confirm"
 		read package_info_confirm
 		if [ "$package_info_confirm" == "y" ] || [ "$package_info_confirm" == "yes" ]; then all_ok=true
 		else _ABORT "${Bold}${F_Green}$Str_Interrupted_By_User${F}${rBD}"; fi
 		
-		if [ $DEBUG_MODE == true ]; then echo "_PRINT_PACKAGE_INFO - all_ok = $all_ok"; read pause; fi
+		if [ $MODE_DEBUG == true ]; then echo "_PRINT_PACKAGE_INFO - all_ok = $all_ok"; read pause; fi
 	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _PRINT_PACKAGE_INFO ${F}${rBD}"; fi
 fi
 }
@@ -430,7 +435,7 @@ $Header
 }
 
 function _CHECK_MD5() {
-if [ $Silent_Mode == false ]; then
+if [ $MODE_SILENT == false ]; then
 	if [ $all_ok == true ]; then all_ok=false
 		clear
 		echo -e "\
@@ -446,7 +451,7 @@ $Header
 			_CHECK_MD5_PRINT
 		else all_ok=true; fi
 	
-	if [ $DEBUG_MODE == true ]; then echo "_CHECK_MD5 - all_ok = $all_ok"; read pause; fi
+	if [ $MODE_DEBUG == true ]; then echo "_CHECK_MD5 - all_ok = $all_ok"; read pause; fi
 	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _CHECK_MD5 ${F}${rBD}"; fi
 else
 	_CHECK_MD5_COMPARE
@@ -459,7 +464,7 @@ fi
 ######### Print installation settings
 
 function _PRINT_INSTALL_SETTINGS() {
-if [ $Silent_Mode == false ]; then
+if [ $MODE_SILENT == false ]; then
 	if [ $all_ok == true ]; then all_ok=false
 		clear
 		echo -e "\
@@ -510,7 +515,7 @@ $Header
 		if [ "$install_settings_confirm" == "y" ] || [ "$install_settings_confirm" == "yes" ]; then all_ok=true
 		else _ABORT "${Bold}${F_Green}$Str_Interrupted_By_User${F}${rBD}"; fi
 	
-		if [ $DEBUG_MODE == true ]; then echo "_PRINT_INSTALL_SETTINGS - all_ok = $all_ok"; read pause; fi
+		if [ $MODE_DEBUG == true ]; then echo "_PRINT_INSTALL_SETTINGS - all_ok = $all_ok"; read pause; fi
 	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _PRINT_INSTALL_SETTINGS ${F}${rBD}"; fi
 fi
 }
@@ -526,9 +531,9 @@ function _PREPARE_INPUT_FILES_GREP() {
 function _PREPARE_INPUT_FILES() {
 	if [ $all_ok == true ]; then all_ok=false
 		
-		if ! [[ -x "$Szip_bin" ]]; then chmod +x "$Szip_bin"; fi
+		if ! [[ -x "$Tool_SevenZip_bin" ]]; then chmod +x "$Tool_SevenZip_bin"; fi
 		
-		if ! "$Szip_bin" x "$Archive_System_Files" -o"$Temp_Dir/" &> /dev/null; then
+		if ! "$Tool_SevenZip_bin" x "$Archive_System_Files" -o"$Temp_Dir/" &> /dev/null; then
 			_ABORT "$Str_PREPAREINPUTFILES_Err_Unpack (_PREPARE_INPUT_FILES). $Str_PREPAREINPUTFILES_Err_Unpack2"
 		fi
 		
@@ -592,7 +597,7 @@ function _PREPARE_INPUT_FILES() {
 		All_Files=("$Output_Install_Dir" "${arr_0[@]}" "${arr_1[@]}" "${arr_2[@]}" "${arr_3[@]}" "${arr_4[@]}" "${arr_5[@]}")
 		all_ok=true
 		
-		if [ $DEBUG_MODE == true ]; then echo "_PREPARE_INPUT_FILES - all_ok = $all_ok"; read pause; fi
+		if [ $MODE_DEBUG == true ]; then echo "_PREPARE_INPUT_FILES - all_ok = $all_ok"; read pause; fi
 	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _PREPARE_INPUT_FILES ${F}${rBD}"; fi
 }
 
@@ -627,7 +632,7 @@ $(for file in "${!arr_files_sorted[@]}"; do echo "   ${arr_files_sorted[$file]}"
 			all_ok=true
 		fi
 		
-		if [ $DEBUG_MODE == true ]; then echo "_CHECK_OUTPUTS - all_ok = $all_ok"; read pause; fi
+		if [ $MODE_DEBUG == true ]; then echo "_CHECK_OUTPUTS - all_ok = $all_ok"; read pause; fi
 	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _CHECK_OUTPUTS ${F}${rBD}"; fi
 }
 
@@ -637,14 +642,14 @@ $(for file in "${!arr_files_sorted[@]}"; do echo "   ${arr_files_sorted[$file]}"
 function _INSTALL_USER_DATA() {
 	# Copy user data
 	if [ $User_Data_Copy_Confirm == true ]; then
-		if [ $Silent_Mode == false ]; then echo " $Str_INSTALLAPP_Copy_uFiles"; fi
+		if [ $MODE_SILENT == false ]; then echo " $Str_INSTALLAPP_Copy_uFiles"; fi
 		
-		if ! "$Szip_bin" x -aoa "$Archive_User_Files" -o"$Output_User_Home/" &> /dev/null; then
+		if ! "$Tool_SevenZip_bin" x -aoa "$Archive_User_Files" -o"$Output_User_Home/" &> /dev/null; then
 			echo " $Str_INSTALLAPP_Copy_uFiles_Err"
 			read pause
 		fi
 	fi
-	if [ $DEBUG_MODE == true ]; then echo "_INSTALL_APP - all_ok = $all_ok"; read pause; fi
+	if [ $MODE_DEBUG == true ]; then echo "_INSTALL_APP - all_ok = $all_ok"; read pause; fi
 }
 
 ######### -------------------------------
@@ -652,21 +657,21 @@ function _INSTALL_USER_DATA() {
 
 function _INSTALL_APP_USER() {
 	if [ $all_ok == true ]; then all_ok=false
-		if [ $Silent_Mode == false ]; then
+		if [ $MODE_SILENT == false ]; then
 			clear
 			echo -e "\
 $Header
  ${Bold}${F_Cyan}$Str_INSTALL_APP_Head${F}${rBD}"; fi
 		
-		if [ $Silent_Mode == false ]; then echo " $Str_INSTALL_APP_Create_Out"; fi
+		if [ $MODE_SILENT == false ]; then echo " $Str_INSTALL_APP_Create_Out"; fi
 		
 		# Check Output Folder
 		if [ ! -e "$Output_Install_Dir" ]; then if ! mkdir -p "$Output_Install_Dir"; then _ABORT "$Str_INSTALL_APP_No_Rights"; fi
 		else if ! touch "$Output_Install_Dir"; then _ABORT "$Str_INSTALL_APP_No_Rights"; fi; fi
 		
-		if [ $Silent_Mode == false ]; then echo " $Str_INSTALLAPP_Unpack_App"; fi
+		if [ $MODE_SILENT == false ]; then echo " $Str_INSTALLAPP_Unpack_App"; fi
 		
-		if ! "$Szip_bin" x -snld -aoa "$Archive_Program_Files" -o"$Output_Install_Dir/" &> /dev/null; then
+		if ! "$Tool_SevenZip_bin" x -snld -aoa "$Archive_Program_Files" -o"$Output_Install_Dir/" &> /dev/null; then
 			echo -e "\n $Str_ATTENTION $Str_INSTALLAPP_Unpack_Err"
 			echo " $Str_INSTALLAPP_Unpack_Err2"
 			echo -e "\n $Str_INSTALLAPP_Unpack_Err_Continue"
@@ -675,7 +680,7 @@ $Header
 			else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_INSTALLAPP_Unpack_Err_Abort${F}${rBD}"; fi
 		fi
 		
-		if [ $Silent_Mode == false ]; then echo " $Str_INSTALLAPP_Install_Bin_Menu"; fi
+		if [ $MODE_SILENT == false ]; then echo " $Str_INSTALLAPP_Install_Bin_Menu"; fi
 		
 		# Check Bin folder
 		if [ ! -e "$Output_Bin_Dir" ]; then mkdir "$Output_Bin_Dir"; fi
@@ -712,7 +717,7 @@ $Header
 		
 		all_ok=true
 		
-		if [ $DEBUG_MODE == true ]; then echo "_INSTALL_APP - all_ok = $all_ok"; read pause; fi
+		if [ $MODE_DEBUG == true ]; then echo "_INSTALL_APP - all_ok = $all_ok"; read pause; fi
 	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _INSTALL_APP ${F}${rBD}"; fi
 }
 
@@ -721,21 +726,21 @@ $Header
 
 function _INSTALL_APP_SYSTEM() {
 	if [ $all_ok == true ]; then all_ok=false
-		if [ $Silent_Mode == false ]; then
+		if [ $MODE_SILENT == false ]; then
 			clear
 			echo -e "\
 $Header
  ${Bold}${F_Cyan}$Str_INSTALL_APP_Head${F}${rBD}"; fi
 		
-		if [ $Silent_Mode == false ]; then echo " $Str_INSTALL_APP_Create_Out"; fi
+		if [ $MODE_SILENT == false ]; then echo " $Str_INSTALL_APP_Create_Out"; fi
 		
 		# Check Output Folder
 		if [ ! -e "$Output_Install_Dir" ]; then if ! sudo mkdir -p "$Output_Install_Dir"; then _ABORT "$Str_INSTALL_APP_No_Rights"; fi
 		else if ! sudo touch "$Output_Install_Dir"; then _ABORT "$Str_INSTALL_APP_No_Rights"; fi; fi
 		
-		if [ $Silent_Mode == false ]; then echo " $Str_INSTALLAPP_Unpack_App"; fi
+		if [ $MODE_SILENT == false ]; then echo " $Str_INSTALLAPP_Unpack_App"; fi
 		
-		if ! sudo "$Szip_bin" x -snld -aoa "$Archive_Program_Files" -o"$Output_Install_Dir/" &> /dev/null; then
+		if ! sudo "$Tool_SevenZip_bin" x -snld -aoa "$Archive_Program_Files" -o"$Output_Install_Dir/" &> /dev/null; then
 			echo -e "\n $Str_ATTENTION $Str_INSTALLAPP_Unpack_Err"
 			echo " $Str_INSTALLAPP_Unpack_Err2"
 			echo -e "\n $Str_INSTALLAPP_Unpack_Err_Continue"
@@ -744,7 +749,7 @@ $Header
 			else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_INSTALLAPP_Unpack_Err_Abort${F}${rBD}"; fi
 		fi
 		
-		if [ $Silent_Mode == false ]; then echo " $Str_INSTALLAPP_Install_Bin_Menu"; fi
+		if [ $MODE_SILENT == false ]; then echo " $Str_INSTALLAPP_Install_Bin_Menu"; fi
 		
 		echo " $Str_INSTALLAPP_Set_Rights"
 		sudo chmod -R $Out_App_Folder_Permissions "$Output_Install_Dir"
@@ -779,7 +784,7 @@ $Header
 		
 		all_ok=true
 		
-		if [ $DEBUG_MODE == true ]; then echo "_INSTALL_APP - all_ok = $all_ok"; read pause; fi
+		if [ $MODE_DEBUG == true ]; then echo "_INSTALL_APP - all_ok = $all_ok"; read pause; fi
 	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _INSTALL_APP ${F}${rBD}"; fi
 }
 
@@ -806,9 +811,9 @@ function _PREPARE_UNINSTALLER() {
 		# Restart taskbar
 		if [ "$Current_DE" == "xfce" ]; then xfce4-panel -r &> /dev/null; fi
 		
-		if [ $Silent_Mode == false ]; then _ABORT "${Bold}${F_Green}$Str_Complete_Install${F}${rBD}"; fi
+		if [ $MODE_SILENT == false ]; then _ABORT "${Bold}${F_Green}$Str_Complete_Install${F}${rBD}"; fi
 		
-		if [ $DEBUG_MODE == true ]; then echo "_PREPARE_UNINSTALLER - all_ok = $all_ok"; read pause; fi
+		if [ $MODE_DEBUG == true ]; then echo "_PREPARE_UNINSTALLER - all_ok = $all_ok"; read pause; fi
 	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _PREPARE_UNINSTALLER ${F}${rBD}"; fi
 }
 
