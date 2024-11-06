@@ -34,7 +34,7 @@ if [ $XDG_SESSION_DESKTOP ]; then Current_DE="$XDG_SESSION_DESKTOP"
 else if [ $DESKTOP_SESSION ]; then Current_DE="$DESKTOP_SESSION"; fi; fi
 source "$User_Home/.config/user-dirs.dirs"
 if [ -f /etc/os-release ]; then . /etc/os-release; Current_OS_Full_Name=$PRETTY_NAME; Current_OS_Name=$NAME; Current_OS_Version_ID=$VERSION_ID
-else if uname &>/dev/null; then DistroVersion="$(uname -sr)"; else _ABORT "$Str_ATTENTION! ${Bold}${F_Yellow}$Str_CHECKOS_No_Current_OS_Name${F}${rBD}"; fi
+else if uname &>/dev/null; then DistroVersion="$(uname -sr)"; else _ABORT "$Str_ATTENTION! ${Bold}${F_Yellow}$Str_CHECKOS_No_Distro_Name${F}${rBD}"; fi
 fi
 
 # Main function, don't change!
