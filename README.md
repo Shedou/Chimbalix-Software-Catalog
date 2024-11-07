@@ -9,7 +9,9 @@ The Installer-SH directory contains the main script and tools (including example
 
 ## Universal Software Packages (Chimbalix 24.2+ and other Linux)
 
-[Blender v4.3.0 Beta - (ISH v1.8)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/blender430b)<br>[![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Software-Catalog/blender430b/total.svg)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/blender430b)
+[Blender v4.3.0 Beta - (ISH v1.8)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/blender430b)<br>[![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Software-Catalog/blender430b/total.svg)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/blender430b)
+
+[ChimbaBench v2.6 x64 Linux Installer-SH Version - (ISH v1.8)](https://github.com/Shedou/ChimbaBench/releases/c26ish)<br>[![Github Releases](https://img.shields.io/github/downloads/Shedou/ChimbaBench/releases/c26ish/total.svg)](https://github.com/Shedou/ChimbaBench/releases/c26ish)
 
 
 ## Software packages for Chimbalix 24.2 and later
