@@ -1,4 +1,4 @@
-# Chimbalix-Software-Catalog
+# Chimbalix-Software-Catalog [![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Software-Catalog/total.svg)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases)
 
 ## Menu:
 - Home
