@@ -30,17 +30,22 @@ Current_DE="Unknown DE"
 Current_OS_Full_Name="Unknown"
 Current_OS_Name="Unknown"
 Current_OS_Version_ID="Unknown"
+
 if [ $XDG_SESSION_DESKTOP ]; then Current_DE="$XDG_SESSION_DESKTOP"
 else if [ $DESKTOP_SESSION ]; then Current_DE="$DESKTOP_SESSION"; fi; fi
+
 source "$User_Home/.config/user-dirs.dirs"
-if [ -f /etc/os-release ]; then . /etc/os-release; Current_OS_Full_Name=$PRETTY_NAME; Current_OS_Name=$NAME; Current_OS_Version_ID=$VERSION_ID
-else if uname &>/dev/null; then DistroVersion="$(uname -sr)"; else _ABORT "$Str_ATTENTION! ${Bold}${F_Yellow}$Str_CHECKOS_No_Distro_Name${F}${rBD}"; fi
-fi
+
+if [ -f /etc/os-release ]; then
+	source /etc/os-release; Current_OS_Full_Name=$PRETTY_NAME; Current_OS_Name=$NAME; Current_OS_Version_ID=$VERSION_ID
+else
+	if uname &>/dev/null; then DistroVersion="$(uname -sr)"; else _ABORT "$Str_ATTENTION! ${Bold}${F_Yellow}$Str_CHECKOS_No_Distro_Name${F}${rBD}"; fi; fi
 
 # Main function, don't change!
 function _MAIN() {
 	if [ ${Arguments[$1]} == "-silent" ]; then MODE_SILENT=true; Lang_Display="-silent"; fi
-	_SET_LOCALE; _PACKAGE_SETTINGS;
+	_SET_LOCALE
+	_PACKAGE_SETTINGS;
 	printf '\033[8;30;110t' # Resize terminal Window
 	if [ "$Current_OS_Name" != "Chimbalix" ]; then
 		if [ ! -e "$Output_PortSoft" ] || [ ! -e "$Output_Menu_DDir" ]; then
@@ -48,7 +53,12 @@ function _MAIN() {
 			source "$Tool_Prepare_Base"
 		fi
 	fi
-	_PRINT_PACKAGE_INFO; _CHECK_MD5; _PRINT_INSTALL_SETTINGS; _CREATE_TEMP; _PREPARE_INPUT_FILES; _CHECK_OUTPUTS
+	_PRINT_PACKAGE_INFO
+	_CHECK_MD5
+	_PRINT_INSTALL_SETTINGS
+	_CREATE_TEMP
+	_PREPARE_INPUT_FILES
+	_CHECK_OUTPUTS
 	if [ "$Install_Mode" == "System" ]; then _INSTALL_APP_SYSTEM; else _INSTALL_APP_USER; fi; _PREPARE_UNINSTALLER
 }
 
@@ -59,7 +69,7 @@ function _MAIN() {
 function _PACKAGE_SETTINGS() {
 
 User_Data_Copy_Confirm=false	# Copy other data to the user's home directory: "true" / "false". Do not use this function unless necessary!
-Install_Helpers=true			# Adds "Default Applications" associations, please prepare files in "installer-data/system_files/helpers/" before using.
+Install_Helpers=false			# Adds "Default Applications" associations, please prepare files in "installer-data/system_files/helpers/" before using.
 Install_Desktop_Icons=true		# Place icons on the desktop (only for current user).
 
 Install_Mode="User"		# "System" / "User", In "User" mode, root rights are not required.
@@ -81,7 +91,7 @@ Info_Name="Example Application"
 Info_Version="1.8"
 Info_Release_Date="2024-10-29"
 Info_Category="Other"
-Info_Platform="Linux - Chimbalix 24.2+, Linux Mint 21.1 xfce"
+Info_Platform="Linux"
 Info_Installed_Size="~1 MiB"
 Info_Licensing="Freeware - Open Source (MIT)
    Other Licensing Examples:
@@ -123,11 +133,12 @@ Program_Uninstaller_Icon="ish-software-uninstaller-icon.png"	#=> PROGRAM_UNINSTA
  # Additional menu categories that will include the main application shortcuts.
  # Please do not use this variable in the uninstaller shortcut file.
 Additional_Categories="chi-other;" #=> ADDITIONAL_CATEGORIES
- # -=== Chimbalix 24.4 main categories:
+ # -=== Chimbalix 24.4+ main categories:
  # chi-ai  chi-accessories  chi-accessories-fm  chi-view  chi-admin  chi-info  chi-info-bench  chi-info-help
  # chi-dev  chi-dev-other  chi-dev-ide  chi-edit  chi-edit-audiovideo  chi-edit-image  chi-edit-text  chi-games
  # chi-network  chi-multimedia  chi-multimedia-players  chi-office  chi-other  chi-tools  chi-tools-archivers
  # -=== XDG / Linux Categories Version 1.1 (20 August 2016):
+ # AudioVideo  Audio  Video  Development  Education  Game  Graphics  Network  Office  Science  Settings  System  Utility
  # URL: https://specifications.freedesktop.org/menu-spec/latest/category-registry.html
  # URL: https://specifications.freedesktop.org/menu-spec/latest/additional-category-registry.html
 
