@@ -61,7 +61,7 @@ function _MAIN() {
 	_CREATE_TEMP
 	_PREPARE_INPUT_FILES
 	_CHECK_OUTPUTS
-	if [ "$Install_Mode" == "System" ]; then _INSTALL_APP_SYSTEM; else _INSTALL_APP_USER; fi
+	_INSTALL_APPLICATION
 	_PREPARE_UNINSTALLER
 }
 
@@ -880,6 +880,11 @@ $Header
 
 ######### Install application (SYSTEM MODE) #########
 ######### --------------------------------- #########
+
+function _INSTALL_APPLICATION() {
+	if [ "$Install_Mode" == "System" ]; then _INSTALL_APP_SYSTEM; else _INSTALL_APP_USER; fi
+}
+
 
 ######### ------------------------ #########
 ######### Prepare uninstaller file #########
