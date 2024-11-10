@@ -331,8 +331,14 @@ function _SET_LOCALE() {
 
 ######### ------------------------------------------------
 ######### ------------------------------------------------
-function _CLEAR_TEMP() { if [ -e "$Temp_Dir" ]; then rm -rf "$Temp_Dir"; fi; }
-function _CREATE_TEMP() { _CLEAR_TEMP; mkdir "$Temp_Dir"; }
+function _CLEAR_TEMP() {
+	if [ -e "$Temp_Dir" ]; then
+		rm -rf "$Temp_Dir"; fi
+}
+function _CREATE_TEMP() {
+	_CLEAR_TEMP
+	mkdir "$Temp_Dir"
+}
 
 function _ABORT() {
 	clear
@@ -377,8 +383,8 @@ $Info_Description
 fi
 }
 
-######### --------------------------------
-######### Check and compare MD5 of archive
+######### -------------------------------- #########
+######### Check and compare MD5 of archive #########
 
 function _CHECK_MD5_COMPARE() {
 	md5_pfiles_error=false; md5_sfiles_error=false; md5_ufiles_error=false
@@ -470,9 +476,11 @@ else
 fi
 }
 
+######### Check and compare MD5 of archive #########
+######### -------------------------------- #########
 
-######### ---------------------------
-######### Print installation settings
+######### --------------------------- #########
+######### Print installation settings #########
 
 function _PRINT_INSTALL_SETTINGS() {
 if [ $MODE_SILENT == false ]; then
@@ -531,8 +539,11 @@ $Header
 fi
 }
 
-######### -------------------
-######### Prepare Input Files
+######### Print installation settings #########
+######### --------------------------- #########
+
+######### ------------------- #########
+######### Prepare Input Files #########
 
 function _PREPARE_INPUT_FILES_GREP() {
 	local p_text="$1"; local p_path="$2"
@@ -612,9 +623,11 @@ function _PREPARE_INPUT_FILES() {
 	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _PREPARE_INPUT_FILES ${F}${rBD}"; fi
 }
 
+######### Prepare Input Files #########
+######### ------------------- #########
 
-######### -------------
-######### Check outputs
+######### ------------- #########
+######### Check outputs #########
 
 function _CHECK_OUTPUTS() {
 	if [ $all_ok == true ]; then all_ok=false
@@ -647,8 +660,11 @@ $(for file in "${!arr_files_sorted[@]}"; do echo "   ${arr_files_sorted[$file]}"
 	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _CHECK_OUTPUTS ${F}${rBD}"; fi
 }
 
-######### -----------------
-######### Install USER DATA
+######### Check outputs #########
+######### ------------- #########
+
+######### ----------------- #########
+######### Install USER DATA #########
 
 function _INSTALL_USER_DATA() {
 	# Copy user data
@@ -662,6 +678,9 @@ function _INSTALL_USER_DATA() {
 	fi
 	if [ $MODE_DEBUG == true ]; then echo "_INSTALL_APP - all_ok = $all_ok"; read pause; fi
 }
+
+######### Install USER DATA #########
+######### ----------------- #########
 
 ######### ------------------------------- #########
 ######### Install application (USER MODE) #########
