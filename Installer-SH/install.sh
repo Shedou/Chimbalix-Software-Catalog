@@ -329,8 +329,9 @@ function _SET_LOCALE() {
 	
 }
 
-######### ------------------------------------------------
-######### ------------------------------------------------
+######### -------------- #########
+######### Base functions #########
+
 function _CLEAR_TEMP() {
 	if [ -e "$Temp_Dir" ]; then
 		rm -rf "$Temp_Dir"; fi
@@ -351,8 +352,12 @@ $Header
 	read pause; clear; exit 1 # Double clear resets styles before going to the system terminal window.
 }
 
-######### -------------------------
-######### Print package information
+######### Base functions #########
+######### -------------- #########
+
+######### ------------------------- #########
+######### Print package information #########
+
 function _PRINT_PACKAGE_INFO() {
 if [ $MODE_SILENT == false ]; then
 	if [ $all_ok == true ]; then all_ok=false
@@ -382,6 +387,9 @@ $Info_Description
 	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _PRINT_PACKAGE_INFO ${F}${rBD}"; fi
 fi
 }
+
+######### Print package information #########
+######### ------------------------- #########
 
 ######### -------------------------------- #########
 ######### Check and compare MD5 of archive #########
