@@ -25,6 +25,8 @@ Path_Installer_Data="$Path_To_Script/installer-data"
 Tool_SevenZip_bin="$Path_Installer_Data/tools/7zip/7zzs"
 Tool_Gio_Trust_Xfce="$Path_Installer_Data/tools/gio-trust-xfce.sh"
 Tool_Prepare_Base="$Path_Installer_Data/tools/prepare-portsoft-menu.sh"
+List_Errors=""		#List_Errors="${List_Errors}\n _FUNCTION - Message."
+List_Warnings=""	#List_Warnings="${List_Warnings}\n _FUNCTION - Message."
 
 Current_DE="Unknown DE"
 Current_OS_Full_Name="Unknown"
@@ -237,6 +239,8 @@ function _SET_LOCALE() {
 		
 		Str_ABORT_Msg="Exit code -"
 		Str_ABORT_Exit="Press Enter or close the window to exit."
+		Str_ABORT_Errors="Errors:"
+		Str_ABORT_Warnings="Warnings:"
 		
 		Str_CHECKOS_No_Distro_Name="The name of the operating system / kernel is not defined!"
 		
@@ -345,7 +349,16 @@ function _ABORT() {
 	clear
 	echo -e "\
 $Header
-  $Str_ABORT_Msg $1
+  $Str_ABORT_Msg $1"
+	if [ "$List_Errors" != "" ]; then
+		echo -e "
+  ${Bold}${F_Red}- $Str_ABORT_Errors${F}${rBD} $List_Errors"
+	fi
+	if [ "$List_Warnings" != "" ]; then
+		echo -e "
+  ${Bold}${F_Yellow}- $Str_ABORT_Warnings${F}${rBD} $List_Warnings"
+	fi
+	echo -e "\
 
   $Str_ABORT_Exit"
 	_CLEAR_TEMP
@@ -836,20 +849,26 @@ $Header
 ######### Prepare uninstaller file #########
 
 function _PREPARE_UNINSTALLER_SYSTEM() {
-	sudo chmod 755 "$Output_Uninstaller"
-	sudo chown $Out_App_Folder_Owner "$Output_Uninstaller"
-	for filename in "${!All_Files[@]}"; do
-		local CurrentFile="${All_Files[$filename]}"
-		sudo sed -i "s~FilesToDelete=(~&\n$CurrentFile~" "$Output_Uninstaller"
-	done
+	if [ -e "$Output_Uninstaller" ]; then
+		sudo chmod 755 "$Output_Uninstaller"
+		sudo chown $Out_App_Folder_Owner "$Output_Uninstaller"
+	
+		for filename in "${!All_Files[@]}"; do
+			local CurrentFile="${All_Files[$filename]}"
+			sudo sed -i "s~FilesToDelete=(~&\n$CurrentFile~" "$Output_Uninstaller"
+		done
+	else List_Errors="${List_Errors}\n _PREPARE_UNINSTALLER_SYSTEM - Output_Uninstaller not found."; fi
 }
 
 function _PREPARE_UNINSTALLER_USER() {
-	chmod 744 "$Output_Uninstaller"
-	for filename in "${!All_Files[@]}"; do
-		local CurrentFile="${All_Files[$filename]}"
-		sed -i "s~FilesToDelete=(~&\n$CurrentFile~" "$Output_Uninstaller"
-	done
+	if [ -e "$Output_Uninstaller" ]; then
+		chmod 744 "$Output_Uninstaller"
+	
+		for filename in "${!All_Files[@]}"; do
+			local CurrentFile="${All_Files[$filename]}"
+			sed -i "s~FilesToDelete=(~&\n$CurrentFile~" "$Output_Uninstaller"
+		done
+	else List_Errors="${List_Errors}\n _PREPARE_UNINSTALLER_USER - Output_Uninstaller not found."; fi
 }
 
 function _PREPARE_UNINSTALLER() {
