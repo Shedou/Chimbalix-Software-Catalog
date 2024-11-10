@@ -704,7 +704,6 @@ function _INSTALL_USER_DATA() {
 ######### Install USER DATA #########
 ######### ----------------- #########
 
-
 ######### --------------- #########
 ######### Install Helpers #########
 
@@ -732,8 +731,34 @@ function _INSTALL_HELPERS() {
 			if [ "$Install_Mode" == "System" ]; then _INSTALL_HELPERS_XFCE_SYSTEM; else _INSTALL_HELPERS_XFCE_USER; fi; fi
 	fi
 }
+
 ######### Install Helpers #########
 ######### --------------- #########
+
+######### --------------------- #########
+######### Install Desktop Icons #########
+
+function _INSTALL_DESKTOP_ICONS_TRUST_XFCE() {
+	for file in "${!Files_Desktop_Dir[@]}"; do
+		if ! [[ -x "$Tool_Gio_Trust_Xfce" ]]; then chmod +x "$Tool_Gio_Trust_Xfce"; fi
+		"$Tool_Gio_Trust_Xfce" -trust --silent "$Output_Desktop_Dir/${Files_Desktop_Dir[$file]}"
+	done
+}
+
+function _INSTALL_DESKTOP_ICONS() {
+	# Check input folder
+	if [ -e "$Input_Desktop_Dir" ]; then
+		# Copy Desktop files
+		cp -rf "$Input_Desktop_Dir/." "$Output_Desktop_Dir"
+		
+		# Trust Desktop files
+		if [ "$Current_DE" == "xfce" ]; then
+			_INSTALL_DESKTOP_ICONS_TRUST_XFCE; fi
+	else List_Errors="${List_Errors}\n _INSTALL_DESKTOP_ICONS - Input_Desktop_Dir not found."; fi
+}
+
+######### Install Desktop Icons #########
+######### --------------------- #########
 
 ######### ------------------------------- #########
 ######### Install application (USER MODE) #########
@@ -781,16 +806,7 @@ $Header
 		
 		# Install Desktop files
 		if [ $Install_Desktop_Icons == true ]; then
-			cp -rf "$Input_Desktop_Dir/." "$Output_Desktop_Dir"
-			
-			# Trust Desktop files
-			if [ "$Current_DE" == "xfce" ]; then
-				for file in "${!Files_Desktop_Dir[@]}"; do
-					if ! [[ -x "$Tool_Gio_Trust_Xfce" ]]; then chmod +x "$Tool_Gio_Trust_Xfce"; fi
-					"$Tool_Gio_Trust_Xfce" -trust --silent "$Output_Desktop_Dir/${Files_Desktop_Dir[$file]}"
-				done
-			fi
-		fi
+			_INSTALL_DESKTOP_ICONS; fi
 		
 		# Copy user data
 		if [ $User_Data_Copy_Confirm == true ]; then _INSTALL_USER_DATA; fi
@@ -851,16 +867,7 @@ $Header
 		
 		# Install Desktop files
 		if [ $Install_Desktop_Icons == true ]; then
-			cp -rf "$Input_Desktop_Dir/." "$Output_Desktop_Dir"
-			
-			# Trust Desktop files
-			if [ "$Current_DE" == "xfce" ]; then
-				for file in "${!Files_Desktop_Dir[@]}"; do
-					if ! [[ -x "$Tool_Gio_Trust_Xfce" ]]; then chmod +x "$Tool_Gio_Trust_Xfce"; fi
-					"$Tool_Gio_Trust_Xfce" -trust --silent "$Output_Desktop_Dir/${Files_Desktop_Dir[$file]}"
-				done
-			fi
-		fi
+			_INSTALL_DESKTOP_ICONS; fi
 		
 		# Copy user data
 		if [ $User_Data_Copy_Confirm == true ]; then _INSTALL_USER_DATA; fi
