@@ -61,7 +61,8 @@ function _MAIN() {
 	_CREATE_TEMP
 	_PREPARE_INPUT_FILES
 	_CHECK_OUTPUTS
-	if [ "$Install_Mode" == "System" ]; then _INSTALL_APP_SYSTEM; else _INSTALL_APP_USER; fi; _PREPARE_UNINSTALLER
+	if [ "$Install_Mode" == "System" ]; then _INSTALL_APP_SYSTEM; else _INSTALL_APP_USER; fi
+	_PREPARE_UNINSTALLER
 }
 
 ######### ---- -------- ---- #########
@@ -607,7 +608,7 @@ function _PREPARE_INPUT_FILES() {
 		#done
 		
 		Input_Bin_Dir="$Temp_Dir/bin"
-		Input_Helpers_Dir="$Temp_Dir/helpers"
+		Input_Helpers_Dir="$Temp_Dir/xfce4/helpers"
 		Input_Desktop_Dir="$Temp_Dir/desktop"
 		Input_Menu_Files_Dir="$Temp_Dir/menu/applications-merged"
 		Input_Menu_Desktop_Dir="$Temp_Dir/menu/desktop-directories/apps"
@@ -703,6 +704,37 @@ function _INSTALL_USER_DATA() {
 ######### Install USER DATA #########
 ######### ----------------- #########
 
+
+######### --------------- #########
+######### Install Helpers #########
+
+### -------------- ###
+### Helpers (XFCE) ###
+# Default paths:
+#  /usr/share/xfce4/helpers/
+#  ~/.local/share/xfce4/helpers/
+
+function _INSTALL_HELPERS_XFCE_SYSTEM() {
+	sudo cp -rf "$Input_Helpers_Dir/." "$Output_Helpers_Dir"
+}
+
+function _INSTALL_HELPERS_XFCE_USER() {
+	if [ ! -e "$Output_Helpers_Dir" ]; then mkdir -p "$Output_Helpers_Dir"; fi
+	cp -rf "$Input_Helpers_Dir/." "$Output_Helpers_Dir"
+}
+
+### Helpers (XFCE) ###
+### -------------- ###
+
+function _INSTALL_HELPERS() {
+	if [ $Install_Helpers == true ]; then
+		if [ $Current_DE == "xfce" ]; then
+			if [ "$Install_Mode" == "System" ]; then _INSTALL_HELPERS_XFCE_SYSTEM; else _INSTALL_HELPERS_XFCE_USER; fi; fi
+	fi
+}
+######### Install Helpers #########
+######### --------------- #########
+
 ######### ------------------------------- #########
 ######### Install application (USER MODE) #########
 
@@ -745,10 +777,7 @@ $Header
 		cp -rf "$Input_Menu_Apps_Dir/." "$Output_Menu_Apps"
 		
 		# Install Helpers
-		if [ $Install_Helpers == true ]; then
-			if [ ! -e "$Output_Helpers_Dir" ]; then mkdir -p "$Output_Helpers_Dir"; fi
-			cp -rf "$Input_Helpers_Dir/." "$Output_Helpers_Dir"
-		fi
+		_INSTALL_HELPERS
 		
 		# Install Desktop files
 		if [ $Install_Desktop_Icons == true ]; then
@@ -818,7 +847,7 @@ $Header
 		sudo cp -rf "$Input_Menu_Apps_Dir/." "$Output_Menu_Apps"
 		
 		# Install Helpers
-		if [ $Install_Helpers == true ]; then sudo cp -rf "$Input_Helpers_Dir/." "$Output_Helpers_Dir"; fi
+		_INSTALL_HELPERS
 		
 		# Install Desktop files
 		if [ $Install_Desktop_Icons == true ]; then
