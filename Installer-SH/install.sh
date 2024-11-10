@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Script version 1.8
+# Script version 1.9
 # LICENSE for this script is at the end of this file
 # FreeSpace=$(df -m "$Out_InstallDir" | grep "/" | awk '{print $4}')
 # Font styles: "${Bold} BLACK TEXT ${rBD} normal text."
@@ -85,11 +85,11 @@ Unique_App_Folder_Name="example_application_18" #=> UNIQUE_APP_FOLDER_NAME
 ######### - ------------------- - #########
 ######### - Package Information - #########
 ######### - ------------------- - #########
-Header="${BG_Black}${F_Red}${Bold} -=: Software Installer Script for Chimbalix (Installer-SH v1.8) - Lang: ${Bold}$Lang_Display${rBD} :=-${rBD}${F}\n"
+Header="${BG_Black}${F_Red}${Bold} -=: Software Installer Script for Chimbalix (Installer-SH v1.9) - Lang: ${Bold}$Lang_Display${rBD} :=-${rBD}${F}\n"
 
 Info_Name="Example Application"
-Info_Version="1.8"
-Info_Release_Date="2024-10-29"
+Info_Version="1.9"
+Info_Release_Date="2024-11-xx"
 Info_Category="Other"
 Info_Platform="Linux"
 Info_Installed_Size="~1 MiB"
@@ -117,11 +117,11 @@ fi
  # Please manually prepare the menu files in the "installer-data/system_files/" directory before packaging the application,
  # this functionality does not allow you to fully customize the menu files.
  # Use the variable names given in the comments to simplify the preparation of menu files.
-Menu_Directory_Name="Example Application 1.8"	#=> MENU_DIRECTORY_NAME
+Menu_Directory_Name="Example Application 1.9"	#=> MENU_DIRECTORY_NAME
 Menu_Directory_Icon="icon.png"					#=> MENU_DIRECTORY_ICON
 
 Program_Executable_File="program/example-application"	#=> PROGRAM_EXECUTABLE_FILE
-Program_Name_In_Menu="Example Application 1.8"			#=> PROGRAM_NAME_IN_MENU
+Program_Name_In_Menu="Example Application 1.9"			#=> PROGRAM_NAME_IN_MENU
 Program_Icon_In_Menu="icon.png"							#=> PROGRAM_ICON_IN_MENU
 Program_Exe_Run_In_Terminal="true"						#=> PROGRAM_EXE_RUN_IN_TERMINAL
 Program_Install_Mode="$Install_Mode"					#=> PROGRAM_INSTALL_MODE
@@ -218,7 +218,7 @@ function _SET_LOCALE() {
 	if [ $MODE_SILENT == false ]; then Lang_Display="$Language"; fi
 	Locale_File="$Path_To_Script/locales/$Language"
 	if [ -e "$Locale_File" ]; then
-		if [ $(grep Locale_Version "$Locale_File") == 'Locale_Version="1.7"' ]; then source "$Locale_File";
+		if [ $(grep Locale_Version "$Locale_File") == 'Locale_Version="1.9"' ]; then source "$Locale_File";
 		else Locale_Use_Default=true; fi
 	else Locale_Use_Default=true; fi
 	
@@ -663,8 +663,8 @@ function _INSTALL_USER_DATA() {
 	if [ $MODE_DEBUG == true ]; then echo "_INSTALL_APP - all_ok = $all_ok"; read pause; fi
 }
 
-######### -------------------------------
-######### Install application (USER MODE)
+######### ------------------------------- #########
+######### Install application (USER MODE) #########
 
 function _INSTALL_APP_USER() {
 	if [ $all_ok == true ]; then all_ok=false
@@ -732,8 +732,11 @@ $Header
 	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _INSTALL_APP ${F}${rBD}"; fi
 }
 
-######### ---------------------------------
-######### Install application (SYSTEM MODE)
+######### Install application (USER MODE) #########
+######### ------------------------------- #########
+
+######### --------------------------------- #########
+######### Install application (SYSTEM MODE) #########
 
 function _INSTALL_APP_SYSTEM() {
 	if [ $all_ok == true ]; then all_ok=false
@@ -799,26 +802,34 @@ $Header
 	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _INSTALL_APP ${F}${rBD}"; fi
 }
 
-######### ------------------------
-######### Prepare uninstaller file
+######### Install application (SYSTEM MODE) #########
+######### --------------------------------- #########
+
+######### ------------------------ #########
+######### Prepare uninstaller file #########
+
+function _PREPARE_UNINSTALLER_SYSTEM() {
+	sudo chmod 755 "$Output_Uninstaller"
+	sudo chown $Out_App_Folder_Owner "$Output_Uninstaller"
+	for filename in "${!All_Files[@]}"; do
+		local CurrentFile="${All_Files[$filename]}"
+		sudo sed -i "s~FilesToDelete=(~&\n$CurrentFile~" "$Output_Uninstaller"
+	done
+}
+
+function _PREPARE_UNINSTALLER_USER() {
+	chmod 744 "$Output_Uninstaller"
+	for filename in "${!All_Files[@]}"; do
+		local CurrentFile="${All_Files[$filename]}"
+		sed -i "s~FilesToDelete=(~&\n$CurrentFile~" "$Output_Uninstaller"
+	done
+}
 
 function _PREPARE_UNINSTALLER() {
 	if [ $all_ok == true ]; then
-		if [ "$Install_Mode" == "System" ]; then
-			sudo chmod 755 "$Output_Uninstaller"
-			sudo chown $Out_App_Folder_Owner "$Output_Uninstaller"
-			for filename in "${!All_Files[@]}"; do
-				CurrentFile="${All_Files[$filename]}"
-				sudo sed -i "s~FilesToDelete=(~&\n$CurrentFile~" "$Output_Uninstaller"
-			done
-		fi
-		if [ "$Install_Mode" == "User" ]; then
-			chmod 744 "$Output_Uninstaller"
-			for filename in "${!All_Files[@]}"; do
-				CurrentFile="${All_Files[$filename]}"
-				sed -i "s~FilesToDelete=(~&\n$CurrentFile~" "$Output_Uninstaller"
-			done
-		fi
+		if [ "$Install_Mode" == "System" ]; then _PREPARE_UNINSTALLER_SYSTEM; fi
+		if [ "$Install_Mode" == "User" ]; then _PREPARE_UNINSTALLER_USER; fi
+		
 		# Restart taskbar
 		if [ "$Current_DE" == "xfce" ]; then xfce4-panel -r &> /dev/null; fi
 		
@@ -827,6 +838,9 @@ function _PREPARE_UNINSTALLER() {
 		if [ $MODE_DEBUG == true ]; then echo "_PREPARE_UNINSTALLER - all_ok = $all_ok"; read pause; fi
 	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _PREPARE_UNINSTALLER ${F}${rBD}"; fi
 }
+
+######### Prepare uninstaller file #########
+######### ------------------------ #########
 
 ######### ---- --------- ---- #########
 ######### -- END FUNCTIONS -- #########
