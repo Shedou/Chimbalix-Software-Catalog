@@ -2,15 +2,15 @@
 # Script version 1.9
 # LICENSE for this script is at the end of this file
 # FreeSpace=$(df -m "$Out_InstallDir" | grep "/" | awk '{print $4}')
-# Font styles: "${Bold} BLACK TEXT ${rBD} normal text."
-Bold="\e[1m"; Dim="\e[2m"; rBD="\e[22m";
-F='\033[39m'; BG='\033[49m'; # Reset colors
-F_Black='\033[30m'; F_DarkGray='\033[90m'; F_Gray='\033[37m'; F_White='\033[97m';
-F_DarkRed='\033[31m'; F_DarkGreen='\033[32m'; F_DarkYellow='\033[33m'; F_DarkBlue='\033[34m'; F_DarkMagenta='\033[35m'; F_DarkCyan='\033[36m';
-F_Red='\033[91m'; F_Green='\033[92m'; F_Yellow='\033[93m'; F_Blue='\033[94m'; F_Magenta='\033[95m'; F_Cyan='\033[96m';
-BG_Black='\033[40m'; BG_DarkGray='\033[100m'; BG_Gray='\033[47m'; BG_White='\033[107m';
-BG_DarkRed='\033[41m'; BG_DarkGreen='\033[42m'; BG_DarkYellow='\033[43m'; BG_DarkBlue='\033[44m'; BG_DarkMagenta='\033[45m'; BG_DarkCyan='\033[46m';
-BG_Red='\033[101m'; BG_Green='\033[102m'; BG_Yellow='\033[103m'; BG_Blue='\033[104m'; BG_Magenta='\033[105m'; BG_Cyan='\033[106m';
+# Font styles: "${Font_Bold} BLACK TEXT ${Font_Reset} normal text."
+Font_Bold="\e[1m"; Font_Dim="\e[2m"; Font_Reset="\e[22m";
+Font_Color_Reset='\033[39m'; BG_Color_Reset='\033[49m'; # Reset colors
+Font_Black='\033[30m'; Font_DarkGray='\033[90m'; Font_Gray='\033[37m'; Font_White='\033[97m';
+Font_DarkRed='\033[31m'; Font_DarkGreen='\033[32m'; Font_DarkYellow='\033[33m'; Font_DarkBlue='\033[34m'; Font_DarkMagenta='\033[35m'; Font_DarkCyan='\033[36m';
+Font_Red='\033[91m'; Font_Green='\033[92m'; Font_Yellow='\033[93m'; Font_Blue='\033[94m'; Font_Magenta='\033[95m'; Font_Cyan='\033[96m';
+Font_BG_Black='\033[40m'; Font_BG_DarkGray='\033[100m'; Font_BG_Gray='\033[47m'; Font_BG_White='\033[107m';
+Font_BG_DarkRed='\033[41m'; Font_BG_DarkGreen='\033[42m'; Font_BG_DarkYellow='\033[43m'; Font_BG_DarkBlue='\033[44m'; Font_BG_DarkMagenta='\033[45m'; Font_BG_DarkCyan='\033[46m';
+Font_BG_Red='\033[101m'; Font_BG_Green='\033[102m'; Font_BG_Yellow='\033[103m'; Font_BG_Blue='\033[104m'; Font_BG_Magenta='\033[105m'; Font_BG_Cyan='\033[106m';
 ######### --------- #########
 ######### Base vars #########
 Arguments=("$@")
@@ -81,7 +81,7 @@ Unique_App_Folder_Name="example_application_18" #=> UNIQUE_APP_FOLDER_NAME
 ######### - ------------------- - #########
 ######### - Package Information - #########
 ######### - ------------------- - #########
-Header="${BG_Black}${F_Red}${Bold} -=: Software Installer Script for Chimbalix (Installer-SH v1.9) - Lang: ${Bold}$Locale_Display${rBD} :=-${rBD}${F}\n"
+Header="${Font_BG_Black}${Font_Red}${Font_Bold} -=: Software Installer Script for Chimbalix (Installer-SH v1.9) - Lang: ${Font_Bold}$Locale_Display${Font_Reset} :=-${Font_Reset}${Font_Color_Reset}\n"
 
 Info_Name="Example Application"
 Info_Version="1.9"
@@ -239,10 +239,10 @@ $Header
   $Str_ABORT_Msg $1"
 	
 	if [ "$List_Errors" != "" ]; then echo -e "
-  ${Bold}${F_Red}- $Str_ABORT_Errors${F}${rBD} $List_Errors"; fi
+  ${Font_Bold}${Font_Red}- $Str_ABORT_Errors${Font_Color_Reset}${Font_Reset} $List_Errors"; fi
 	
 	if [ "$List_Warnings" != "" ]; then echo -e "
-  ${Bold}${F_Yellow}- $Str_ABORT_Warnings${F}${rBD} $List_Warnings"; fi
+  ${Font_Bold}${Font_Yellow}- $Str_ABORT_Warnings${Font_Color_Reset}${Font_Reset} $List_Warnings"; fi
 	
 	echo -e "
   $Str_ABORT_Exit"
@@ -274,7 +274,7 @@ function _CHECK_SYSTEM() {
 		Current_OS_Codename="$DISTRIB_CODENAME"
 	else
 		if type uname &>/dev/null; then DistroVersion="$(uname -sr)"
-		else _ABORT "$Str_ATTENTION! ${Bold}${F_Yellow}$Str_CHECKOS_No_Distro_Name${F}${rBD}"; fi
+		else _ABORT "$Str_ATTENTION! ${Font_Bold}${Font_Yellow}$Str_CHECKOS_No_Distro_Name${Font_Color_Reset}${Font_Reset}"; fi
 	fi
 	
 	# Check DE
@@ -301,30 +301,30 @@ function _CHECK_SYSTEM() {
 function _PRINT_PACKAGE_INFO() {
 if [ $MODE_SILENT == false ]; then
 	if [ $all_ok == true ]; then all_ok=false
-		echo -e "${BG_Black}"; clear; # A crutch to fill the background completely...
+		echo -e "${Font_BG_Black}"; clear; # A crutch to fill the background completely...
 		echo -e "\
 $Header
- ${Bold}${F_Cyan}$Str_PACKAGEINFO_Head${F}${rBD}
- -${Bold}${F_DarkYellow}$Str_PACKAGEINFO_Name${F} $Info_Name${rBD} ($Info_Version,  $Architecture)
- -${Bold}${F_DarkYellow}$Str_PACKAGEINFO_ReleaseDate${rBD}${F} $Info_Release_Date
- -${Bold}${F_DarkYellow}$Str_PACKAGEINFO_Category${rBD}${F} $Info_Category
- -${Bold}${F_DarkYellow}$Str_PACKAGEINFO_Platform${rBD}${F} $Info_Platform
- -${Bold}${F_DarkYellow}$Str_PACKAGEINFO_InstalledSize${rBD}${F} $Info_Installed_Size
- -${Bold}${F_DarkYellow}$Str_PACKAGEINFO_Licensing${rBD}${F} $Info_Licensing
- -${Bold}${F_DarkYellow}$Str_PACKAGEINFO_Developer${rBD}${F} $Info_Developer
- -${Bold}${F_DarkYellow}$Str_PACKAGEINFO_URL${rBD}${F} $Info_URL
- -${Bold}${F_DarkYellow}$Str_PACKAGEINFO_Description${F}${rBD}
+ ${Font_Bold}${Font_Cyan}$Str_PACKAGEINFO_Head${Font_Color_Reset}${Font_Reset}
+ -${Font_Bold}${Font_DarkYellow}$Str_PACKAGEINFO_Name${Font_Color_Reset} $Info_Name${Font_Reset} ($Info_Version,  $Architecture)
+ -${Font_Bold}${Font_DarkYellow}$Str_PACKAGEINFO_ReleaseDate${Font_Reset}${Font_Color_Reset} $Info_Release_Date
+ -${Font_Bold}${Font_DarkYellow}$Str_PACKAGEINFO_Category${Font_Reset}${Font_Color_Reset} $Info_Category
+ -${Font_Bold}${Font_DarkYellow}$Str_PACKAGEINFO_Platform${Font_Reset}${Font_Color_Reset} $Info_Platform
+ -${Font_Bold}${Font_DarkYellow}$Str_PACKAGEINFO_InstalledSize${Font_Reset}${Font_Color_Reset} $Info_Installed_Size
+ -${Font_Bold}${Font_DarkYellow}$Str_PACKAGEINFO_Licensing${Font_Reset}${Font_Color_Reset} $Info_Licensing
+ -${Font_Bold}${Font_DarkYellow}$Str_PACKAGEINFO_Developer${Font_Reset}${Font_Color_Reset} $Info_Developer
+ -${Font_Bold}${Font_DarkYellow}$Str_PACKAGEINFO_URL${Font_Reset}${Font_Color_Reset} $Info_URL
+ -${Font_Bold}${Font_DarkYellow}$Str_PACKAGEINFO_Description${Font_Color_Reset}${Font_Reset}
 $Info_Description
 
- -${Bold}${F_DarkGreen}$Str_PACKAGEINFO_CurrentOS${F} $Current_OS_Name_Full ($Current_DE)${rBD}
- -${Bold}${F_DarkGreen}$Str_PACKAGEINFO_InstallMode${F} $Install_Mode${rBD}"
+ -${Font_Bold}${Font_DarkGreen}$Str_PACKAGEINFO_CurrentOS${Font_Color_Reset} $Current_OS_Name_Full ($Current_DE)${Font_Reset}
+ -${Font_Bold}${Font_DarkGreen}$Str_PACKAGEINFO_InstallMode${Font_Color_Reset} $Install_Mode${Font_Reset}"
 		echo -e "\n $Str_PACKAGEINFO_Confirm"
 		read package_info_confirm
 		if [ "$package_info_confirm" == "y" ] || [ "$package_info_confirm" == "yes" ]; then all_ok=true
-		else _ABORT "${Bold}${F_Green}$Str_Interrupted_By_User${F}${rBD}"; fi
+		else _ABORT "${Font_Bold}${Font_Green}$Str_Interrupted_By_User${Font_Color_Reset}${Font_Reset}"; fi
 		
 		if [ $MODE_DEBUG == true ]; then echo "_PRINT_PACKAGE_INFO - all_ok = $all_ok"; read pause; fi
-	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _PRINT_PACKAGE_INFO ${F}${rBD}"; fi
+	else _ABORT "$Str_ERROR! ${Font_Bold}${Font_Yellow}$Str_Error_All_Ok _PRINT_PACKAGE_INFO ${Font_Color_Reset}${Font_Reset}"; fi
 fi
 }
 
@@ -358,43 +358,43 @@ function _CHECK_MD5_PRINT() {
 	clear
 	echo -e "\
 $Header
- ${Bold}${F_Cyan}$Str_CHECKMD5PRINT_Head${F}${rBD}
+ ${Font_Bold}${Font_Cyan}$Str_CHECKMD5PRINT_Head${Font_Color_Reset}${Font_Reset}
   $Str_CHECKMD5PRINT_Sub_Head"
 	
 	if [ $md5_warning == true ]; then
 		echo -e "\
 
-  $Str_ATTENTION ${Bold}${F_DarkRed}$Str_CHECKMD5PRINT_Hash_Not_Match${F}
-  ${F_Red}$Str_CHECKMD5PRINT_Hash_Not_Match2${F}${rBD}"
+  $Str_ATTENTION ${Font_Bold}${Font_DarkRed}$Str_CHECKMD5PRINT_Hash_Not_Match${Font_Color_Reset}
+  ${Font_Red}$Str_CHECKMD5PRINT_Hash_Not_Match2${Font_Color_Reset}${Font_Reset}"
 		if [ $md5_pfiles_error == true ]; then
 			echo -e "\
 
-   ${Bold}$Str_CHECKMD5PRINT_Expected_pHash${rBD} \"$Archive_Program_Files_MD5\"
-   ${Bold}$Str_CHECKMD5PRINT_Real_pHash${rBD}     \"$Program_Files_MD5\""; fi
+   ${Font_Bold}$Str_CHECKMD5PRINT_Expected_pHash${Font_Reset} \"$Archive_Program_Files_MD5\"
+   ${Font_Bold}$Str_CHECKMD5PRINT_Real_pHash${Font_Reset}     \"$Program_Files_MD5\""; fi
 		if [ $md5_sfiles_error == true ]; then
 			echo -e "\
 
-   ${Bold}$Str_CHECKMD5PRINT_Expected_sHash${rBD} \"$Archive_System_Files_MD5\"
-   ${Bold}$Str_CHECKMD5PRINT_Real_sHash${rBD}     \"$System_Files_MD5\""; fi
+   ${Font_Bold}$Str_CHECKMD5PRINT_Expected_sHash${Font_Reset} \"$Archive_System_Files_MD5\"
+   ${Font_Bold}$Str_CHECKMD5PRINT_Real_sHash${Font_Reset}     \"$System_Files_MD5\""; fi
 		if [ $md5_ufiles_error == true ]; then
 			echo -e "\
 
-   ${Bold}$Str_CHECKMD5PRINT_Expected_uHash${rBD} \"$Archive_User_Files_MD5\"
-   ${Bold}$Str_CHECKMD5PRINT_Real_uHash${rBD}     \"$User_Files_MD5\""; fi
+   ${Font_Bold}$Str_CHECKMD5PRINT_Expected_uHash${Font_Reset} \"$Archive_User_Files_MD5\"
+   ${Font_Bold}$Str_CHECKMD5PRINT_Real_uHash${Font_Reset}     \"$User_Files_MD5\""; fi
 		echo -e "\n  $Str_CHECKMD5PRINT_yes_To_Continue"
 		read errors_confirm
     	if [ "$errors_confirm" == "y" ] || [ "$errors_confirm" == "yes" ]; then all_ok=true
-		else _ABORT "${Bold}${F_Green}$Str_Interrupted_By_User${F}${rBD}"; fi
+		else _ABORT "${Font_Bold}${Font_Green}$Str_Interrupted_By_User${Font_Color_Reset}${Font_Reset}"; fi
 	else
 		all_ok=true
 		echo -e "
-  ${F_Green}The integrity of the installation archive has been successfully verified
-   ${Bold}$Str_CHECKMD5PRINT_Real_pHash${rBD}  \"$Program_Files_MD5\"
-   ${Bold}$Str_CHECKMD5PRINT_Real_sHash${rBD}   \"$System_Files_MD5\""
+  ${Font_Green}The integrity of the installation archive has been successfully verified
+   ${Font_Bold}$Str_CHECKMD5PRINT_Real_pHash${Font_Reset}  \"$Program_Files_MD5\"
+   ${Font_Bold}$Str_CHECKMD5PRINT_Real_sHash${Font_Reset}   \"$System_Files_MD5\""
 		if [ $User_Data_Copy_Confirm == true ]; then echo -e "\
-   ${Bold}$Str_CHECKMD5PRINT_Real_uHash${rBD}     \"$User_Files_MD5\""; fi
-		echo -e "${F}
-  ${Bold}$Str_CHECKMD5PRINT_Enter_To_Continue${rBD}"
+   ${Font_Bold}$Str_CHECKMD5PRINT_Real_uHash${Font_Reset}     \"$User_Files_MD5\""; fi
+		echo -e "${Font_Color_Reset}
+  ${Font_Bold}$Str_CHECKMD5PRINT_Enter_To_Continue${Font_Reset}"
 		read pause
 	fi
 }
@@ -405,7 +405,7 @@ if [ $MODE_SILENT == false ]; then
 		clear
 		echo -e "\
 $Header
- ${Bold}${F_Cyan}$Str_CHECKMD5_Head${F}${rBD}
+ ${Font_Bold}${Font_Cyan}$Str_CHECKMD5_Head${Font_Color_Reset}${Font_Reset}
   $Str_CHECKMD5_Sub_Head
    $Str_CHECKMD5_Sub_Head2
   
@@ -417,7 +417,7 @@ $Header
 		else all_ok=true; fi
 	
 	if [ $MODE_DEBUG == true ]; then echo "_CHECK_MD5 - all_ok = $all_ok"; read pause; fi
-	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _CHECK_MD5 ${F}${rBD}"; fi
+	else _ABORT "$Str_ERROR! ${Font_Bold}${Font_Yellow}$Str_Error_All_Ok _CHECK_MD5 ${Font_Color_Reset}${Font_Reset}"; fi
 else
 	_CHECK_MD5_COMPARE
 	if [ $md5_warning == true ]; then _CHECK_MD5_PRINT; fi
@@ -436,42 +436,42 @@ if [ $MODE_SILENT == false ]; then
 		clear
 		echo -e "\
 $Header
- ${Bold}${F_Cyan}$Str_PRINTINSTALLSETTINGS_Head (${F_DarkYellow}$Install_Mode${F_Cyan}):${F}${rBD}
+ ${Font_Bold}${Font_Cyan}$Str_PRINTINSTALLSETTINGS_Head (${Font_DarkYellow}$Install_Mode${Font_Cyan}):${Font_Color_Reset}${Font_Reset}
 
- -${Bold}${F_DarkGreen}$Str_PRINTINSTALLSETTINGS_Temp_Dir${F}${rBD} $Temp_Dir
+ -${Font_Bold}${Font_DarkGreen}$Str_PRINTINSTALLSETTINGS_Temp_Dir${Font_Color_Reset}${Font_Reset} $Temp_Dir
  
- -${Bold}${F_DarkGreen}$Str_PRINTINSTALLSETTINGS_App_Inst_Dir
-   ${F}${rBD}$Output_Install_Dir
+ -${Font_Bold}${Font_DarkGreen}$Str_PRINTINSTALLSETTINGS_App_Inst_Dir
+   ${Font_Color_Reset}${Font_Reset}$Output_Install_Dir
 
- -${Bold}${F_DarkGreen}$Str_PRINTINSTALLSETTINGS_Menu_Dirs${F}${rBD}
+ -${Font_Bold}${Font_DarkGreen}$Str_PRINTINSTALLSETTINGS_Menu_Dirs${Font_Color_Reset}${Font_Reset}
    $Output_Menu_Files
    $Output_Menu_DDir
    $Output_Menu_Apps
 
- -${Bold}${F_DarkGreen}$Str_PRINTINSTALLSETTINGS_Bin_Dir${F}${rBD}
+ -${Font_Bold}${Font_DarkGreen}$Str_PRINTINSTALLSETTINGS_Bin_Dir${Font_Color_Reset}${Font_Reset}
    $Output_Bin_Dir"
 
 		if [ $Install_Helpers == true ]; then
 			echo -e "
- -${Bold}${F_DarkGreen}$Str_PRINTINSTALLSETTINGS_Helpers_Dir${F}${rBD}
+ -${Font_Bold}${Font_DarkGreen}$Str_PRINTINSTALLSETTINGS_Helpers_Dir${Font_Color_Reset}${Font_Reset}
    $Output_Helpers_Dir"; fi
 
 		if [ $Install_Desktop_Icons == true ]; then
 			echo -e "
- -${Bold}${F_DarkGreen}$Str_PRINTINSTALLSETTINGS_Desktop_Dir${F}${rBD}
+ -${Font_Bold}${Font_DarkGreen}$Str_PRINTINSTALLSETTINGS_Desktop_Dir${Font_Color_Reset}${Font_Reset}
    $Output_Desktop_Dir"; fi
 
 		if [ $User_Data_Copy_Confirm == true ]; then
 			echo -e "
- -$Str_ATTENTION! ${Bold}${F_DarkGreen}$Str_PRINTINSTALLSETTINGS_Copy_uData_To${F}${rBD} $Output_User_Home
+ -$Str_ATTENTION! ${Font_Bold}${Font_DarkGreen}$Str_PRINTINSTALLSETTINGS_Copy_uData_To${Font_Color_Reset}${Font_Reset} $Output_User_Home
    $Str_PRINTINSTALLSETTINGS_Copy_uData_To2
    $Str_PRINTINSTALLSETTINGS_Copy_uData_To3
     $Str_PRINTINSTALLSETTINGS_Copy_uData_To4"; fi
 	
 		if [ "$Install_Mode" == "System" ]; then
 			echo -e "
- -$Str_ATTENTION! ${Bold}${F_Yellow}$Str_PRINTINSTALLSETTINGS_System_Mode
-   $Str_PRINTINSTALLSETTINGS_System_Mode2${F}${rBD}"; fi
+ -$Str_ATTENTION! ${Font_Bold}${Font_Yellow}$Str_PRINTINSTALLSETTINGS_System_Mode
+   $Str_PRINTINSTALLSETTINGS_System_Mode2${Font_Color_Reset}${Font_Reset}"; fi
 		
 		echo -e "
  $Str_PRINTINSTALLSETTINGS_Before_Install
@@ -480,10 +480,10 @@ $Header
 		read install_settings_confirm
 	
 		if [ "$install_settings_confirm" == "y" ] || [ "$install_settings_confirm" == "yes" ]; then all_ok=true
-		else _ABORT "${Bold}${F_Green}$Str_Interrupted_By_User${F}${rBD}"; fi
+		else _ABORT "${Font_Bold}${Font_Green}$Str_Interrupted_By_User${Font_Color_Reset}${Font_Reset}"; fi
 	
 		if [ $MODE_DEBUG == true ]; then echo "_PRINT_INSTALL_SETTINGS - all_ok = $all_ok"; read pause; fi
-	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _PRINT_INSTALL_SETTINGS ${F}${rBD}"; fi
+	else _ABORT "$Str_ERROR! ${Font_Bold}${Font_Yellow}$Str_Error_All_Ok _PRINT_INSTALL_SETTINGS ${Font_Color_Reset}${Font_Reset}"; fi
 fi
 }
 
@@ -568,7 +568,7 @@ function _PREPARE_INPUT_FILES() {
 		all_ok=true
 		
 		if [ $MODE_DEBUG == true ]; then echo "_PREPARE_INPUT_FILES - all_ok = $all_ok"; read pause; fi
-	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _PREPARE_INPUT_FILES ${F}${rBD}"; fi
+	else _ABORT "$Str_ERROR! ${Font_Bold}${Font_Yellow}$Str_Error_All_Ok _PREPARE_INPUT_FILES ${Font_Color_Reset}${Font_Reset}"; fi
 }
 
 ######### Prepare Input Files #########
@@ -588,24 +588,24 @@ function _CHECK_OUTPUTS() {
 			clear
 			echo -e "\
 $Header
- ${Bold}${F_Cyan}$Str_CHECKOUTPUTS_Head${F}${rBD}"
+ ${Font_Bold}${Font_Cyan}$Str_CHECKOUTPUTS_Head${Font_Color_Reset}${Font_Reset}"
 			echo -e "
   $Str_ATTENTION! $Str_CHECKOUTPUTS_Already_Present
 $(for file in "${!arr_files_sorted[@]}"; do echo "   ${arr_files_sorted[$file]}"; done)"
 			echo -e "
    $Str_CHECKOUTPUTS_Attention
-   ${F_Yellow}$Str_CHECKOUTPUTS_Attention2${F}
+   ${Font_Yellow}$Str_CHECKOUTPUTS_Attention2${Font_Color_Reset}
 
  $Str_CHECKOUTPUTS_Confirm"
 			read install_confirm
 			if [ "$install_confirm" == "y" ] || [ "$install_confirm" == "yes" ]; then all_ok=true
-			else _ABORT "${Bold}${F_Green}$Str_Interrupted_By_User${F}${rBD}"; fi
+			else _ABORT "${Font_Bold}${Font_Green}$Str_Interrupted_By_User${Font_Color_Reset}${Font_Reset}"; fi
 		else
 			all_ok=true
 		fi
 		
 		if [ $MODE_DEBUG == true ]; then echo "_CHECK_OUTPUTS - all_ok = $all_ok"; read pause; fi
-	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _CHECK_OUTPUTS ${F}${rBD}"; fi
+	else _ABORT "$Str_ERROR! ${Font_Bold}${Font_Yellow}$Str_Error_All_Ok _CHECK_OUTPUTS ${Font_Color_Reset}${Font_Reset}"; fi
 }
 
 ######### Check outputs #########
@@ -695,7 +695,7 @@ function _INSTALL_APP_USER() {
 			clear
 			echo -e "\
 $Header
- ${Bold}${F_Cyan}$Str_INSTALL_APP_Head${F}${rBD}"; fi
+ ${Font_Bold}${Font_Cyan}$Str_INSTALL_APP_Head${Font_Color_Reset}${Font_Reset}"; fi
 		
 		if [ $MODE_SILENT == false ]; then echo " $Str_INSTALL_APP_Create_Out"; fi
 		
@@ -711,7 +711,7 @@ $Header
 			echo -e "\n $Str_INSTALLAPP_Unpack_Err_Continue"
 			read confirm_unpack
 			if [ "$confirm_unpack" == "y" ] || [ "$confirm_unpack" == "yes" ]; then echo "  $Str_INSTALLAPP_Unpack_Continue"
-			else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_INSTALLAPP_Unpack_Err_Abort${F}${rBD}"; fi
+			else _ABORT "$Str_ERROR! ${Font_Bold}${Font_Yellow}$Str_INSTALLAPP_Unpack_Err_Abort${Font_Color_Reset}${Font_Reset}"; fi
 		fi
 		
 		if [ $MODE_SILENT == false ]; then echo " $Str_INSTALLAPP_Install_Bin_Menu"; fi
@@ -740,7 +740,7 @@ $Header
 		all_ok=true
 		
 		if [ $MODE_DEBUG == true ]; then echo "_INSTALL_APP - all_ok = $all_ok"; read pause; fi
-	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _INSTALL_APP ${F}${rBD}"; fi
+	else _ABORT "$Str_ERROR! ${Font_Bold}${Font_Yellow}$Str_Error_All_Ok _INSTALL_APP ${Font_Color_Reset}${Font_Reset}"; fi
 }
 
 ######### Install application (USER MODE) #########
@@ -755,7 +755,7 @@ function _INSTALL_APP_SYSTEM() {
 			clear
 			echo -e "\
 $Header
- ${Bold}${F_Cyan}$Str_INSTALL_APP_Head${F}${rBD}"; fi
+ ${Font_Bold}${Font_Cyan}$Str_INSTALL_APP_Head${Font_Color_Reset}${Font_Reset}"; fi
 		
 		if [ $MODE_SILENT == false ]; then echo " $Str_INSTALL_APP_Create_Out"; fi
 		
@@ -771,7 +771,7 @@ $Header
 			echo -e "\n $Str_INSTALLAPP_Unpack_Err_Continue"
 			read confirm_error_unpacking
 			if [ "$confirm_error_unpacking" == "y" ] || [ "$confirm_error_unpacking" == "yes" ]; then echo "  $Str_INSTALLAPP_Unpack_Continue"
-			else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_INSTALLAPP_Unpack_Err_Abort${F}${rBD}"; fi
+			else _ABORT "$Str_ERROR! ${Font_Bold}${Font_Yellow}$Str_INSTALLAPP_Unpack_Err_Abort${Font_Color_Reset}${Font_Reset}"; fi
 		fi
 		
 		if [ $MODE_SILENT == false ]; then echo " $Str_INSTALLAPP_Install_Bin_Menu"; fi
@@ -801,7 +801,7 @@ $Header
 		all_ok=true
 		
 		if [ $MODE_DEBUG == true ]; then echo "_INSTALL_APP - all_ok = $all_ok"; read pause; fi
-	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _INSTALL_APP ${F}${rBD}"; fi
+	else _ABORT "$Str_ERROR! ${Font_Bold}${Font_Yellow}$Str_Error_All_Ok _INSTALL_APP ${Font_Color_Reset}${Font_Reset}"; fi
 }
 
 ######### Install application (SYSTEM MODE) #########
@@ -844,7 +844,7 @@ function _PREPARE_UNINSTALLER() {
 		if [ "$Install_Mode" == "User" ]; then _PREPARE_UNINSTALLER_USER; fi
 		
 		if [ $MODE_DEBUG == true ]; then echo "_PREPARE_UNINSTALLER - all_ok = $all_ok"; read pause; fi
-	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _PREPARE_UNINSTALLER ${F}${rBD}"; fi
+	else _ABORT "$Str_ERROR! ${Font_Bold}${Font_Yellow}$Str_Error_All_Ok _PREPARE_UNINSTALLER ${Font_Color_Reset}${Font_Reset}"; fi
 }
 
 ######### Prepare uninstaller file #########
@@ -873,10 +873,10 @@ function _POST_INSTALL() {
 			_POST_INSTALL_UPDATE_MENU_KDE; fi
 		
 		# Exit
-		if [ $MODE_SILENT == false ]; then _ABORT "${Bold}${F_Green}$Str_Complete_Install${F}${rBD}"; fi
+		if [ $MODE_SILENT == false ]; then _ABORT "${Font_Bold}${Font_Green}$Str_Complete_Install${Font_Color_Reset}${Font_Reset}"; fi
 		
 		if [ $MODE_DEBUG == true ]; then echo "_POST_INSTALL - all_ok = $all_ok"; read pause; fi
-	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _POST_INSTALL ${F}${rBD}"; fi
+	else _ABORT "$Str_ERROR! ${Font_Bold}${Font_Yellow}$Str_Error_All_Ok _POST_INSTALL ${Font_Color_Reset}${Font_Reset}"; fi
 }
 
 ######### Post Install #########
@@ -889,9 +889,9 @@ function _POST_INSTALL() {
 function _SET_LOCALE_DEFAULT() {
 	Info_Description="  Not used in this place... The translation is located in the \"locales/\" directory."
 	
-	Str_ERROR="${Bold}${F_Red}ERROR${F}${rBD}"
-	Str_ATTENTION="${Bold}${F_Yellow}ATTENTION${F}${rBD}"
-	Str_WARNING="${Bold}${F_Yellow}WARNING${F}${rBD}"
+	Str_ERROR="${Font_Bold}${Font_Red}ERROR${Font_Color_Reset}${Font_Reset}"
+	Str_ATTENTION="${Font_Bold}${Font_Yellow}ATTENTION${Font_Color_Reset}${Font_Reset}"
+	Str_WARNING="${Font_Bold}${Font_Yellow}WARNING${Font_Color_Reset}${Font_Reset}"
 	
 	Str_Interrupted_By_User="Interrupted by user"
 	Str_Complete_Install="The installation process has been completed successfully."
