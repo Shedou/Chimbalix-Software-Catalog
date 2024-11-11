@@ -63,6 +63,7 @@ function _MAIN() {
 	_CHECK_OUTPUTS
 	_INSTALL_APPLICATION
 	_PREPARE_UNINSTALLER
+	_POST_INSTALL
 }
 
 ######### ---- -------- ---- #########
@@ -917,17 +918,26 @@ function _PREPARE_UNINSTALLER() {
 		if [ "$Install_Mode" == "System" ]; then _PREPARE_UNINSTALLER_SYSTEM; fi
 		if [ "$Install_Mode" == "User" ]; then _PREPARE_UNINSTALLER_USER; fi
 		
-		# Restart taskbar
-		if [ "$Current_DE" == "xfce" ]; then xfce4-panel -r &> /dev/null; fi
-		
-		if [ $MODE_SILENT == false ]; then _ABORT "${Bold}${F_Green}$Str_Complete_Install${F}${rBD}"; fi
-		
 		if [ $MODE_DEBUG == true ]; then echo "_PREPARE_UNINSTALLER - all_ok = $all_ok"; read pause; fi
 	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _PREPARE_UNINSTALLER ${F}${rBD}"; fi
 }
 
 ######### Prepare uninstaller file #########
 ######### ------------------------ #########
+
+######### ------------ #########
+######### Post Install #########
+
+function _POST_INSTALL() {
+	# Restart taskbar
+	if [ "$Current_DE" == "xfce" ]; then xfce4-panel -r &> /dev/null; fi
+	
+	# Exit
+	if [ $MODE_SILENT == false ]; then _ABORT "${Bold}${F_Green}$Str_Complete_Install${F}${rBD}"; fi
+}
+
+######### Post Install #########
+######### ------------ #########
 
 ######### ---- --------- ---- #########
 ######### -- END FUNCTIONS -- #########
