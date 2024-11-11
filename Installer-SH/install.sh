@@ -173,6 +173,9 @@ Output_Uninstaller="$Output_Install_Dir/$Program_Uninstaller_File" # Uninstaller
 ######### -- ------------ -- #########
 
 ######### ---------------- #########
+######### ---------------- #########
+######### ---------------- #########
+######### ---------------- #########
 ######### Global variables #########
 
 function _INIT_GLOBAL_VARIABLES() {
@@ -189,15 +192,20 @@ function _INIT_GLOBAL_VARIABLES() {
 	all_ok=true
 	Locale_Use_Default=true # don't change!
 	Locale_Display="Default"
+	
 	User_Home="$HOME"
 	User_Name="$USER"
+	
 	MODE_DEBUG=false
 	MODE_SILENT=false; if [ "${Arguments[$1]}" == "-silent" ]; then MODE_SILENT=true; fi
+	
 	Path_To_Script="$( dirname "$(readlink -f "$0")")"
 	Path_Installer_Data="$Path_To_Script/installer-data"
+	
 	Tool_SevenZip_bin="$Path_Installer_Data/tools/7zip/7zzs"
 	Tool_Gio_Trust_Xfce="$Path_Installer_Data/tools/gio-trust-xfce.sh"
 	Tool_Prepare_Base="$Path_Installer_Data/tools/prepare-portsoft-menu.sh"
+	
 	List_Errors=""		#List_Errors="${List_Errors}\n _FUNCTION - Message."
 	List_Warnings=""	#List_Warnings="${List_Warnings}\n _FUNCTION - Message."
 	
@@ -214,6 +222,9 @@ if [ -e "$User_Home/.config/user-dirs.dirs" ]; then
 }
 
 ######### Global variables #########
+######### ---------------- #########
+######### ---------------- #########
+######### ---------------- #########
 ######### ---------------- #########
 
 ######### -------------- #########
