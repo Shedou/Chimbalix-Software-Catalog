@@ -30,25 +30,14 @@ List_Errors=""		#List_Errors="${List_Errors}\n _FUNCTION - Message."
 List_Warnings=""	#List_Warnings="${List_Warnings}\n _FUNCTION - Message."
 
 Current_DE="UnknownDE"
-Current_OS_Full_Name="Unknown"
-Current_OS_Name="Unknown"
-Current_OS_Version_ID="Unknown"
 
-if [ $DESKTOP_SESSION ]; then Current_DE="$DESKTOP_SESSION"
-else if [ $XDG_SESSION_DESKTOP ]; then Current_DE="$XDG_SESSION_DESKTOP"
-	else if [ $XDG_CURRENT_DESKTOP ]; then Current_DE="$XDG_CURRENT_DESKTOP"
-		else if [ $GDMSESSION ]; then Current_DE="$GDMSESSION"
-			fi
-		fi
-	fi
-fi
+Current_OS_Name_Full="Unknown"	# PRETTY_NAME		"Chimbalix 24.5 Alphachi"
+Current_OS_Name="Unknown"		# NAME				"Chimbalix"
+Current_OS_Name_ID="Unknown"	# ID				"chimbalix"
+Current_OS_Version="Unknown"	# VERSION_ID		"24.5"
+Current_OS_Codename="Unknown"	# VERSION_CODENAME	"alphachi"
 
 source "$User_Home/.config/user-dirs.dirs"
-
-if [ -f /etc/os-release ]; then
-	source /etc/os-release; Current_OS_Full_Name=$PRETTY_NAME; Current_OS_Name=$NAME; Current_OS_Version_ID=$VERSION_ID
-else
-	if uname &>/dev/null; then DistroVersion="$(uname -sr)"; else _ABORT "$Str_ATTENTION! ${Bold}${F_Yellow}$Str_CHECKOS_No_Distro_Name${F}${rBD}"; fi; fi
 
 # Main function, don't change!
 function _MAIN() {
@@ -262,7 +251,28 @@ $Header
 ######### Check System #########
 
 function _CHECK_SYSTEM() {
-	:
+	# Check OS
+	if [ -f "/etc/os-release" ]; then
+		source "/etc/os-release"
+		Current_OS_Name_Full=$PRETTY_NAME
+		Current_OS_Name=$NAME
+		Current_OS_Name_ID=$ID
+		Current_OS_Version=$VERSION_ID
+		Current_OS_Codename=$VERSION_CODENAME
+	else
+		if uname &>/dev/null; then DistroVersion="$(uname -sr)"
+		else _ABORT "$Str_ATTENTION! ${Bold}${F_Yellow}$Str_CHECKOS_No_Distro_Name${F}${rBD}"; fi
+	fi
+	
+	# Check DE
+	if [ $DESKTOP_SESSION ]; then Current_DE="$DESKTOP_SESSION"
+	else if [ $XDG_SESSION_DESKTOP ]; then Current_DE="$XDG_SESSION_DESKTOP"
+		else if [ $XDG_CURRENT_DESKTOP ]; then Current_DE="$XDG_CURRENT_DESKTOP"
+			else if [ $GDMSESSION ]; then Current_DE="$GDMSESSION"
+				fi
+			fi
+		fi
+	fi
 }
 
 ######### Check System #########
@@ -289,7 +299,7 @@ $Header
  -${Bold}${F_DarkYellow}$Str_PACKAGEINFO_Description${F}${rBD}
 $Info_Description
 
- -${Bold}${F_DarkGreen}$Str_PACKAGEINFO_CurrentOS${F} $Current_OS_Full_Name ($Current_DE)${rBD}
+ -${Bold}${F_DarkGreen}$Str_PACKAGEINFO_CurrentOS${F} $Current_OS_Name_Full ($Current_DE)${rBD}
  -${Bold}${F_DarkGreen}$Str_PACKAGEINFO_InstallMode${F} $Install_Mode${rBD}"
 		echo -e "\n $Str_PACKAGEINFO_Confirm"
 		read package_info_confirm
@@ -826,8 +836,14 @@ function _PREPARE_UNINSTALLER() {
 ######### ------------ #########
 ######### Post Install #########
 
-function _POST_INSTALL_UPDATE_MENU_XFCE() {
-	xfce4-panel -r &> /dev/null
+function _POST_INSTALL_UPDATE_MENU_XFCE() { xfce4-panel -r &> /dev/null }
+
+function _POST_INSTALL_UPDATE_MENU_KDE() {
+	if type "kbuildsycoca7" &> /dev/null; then kbuildsycoca7 &> /dev/null;
+	elif type "kbuildsycoca6" &> /dev/null; then kbuildsycoca6 &> /dev/null;
+	elif type "kbuildsycoca5" &> /dev/null; then kbuildsycoca5 &> /dev/null;
+	elif type "kbuildsycoca4" &> /dev/null; then kbuildsycoca4 &> /dev/null;
+	fi
 }
 
 function _POST_INSTALL() {
@@ -836,6 +852,9 @@ function _POST_INSTALL() {
 		if [ "$Current_DE" == "xfce" ]; then
 			_POST_INSTALL_UPDATE_MENU_XFCE; fi
 		
+		if [ "$Current_DE" == "KDE" ]; then
+			_POST_INSTALL_UPDATE_MENU_KDE; fi
+			
 		# Exit
 		if [ $MODE_SILENT == false ]; then _ABORT "${Bold}${F_Green}$Str_Complete_Install${F}${rBD}"; fi
 		
@@ -846,8 +865,9 @@ function _POST_INSTALL() {
 ######### Post Install #########
 ######### ------------ #########
 
-######### Strings! #########
-###### Default Locale ######
+######### ---- #########
+####### Strings! #######
+###### Set Locale ######
 
 function _SET_LOCALE_DEFAULT() {
 	Info_Description="  Not used in this place... The translation is located in the \"locales/\" directory."
@@ -972,6 +992,10 @@ function _SET_LOCALE() {
 		fi
 	fi
 }
+
+###### Set Locale ######
+####### Strings! #######
+######### ---- #########
 
 ######### ---- --------- ---- #########
 ######### -- END FUNCTIONS -- #########

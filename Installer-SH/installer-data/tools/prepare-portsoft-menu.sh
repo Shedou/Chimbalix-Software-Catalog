@@ -41,7 +41,7 @@ $Base_Header
   
   $Str_BASEINFO_Attention
 
- -${Bold}${F_DarkGreen}$Str_PACKAGEINFO_CurrentOS${F} $Current_OS_Full_Name ($Current_DE)${rBD}
+ -${Bold}${F_DarkGreen}$Str_PACKAGEINFO_CurrentOS${F} $Current_OS_Name_Full ($Current_DE)${rBD}
  -${Bold}${F_DarkGreen}$Str_PACKAGEINFO_InstallMode${F} $Install_Mode${rBD}"
 		echo -e "\n $Str_BASEINFO_Confirm"
 		read base_info_confirm
