@@ -36,7 +36,8 @@ Current_OS_Version_ID="Unknown"
 if [ $DESKTOP_SESSION ]; then Current_DE="$DESKTOP_SESSION"
 else if [ $XDG_SESSION_DESKTOP ]; then Current_DE="$XDG_SESSION_DESKTOP"
 	else if [ $XDG_CURRENT_DESKTOP ]; then Current_DE="$XDG_CURRENT_DESKTOP"
-		else if [ $GDMSESSION ]; then Current_DE="$GDMSESSION"; fi
+		else if [ $GDMSESSION ]; then Current_DE="$GDMSESSION"
+			fi
 		fi
 	fi
 fi
