@@ -2,47 +2,11 @@
 # Script version 1.9
 # LICENSE for this script is at the end of this file
 # FreeSpace=$(df -m "$Out_InstallDir" | grep "/" | awk '{print $4}')
-# Font styles: "${Font_Bold} BLACK TEXT ${Font_Reset} normal text."
-Font_Bold="\e[1m"; Font_Dim="\e[2m"; Font_Reset="\e[22m";
-Font_Color_Reset='\033[39m'; BG_Color_Reset='\033[49m'; # Reset colors
-Font_Black='\033[30m'; Font_DarkGray='\033[90m'; Font_Gray='\033[37m'; Font_White='\033[97m';
-Font_DarkRed='\033[31m'; Font_DarkGreen='\033[32m'; Font_DarkYellow='\033[33m'; Font_DarkBlue='\033[34m'; Font_DarkMagenta='\033[35m'; Font_DarkCyan='\033[36m';
-Font_Red='\033[91m'; Font_Green='\033[92m'; Font_Yellow='\033[93m'; Font_Blue='\033[94m'; Font_Magenta='\033[95m'; Font_Cyan='\033[96m';
-Font_BG_Black='\033[40m'; Font_BG_DarkGray='\033[100m'; Font_BG_Gray='\033[47m'; Font_BG_White='\033[107m';
-Font_BG_DarkRed='\033[41m'; Font_BG_DarkGreen='\033[42m'; Font_BG_DarkYellow='\033[43m'; Font_BG_DarkBlue='\033[44m'; Font_BG_DarkMagenta='\033[45m'; Font_BG_DarkCyan='\033[46m';
-Font_BG_Red='\033[101m'; Font_BG_Green='\033[102m'; Font_BG_Yellow='\033[103m'; Font_BG_Blue='\033[104m'; Font_BG_Magenta='\033[105m'; Font_BG_Cyan='\033[106m';
-######### --------- #########
-######### Base vars #########
 Arguments=("$@")
-all_ok=true
-Locale_Use_Default=true # don't change!
-Locale_Display="Default"
-User_Home="$HOME"
-User_Name="$USER"
-MODE_DEBUG=false
-MODE_SILENT=false; if [ "${Arguments[$1]}" == "-silent" ]; then MODE_SILENT=true; fi
-Path_To_Script="$( dirname "$(readlink -f "$0")")"
-Path_Installer_Data="$Path_To_Script/installer-data"
-Tool_SevenZip_bin="$Path_Installer_Data/tools/7zip/7zzs"
-Tool_Gio_Trust_Xfce="$Path_Installer_Data/tools/gio-trust-xfce.sh"
-Tool_Prepare_Base="$Path_Installer_Data/tools/prepare-portsoft-menu.sh"
-List_Errors=""		#List_Errors="${List_Errors}\n _FUNCTION - Message."
-List_Warnings=""	#List_Warnings="${List_Warnings}\n _FUNCTION - Message."
-
-Current_DE="UnknownDE"
-
-                                # os-release (main)    example                    lsb-release
-Current_OS_Name_Full="Unknown"  # PRETTY_NAME         "Chimbalix 24.5 Alphachi"   DISTRIB_DESCRIPTION
-Current_OS_Name="Unknown"       # NAME                "Chimbalix"                 DISTRIB_ID
-Current_OS_Name_ID="Unknown"    # ID                  "chimbalix"                 DISTRIB_ID
-Current_OS_Version="Unknown"    # VERSION_ID          "24.5"                      DISTRIB_RELEASE
-Current_OS_Codename="Unknown"   # VERSION_CODENAME    "alphachi"                  DISTRIB_CODENAME
-
-if [ -e "$User_Home/.config/user-dirs.dirs" ]; then
-	source "$User_Home/.config/user-dirs.dirs"; fi
 
 # Main function, don't change!
 function _MAIN() {
+	_INIT_GLOBAL_VARIABLES
 	_CHECK_SYSTEM
 	_SET_LOCALE
 	_PACKAGE_SETTINGS;
@@ -208,15 +172,49 @@ Output_Uninstaller="$Output_Install_Dir/$Program_Uninstaller_File" # Uninstaller
 ######### -- ------------ -- #########
 ######### -- ------------ -- #########
 
-######### -------------- #########
-######### Base variables #########
+######### ---------------- #########
+######### Global variables #########
 
-function _INIT_BASE_VARIABLES() {
-	:
+function _INIT_GLOBAL_VARIABLES() {
+	# Font styles: "${Font_Bold} BLACK TEXT ${Font_Reset} normal text."
+	Font_Bold="\e[1m"; Font_Dim="\e[2m"; Font_Reset="\e[22m";
+	Font_Color_Reset='\033[39m'; BG_Color_Reset='\033[49m'; # Reset colors
+	Font_Black='\033[30m'; Font_DarkGray='\033[90m'; Font_Gray='\033[37m'; Font_White='\033[97m';
+	Font_DarkRed='\033[31m'; Font_DarkGreen='\033[32m'; Font_DarkYellow='\033[33m'; Font_DarkBlue='\033[34m'; Font_DarkMagenta='\033[35m'; Font_DarkCyan='\033[36m';
+	Font_Red='\033[91m'; Font_Green='\033[92m'; Font_Yellow='\033[93m'; Font_Blue='\033[94m'; Font_Magenta='\033[95m'; Font_Cyan='\033[96m';
+	Font_BG_Black='\033[40m'; Font_BG_DarkGray='\033[100m'; Font_BG_Gray='\033[47m'; Font_BG_White='\033[107m';
+	Font_BG_DarkRed='\033[41m'; Font_BG_DarkGreen='\033[42m'; Font_BG_DarkYellow='\033[43m'; Font_BG_DarkBlue='\033[44m'; Font_BG_DarkMagenta='\033[45m'; Font_BG_DarkCyan='\033[46m';
+	Font_BG_Red='\033[101m'; Font_BG_Green='\033[102m'; Font_BG_Yellow='\033[103m'; Font_BG_Blue='\033[104m'; Font_BG_Magenta='\033[105m'; Font_BG_Cyan='\033[106m';
+	
+	all_ok=true
+	Locale_Use_Default=true # don't change!
+	Locale_Display="Default"
+	User_Home="$HOME"
+	User_Name="$USER"
+	MODE_DEBUG=false
+	MODE_SILENT=false; if [ "${Arguments[$1]}" == "-silent" ]; then MODE_SILENT=true; fi
+	Path_To_Script="$( dirname "$(readlink -f "$0")")"
+	Path_Installer_Data="$Path_To_Script/installer-data"
+	Tool_SevenZip_bin="$Path_Installer_Data/tools/7zip/7zzs"
+	Tool_Gio_Trust_Xfce="$Path_Installer_Data/tools/gio-trust-xfce.sh"
+	Tool_Prepare_Base="$Path_Installer_Data/tools/prepare-portsoft-menu.sh"
+	List_Errors=""		#List_Errors="${List_Errors}\n _FUNCTION - Message."
+	List_Warnings=""	#List_Warnings="${List_Warnings}\n _FUNCTION - Message."
+	
+	Current_DE="UnknownDE"
+                                	# os-release (main)    example                    lsb-release
+	Current_OS_Name_Full="Unknown"  # PRETTY_NAME         "Chimbalix 24.5 Alphachi"   DISTRIB_DESCRIPTION
+	Current_OS_Name="Unknown"       # NAME                "Chimbalix"                 DISTRIB_ID
+	Current_OS_Name_ID="Unknown"    # ID                  "chimbalix"                 DISTRIB_ID
+	Current_OS_Version="Unknown"    # VERSION_ID          "24.5"                      DISTRIB_RELEASE
+	Current_OS_Codename="Unknown"   # VERSION_CODENAME    "alphachi"                  DISTRIB_CODENAME
+
+if [ -e "$User_Home/.config/user-dirs.dirs" ]; then
+	source "$User_Home/.config/user-dirs.dirs"; fi
 }
 
-######### Base variables #########
-######### -------------- #########
+######### Global variables #########
+######### ---------------- #########
 
 ######### -------------- #########
 ######### Base functions #########
