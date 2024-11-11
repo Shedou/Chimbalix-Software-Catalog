@@ -20,7 +20,7 @@ Locale_Display="Default"
 User_Home="$HOME"
 User_Name="$USER"
 MODE_DEBUG=false
-MODE_SILENT=false; if [ ${Arguments[$1]} == "-silent" ]; then MODE_SILENT=true; fi
+MODE_SILENT=false; if [ "${Arguments[$1]}" == "-silent" ]; then MODE_SILENT=true; fi
 Path_To_Script="$( dirname "$(readlink -f "$0")")"
 Path_Installer_Data="$Path_To_Script/installer-data"
 Tool_SevenZip_bin="$Path_Installer_Data/tools/7zip/7zzs"
@@ -37,7 +37,8 @@ Current_OS_Name_ID="Unknown"	# ID				"chimbalix"
 Current_OS_Version="Unknown"	# VERSION_ID		"24.5"
 Current_OS_Codename="Unknown"	# VERSION_CODENAME	"alphachi"
 
-source "$User_Home/.config/user-dirs.dirs"
+if [ -e "$User_Home/.config/user-dirs.dirs" ]; then
+	source "$User_Home/.config/user-dirs.dirs"; fi
 
 # Main function, don't change!
 function _MAIN() {
@@ -45,12 +46,6 @@ function _MAIN() {
 	_SET_LOCALE
 	_PACKAGE_SETTINGS;
 	printf '\033[8;30;110t' # Resize terminal Window
-	if [ "$Current_OS_Name" != "Chimbalix" ]; then
-		if [ ! -e "$Output_PortSoft" ] || [ ! -e "$Output_Menu_DDir" ]; then
-			if ! [[ -x "$Tool_Prepare_Base" ]]; then chmod +x "$Tool_Prepare_Base"; fi
-			source "$Tool_Prepare_Base"
-		fi
-	fi
 	_PRINT_PACKAGE_INFO
 	_CHECK_MD5
 	_PRINT_INSTALL_SETTINGS
@@ -252,25 +247,28 @@ $Header
 
 function _CHECK_SYSTEM() {
 	# Check OS
-	if [ -f "/etc/os-release" ]; then
-		source "/etc/os-release"
-		Current_OS_Name_Full=$PRETTY_NAME
-		Current_OS_Name=$NAME
-		Current_OS_Name_ID=$ID
-		Current_OS_Version=$VERSION_ID
-		Current_OS_Codename=$VERSION_CODENAME
+	if [ -f "/etc/os-release" ]; then source "/etc/os-release"
+		Current_OS_Name_Full="$PRETTY_NAME"
+		Current_OS_Name="$NAME"
+		Current_OS_Name_ID="$ID"
+		Current_OS_Version="$VERSION_ID"
+		Current_OS_Codename="$VERSION_CODENAME"
 	else
-		if uname &>/dev/null; then DistroVersion="$(uname -sr)"
+		if type uname &>/dev/null; then DistroVersion="$(uname -sr)"
 		else _ABORT "$Str_ATTENTION! ${Bold}${F_Yellow}$Str_CHECKOS_No_Distro_Name${F}${rBD}"; fi
 	fi
 	
 	# Check DE
 	if [ $DESKTOP_SESSION ]; then Current_DE="$DESKTOP_SESSION"
-	else if [ $XDG_SESSION_DESKTOP ]; then Current_DE="$XDG_SESSION_DESKTOP"
-		else if [ $XDG_CURRENT_DESKTOP ]; then Current_DE="$XDG_CURRENT_DESKTOP"
-			else if [ $GDMSESSION ]; then Current_DE="$GDMSESSION"
-				fi
-			fi
+	elif [ $XDG_SESSION_DESKTOP ]; then Current_DE="$XDG_SESSION_DESKTOP"
+	elif [ $XDG_CURRENT_DESKTOP ]; then Current_DE="$XDG_CURRENT_DESKTOP"
+	elif [ $GDMSESSION ]; then Current_DE="$GDMSESSION"
+	fi
+	
+	if [ "$Current_OS_Name" != "Chimbalix" ]; then
+		if [ ! -e "$Output_PortSoft" ] || [ ! -e "$Output_Menu_DDir" ]; then
+			if ! [[ -x "$Tool_Prepare_Base" ]]; then chmod +x "$Tool_Prepare_Base"; fi
+			source "$Tool_Prepare_Base"
 		fi
 	fi
 }
@@ -836,13 +834,13 @@ function _PREPARE_UNINSTALLER() {
 ######### ------------ #########
 ######### Post Install #########
 
-function _POST_INSTALL_UPDATE_MENU_XFCE() { xfce4-panel -r &> /dev/null }
+function _POST_INSTALL_UPDATE_MENU_XFCE() { xfce4-panel -r &> /dev/null; }
 
 function _POST_INSTALL_UPDATE_MENU_KDE() {
-	if type "kbuildsycoca7" &> /dev/null; then kbuildsycoca7 &> /dev/null;
-	elif type "kbuildsycoca6" &> /dev/null; then kbuildsycoca6 &> /dev/null;
-	elif type "kbuildsycoca5" &> /dev/null; then kbuildsycoca5 &> /dev/null;
-	elif type "kbuildsycoca4" &> /dev/null; then kbuildsycoca4 &> /dev/null;
+	if type "kbuildsycoca7" &> /dev/null; then kbuildsycoca7 &> /dev/null
+	elif type "kbuildsycoca6" &> /dev/null; then kbuildsycoca6 &> /dev/null
+	elif type "kbuildsycoca5" &> /dev/null; then kbuildsycoca5 &> /dev/null
+	elif type "kbuildsycoca4" &> /dev/null; then kbuildsycoca4 &> /dev/null
 	fi
 }
 
@@ -854,7 +852,7 @@ function _POST_INSTALL() {
 		
 		if [ "$Current_DE" == "KDE" ]; then
 			_POST_INSTALL_UPDATE_MENU_KDE; fi
-			
+		
 		# Exit
 		if [ $MODE_SILENT == false ]; then _ABORT "${Bold}${F_Green}$Str_Complete_Install${F}${rBD}"; fi
 		
