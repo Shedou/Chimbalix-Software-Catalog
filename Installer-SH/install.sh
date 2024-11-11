@@ -45,7 +45,7 @@ function _MAIN() {
 	_CHECK_SYSTEM
 	_SET_LOCALE
 	_PACKAGE_SETTINGS;
-	printf '\033[8;30;110t' # Resize terminal Window
+	printf '\033[8;30;110t' # Resize terminal Window (110x30)
 	_PRINT_PACKAGE_INFO
 	_CHECK_MD5
 	_PRINT_INSTALL_SETTINGS
@@ -208,6 +208,16 @@ Output_Uninstaller="$Output_Install_Dir/$Program_Uninstaller_File" # Uninstaller
 ######### -- ------------ -- #########
 
 ######### -------------- #########
+######### Base variables #########
+
+function _INIT_BASE_VARIABLES() {
+	:
+}
+
+######### Base variables #########
+######### -------------- #########
+
+######### -------------- #########
 ######### Base functions #########
 
 function _CLEAR_TEMP() {
@@ -232,8 +242,7 @@ $Header
 		echo -e "
   ${Bold}${F_Yellow}- $Str_ABORT_Warnings${F}${rBD} $List_Warnings"
 	fi
-	echo -e "\
-
+	echo -e "
   $Str_ABORT_Exit"
 	_CLEAR_TEMP
 	read pause; clear; exit 1 # Double clear resets styles before going to the system terminal window.
