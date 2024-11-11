@@ -231,20 +231,22 @@ function _CREATE_TEMP() {
 
 function _ABORT() {
 	clear
+	
 	echo -e "\
 $Header
   $Str_ABORT_Msg $1"
-	if [ "$List_Errors" != "" ]; then
-		echo -e "
-  ${Bold}${F_Red}- $Str_ABORT_Errors${F}${rBD} $List_Errors"
-	fi
-	if [ "$List_Warnings" != "" ]; then
-		echo -e "
-  ${Bold}${F_Yellow}- $Str_ABORT_Warnings${F}${rBD} $List_Warnings"
-	fi
+	
+	if [ "$List_Errors" != "" ]; then echo -e "
+  ${Bold}${F_Red}- $Str_ABORT_Errors${F}${rBD} $List_Errors"; fi
+	
+	if [ "$List_Warnings" != "" ]; then echo -e "
+  ${Bold}${F_Yellow}- $Str_ABORT_Warnings${F}${rBD} $List_Warnings"; fi
+	
 	echo -e "
   $Str_ABORT_Exit"
+	
 	_CLEAR_TEMP
+	
 	read pause; clear; exit 1 # Double clear resets styles before going to the system terminal window.
 }
 
