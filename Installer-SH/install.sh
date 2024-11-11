@@ -28,13 +28,18 @@ Tool_Prepare_Base="$Path_Installer_Data/tools/prepare-portsoft-menu.sh"
 List_Errors=""		#List_Errors="${List_Errors}\n _FUNCTION - Message."
 List_Warnings=""	#List_Warnings="${List_Warnings}\n _FUNCTION - Message."
 
-Current_DE="Unknown DE"
+Current_DE="UnknownDE"
 Current_OS_Full_Name="Unknown"
 Current_OS_Name="Unknown"
 Current_OS_Version_ID="Unknown"
 
-if [ $XDG_SESSION_DESKTOP ]; then Current_DE="$XDG_SESSION_DESKTOP"
-else if [ $DESKTOP_SESSION ]; then Current_DE="$DESKTOP_SESSION"; fi; fi
+if [ $DESKTOP_SESSION ]; then Current_DE="$DESKTOP_SESSION"
+else if [ $XDG_SESSION_DESKTOP ]; then Current_DE="$XDG_SESSION_DESKTOP"
+	else if [ $XDG_CURRENT_DESKTOP ]; then Current_DE="$XDG_CURRENT_DESKTOP"
+		else if [ $GDMSESSION ]; then Current_DE="$GDMSESSION"; fi
+		fi
+	fi
+fi
 
 source "$User_Home/.config/user-dirs.dirs"
 
@@ -928,12 +933,21 @@ function _PREPARE_UNINSTALLER() {
 ######### ------------ #########
 ######### Post Install #########
 
+function _POST_INSTALL_UPDATE_MENU_XFCE() {
+	xfce4-panel -r &> /dev/null
+}
+
 function _POST_INSTALL() {
-	# Restart taskbar
-	if [ "$Current_DE" == "xfce" ]; then xfce4-panel -r &> /dev/null; fi
-	
-	# Exit
-	if [ $MODE_SILENT == false ]; then _ABORT "${Bold}${F_Green}$Str_Complete_Install${F}${rBD}"; fi
+	if [ $all_ok == true ]; then
+		# Restart taskbar
+		if [ "$Current_DE" == "xfce" ]; then
+			_POST_INSTALL_UPDATE_MENU_XFCE; fi
+		
+		# Exit
+		if [ $MODE_SILENT == false ]; then _ABORT "${Bold}${F_Green}$Str_Complete_Install${F}${rBD}"; fi
+		
+		if [ $MODE_DEBUG == true ]; then echo "_POST_INSTALL - all_ok = $all_ok"; read pause; fi
+	else _ABORT "$Str_ERROR! ${Bold}${F_Yellow}$Str_Error_All_Ok _POST_INSTALL ${F}${rBD}"; fi
 }
 
 ######### Post Install #########
