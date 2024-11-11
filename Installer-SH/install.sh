@@ -13,13 +13,14 @@ BG_DarkRed='\033[41m'; BG_DarkGreen='\033[42m'; BG_DarkYellow='\033[43m'; BG_Dar
 BG_Red='\033[101m'; BG_Green='\033[102m'; BG_Yellow='\033[103m'; BG_Blue='\033[104m'; BG_Magenta='\033[105m'; BG_Cyan='\033[106m';
 ######### --------- #########
 ######### Base vars #########
-all_ok=true
 Arguments=("$@")
-Locale_Use_Default=false
-User_Home=$HOME
-User_Name=$USER
+all_ok=true
+Locale_Use_Default=true # don't change!
+Locale_Display="Default"
+User_Home="$HOME"
+User_Name="$USER"
 MODE_DEBUG=false
-MODE_SILENT=false
+MODE_SILENT=false; if [ ${Arguments[$1]} == "-silent" ]; then MODE_SILENT=true; fi
 Path_To_Script="$( dirname "$(readlink -f "$0")")"
 Path_Installer_Data="$Path_To_Script/installer-data"
 Tool_SevenZip_bin="$Path_Installer_Data/tools/7zip/7zzs"
@@ -51,7 +52,7 @@ else
 
 # Main function, don't change!
 function _MAIN() {
-	if [ ${Arguments[$1]} == "-silent" ]; then MODE_SILENT=true; Lang_Display="-silent"; fi
+	_CHECK_SYSTEM
 	_SET_LOCALE
 	_PACKAGE_SETTINGS;
 	printf '\033[8;30;110t' # Resize terminal Window
@@ -95,7 +96,7 @@ Unique_App_Folder_Name="example_application_18" #=> UNIQUE_APP_FOLDER_NAME
 ######### - ------------------- - #########
 ######### - Package Information - #########
 ######### - ------------------- - #########
-Header="${BG_Black}${F_Red}${Bold} -=: Software Installer Script for Chimbalix (Installer-SH v1.9) - Lang: ${Bold}$Lang_Display${rBD} :=-${rBD}${F}\n"
+Header="${BG_Black}${F_Red}${Bold} -=: Software Installer Script for Chimbalix (Installer-SH v1.9) - Lang: ${Bold}$Locale_Display${rBD} :=-${rBD}${F}\n"
 
 Info_Name="Example Application"
 Info_Version="1.9"
@@ -217,129 +218,10 @@ Output_Uninstaller="$Output_Install_Dir/$Program_Uninstaller_File" # Uninstaller
 }
 
 ######### -- ------------ -- #########
+######### -- ------------ -- #########
 ######### -- END SETTINGS -- #########
 ######### -- ------------ -- #########
-
-######### Strings! #########
-###### Default Locale ######
-
-function _SET_LOCALE() {
-	Language="${LANG%%.*}"
-	if [ $MODE_SILENT == false ]; then Lang_Display="$Language"; fi
-	Locale_File="$Path_To_Script/locales/$Language"
-	if [ -e "$Locale_File" ]; then
-		if [ $(grep Locale_Version "$Locale_File") == 'Locale_Version="1.9"' ]; then source "$Locale_File";
-		else Locale_Use_Default=true; fi
-	else Locale_Use_Default=true; fi
-	
-	if [ $Locale_Use_Default == true ]; then
-		if [ $MODE_SILENT == false ]; then Lang_Display="Default"; fi
-		Info_Description="Not used in this place... The translation is located in the \"locales/\" directory."
-		
-		Str_ERROR="${Bold}${F_Red}ERROR${F}${rBD}"
-		Str_ATTENTION="${Bold}${F_Yellow}ATTENTION${F}${rBD}"
-		Str_WARNING="${Bold}${F_Yellow}WARNING${F}${rBD}"
-		
-		Str_Interrupted_By_User="Interrupted by user"
-		Str_Complete_Install="The installation process has been completed successfully."
-		
-		Str_Error_All_Ok="The \"all_ok\" condition was not passed in the function:"
-		
-		Str_ABORT_Msg="Exit code -"
-		Str_ABORT_Exit="Press Enter or close the window to exit."
-		Str_ABORT_Errors="Errors:"
-		Str_ABORT_Warnings="Warnings:"
-		
-		Str_CHECKOS_No_Distro_Name="The name of the operating system / kernel is not defined!"
-		
-		Str_BASEINFO_Head="Installing basic components:"
-		Str_BASEINFO_Warning="Warning! If you are here - you are not using Chimbalix,\n  other Linux distributions require some preparation, the following components must be installed:"
-		Str_BASEINFO_PortSoft="PortSoft directory:"
-		Str_BASEINFO_PortSoft_Full="Base directory for placing program files, the main application directory in the Chimbalix distribution."
-		Str_BASEINFO_MenuApps="Stable \"Applications\" menu category:"
-		Str_BASEINFO_MenuApps_Full="Stable \"Applications\" category in the menu for placing shortcuts to installed programs."
-		Str_BASEINFO_Attention="Attention! The above components will be installed according to the current installation mode.\n  AFTER CONFIRMATION, THIS ACTION CANNOT BE CANCELLED!\n  For proper operation, your distribution must support the XDG standard!\n  The menu must also support subcategories!\n  You may also need to Log Out to refresh the menu after installation."
-		Str_BASEINFO_Confirm="Start the installation process? Enter \"y\" or \"yes\" to confirm."
-		Str_BASE_COMPLETE="Done, depending on the distribution the menu may not appear until you log in again.\n Press \"Enter\" to continue."
-		
-		Str_BASECHECKMD5PRINT_Hash_Not_Match="The Base Data archive hash sum does not match the value specified in the settings!"
-		Str_BASECHECKMD5PRINT_Hash_Not_Match2="The files may have been copied with errors or modified! Be careful!"
-		Str_BASECHECKMD5PRINT_Expected_bHash="Expected MD5 hash of \"Base Data\":"
-		Str_BASECHECKMD5PRINT_Real_bHash="Real MD5 hash of \"Base Data\":"
-		
-		Str_PACKAGEINFO_Head="Software Info:"
-		Str_PACKAGEINFO_Name="Name:"
-		Str_PACKAGEINFO_ReleaseDate="Release Date:"
-		Str_PACKAGEINFO_Category="Category:"
-		Str_PACKAGEINFO_Platform="Platform:"
-		Str_PACKAGEINFO_InstalledSize="Installed Size:"
-		Str_PACKAGEINFO_Licensing="Licensing:"
-		Str_PACKAGEINFO_Developer="Developer:"
-		Str_PACKAGEINFO_URL="URL:"
-		Str_PACKAGEINFO_Description="Description:"
-		Str_PACKAGEINFO_CurrentOS="Current OS:"
-		Str_PACKAGEINFO_InstallMode="Installation Mode:"
-		Str_PACKAGEINFO_Confirm="Start the application installation process? Enter \"y\" or \"yes\" to confirm."
-		
-		Str_CHECKMD5PRINT_Head="Integrity check:"
-		Str_CHECKMD5PRINT_Sub_Head="Checking the integrity of the installation archives, please wait..."
-		Str_CHECKMD5PRINT_Hash_Not_Match="The archives hash sum does not match the value specified in the settings!"
-		Str_CHECKMD5PRINT_Hash_Not_Match2="The files may have been copied with errors or modified! Be careful!"
-		Str_CHECKMD5PRINT_Expected_pHash="Expected MD5 hash of \"Program Files\":"
-		Str_CHECKMD5PRINT_Expected_sHash="Expected MD5 hash of \"System Files\":"
-		Str_CHECKMD5PRINT_Expected_uHash="Expected MD5 hash of \"User Files\":"
-		Str_CHECKMD5PRINT_Real_pHash="Real MD5 hash of \"Program Files\":"
-		Str_CHECKMD5PRINT_Real_sHash="Real MD5 hash of \"System Files\":"
-		Str_CHECKMD5PRINT_Real_uHash="Real MD5 hash of \"User Files\":"
-		Str_CHECKMD5PRINT_yes_To_Continue="Enter \"y\" or \"yes\" to continue installation (not recommended):"
-		Str_CHECKMD5PRINT_Enter_To_Continue="Press Enter to continue."
-		
-		Str_CHECKMD5_Head="Checking archives integrity:"
-		Str_CHECKMD5_Sub_Head="Do you want to check the integrity of the installation package?"
-		Str_CHECKMD5_Sub_Head2="(this may take some time if the application is large)"
-		Str_CHECKMD5_y_To_Check="Enter \"y\" or \"yes\" to check the integrity of the archives (recommended)."
-		
-		Str_PRINTINSTALLSETTINGS_Head="Installation settings"
-		Str_PRINTINSTALLSETTINGS_Temp_Dir="Temporary Directory:"
-		Str_PRINTINSTALLSETTINGS_App_Inst_Dir="Application install Directory:"
-		Str_PRINTINSTALLSETTINGS_Menu_Dirs="Menu files will be installed to:"
-		Str_PRINTINSTALLSETTINGS_Bin_Dir="Bin files will be installed to:"
-		Str_PRINTINSTALLSETTINGS_Copy_uData_To="User data will be installed in:"
-		Str_PRINTINSTALLSETTINGS_Copy_uData_To2="This feature is not recommended to use, but some applications require it, so be careful."
-		Str_PRINTINSTALLSETTINGS_Copy_uData_To3="To disable this feature, change the variable \"User_Data_Copy_Confirm=false\"."
-		Str_PRINTINSTALLSETTINGS_Copy_uData_To4="(if the function is required, disabling it may break the program)"
-		Str_PRINTINSTALLSETTINGS_System_Mode="Use \"System\" mode only when installing software for all users!"
-		Str_PRINTINSTALLSETTINGS_System_Mode2="Root rights are required to perform the installation!"
-		Str_PRINTINSTALLSETTINGS_Before_Install="Please close all important applications before installation."
-		Str_PRINTINSTALLSETTINGS_Confirm="Enter \"y\" or \"yes\" to begin the installation."
-		Str_PRINTINSTALLSETTINGS_Helpers_Dir="Helper files will be installed to:"
-		Str_PRINTINSTALLSETTINGS_Desktop_Dir="Desktop shortcuts will be installed to:"
-		
-		Str_PREPAREINPUTFILES_Err_Unpack="Error unpacking temp files:"
-		Str_PREPAREINPUTFILES_Err_Unpack2="Try copying the installation files to another disk before running."
-		
-		Str_CHECKOUTPUTS_Head="Checking output directories:"
-		Str_CHECKOUTPUTS_Already_Present="Folders|Files already present"
-		Str_CHECKOUTPUTS_Attention="Continue installation and overwrite directories/files?"
-		Str_CHECKOUTPUTS_Attention2="Please make a backup copy of your data, if any, in the above directories."
-		Str_CHECKOUTPUTS_Confirm="Enter \"y\" or \"yes\" to continue."
-		
-		Str_INSTALLAPP_Head="Installing..."
-		Str_INSTALLAPP_No_Rights="No rights to the application installation directory?"
-		Str_INSTALLAPP_Create_Out="Creating output folder if it does not exist..."
-		Str_INSTALLAPP_Unpack_App="Unpacking application files..."
-		Str_INSTALLAPP_Unpack_Err="Error unpacking program files..."
-		Str_INSTALLAPP_Unpack_Err2="Broken archive? Or symbolic links with absolute paths as part of an application?"
-		Str_INSTALLAPP_Unpack_Err_Continue="Enter \"y\" or \"yes\" to continue the installation process..."
-		Str_INSTALLAPP_Unpack_Err_Abort="At the stage of unpacking program files."
-		Str_INSTALLAPP_Unpack_Continue="The installation continues..."
-		Str_INSTALLAPP_Set_Rights="Setting rights and owner..."
-		Str_INSTALLAPP_Install_Bin_Menu="Installing Bin files and copy menu files..."
-		Str_INSTALLAPP_Copy_uFiles="Copying user files...."
-		Str_INSTALLAPP_Copy_uFiles_Err="Error unpacking user files..."
-	fi
-	
-}
+######### -- ------------ -- #########
 
 ######### -------------- #########
 ######### Base functions #########
@@ -375,6 +257,16 @@ $Header
 
 ######### Base functions #########
 ######### -------------- #########
+
+######### ------------ #########
+######### Check System #########
+
+function _CHECK_SYSTEM() {
+	:
+}
+
+######### Check System #########
+######### ------------ #########
 
 ######### ------------------------- #########
 ######### Print package information #########
@@ -953,6 +845,133 @@ function _POST_INSTALL() {
 
 ######### Post Install #########
 ######### ------------ #########
+
+######### Strings! #########
+###### Default Locale ######
+
+function _SET_LOCALE_DEFAULT() {
+	Info_Description="  Not used in this place... The translation is located in the \"locales/\" directory."
+	
+	Str_ERROR="${Bold}${F_Red}ERROR${F}${rBD}"
+	Str_ATTENTION="${Bold}${F_Yellow}ATTENTION${F}${rBD}"
+	Str_WARNING="${Bold}${F_Yellow}WARNING${F}${rBD}"
+	
+	Str_Interrupted_By_User="Interrupted by user"
+	Str_Complete_Install="The installation process has been completed successfully."
+	
+	Str_Error_All_Ok="The \"all_ok\" condition was not passed in the function:"
+	
+	Str_ABORT_Msg="Exit code -"
+	Str_ABORT_Exit="Press Enter or close the window to exit."
+	Str_ABORT_Errors="Errors:"
+	Str_ABORT_Warnings="Warnings:"
+	
+	Str_CHECKOS_No_Distro_Name="The name of the operating system / kernel is not defined!"
+	
+	Str_BASEINFO_Head="Installing basic components:"
+	Str_BASEINFO_Warning="Warning! If you are here - you are not using Chimbalix,\n  other Linux distributions require some preparation, the following components must be installed:"
+	Str_BASEINFO_PortSoft="PortSoft directory:"
+	Str_BASEINFO_PortSoft_Full="Base directory for placing program files, the main application directory in the Chimbalix distribution."
+	Str_BASEINFO_MenuApps="Stable \"Applications\" menu category:"
+	Str_BASEINFO_MenuApps_Full="Stable \"Applications\" category in the menu for placing shortcuts to installed programs."
+	Str_BASEINFO_Attention="Attention! The above components will be installed according to the current installation mode.\n  AFTER CONFIRMATION, THIS ACTION CANNOT BE CANCELLED!\n  For proper operation, your distribution must support the XDG standard!\n  The menu must also support subcategories!\n  You may also need to Log Out to refresh the menu after installation."
+	Str_BASEINFO_Confirm="Start the installation process? Enter \"y\" or \"yes\" to confirm."
+	Str_BASE_COMPLETE="Done, depending on the distribution the menu may not appear until you log in again.\n Press \"Enter\" to continue."
+	
+	Str_BASECHECKMD5PRINT_Hash_Not_Match="The Base Data archive hash sum does not match the value specified in the settings!"
+	Str_BASECHECKMD5PRINT_Hash_Not_Match2="The files may have been copied with errors or modified! Be careful!"
+	Str_BASECHECKMD5PRINT_Expected_bHash="Expected MD5 hash of \"Base Data\":"
+	Str_BASECHECKMD5PRINT_Real_bHash="Real MD5 hash of \"Base Data\":"
+	
+	Str_PACKAGEINFO_Head="Software Info:"
+	Str_PACKAGEINFO_Name="Name:"
+	Str_PACKAGEINFO_ReleaseDate="Release Date:"
+	Str_PACKAGEINFO_Category="Category:"
+	Str_PACKAGEINFO_Platform="Platform:"
+	Str_PACKAGEINFO_InstalledSize="Installed Size:"
+	Str_PACKAGEINFO_Licensing="Licensing:"
+	Str_PACKAGEINFO_Developer="Developer:"
+	Str_PACKAGEINFO_URL="URL:"
+	Str_PACKAGEINFO_Description="Description:"
+	Str_PACKAGEINFO_CurrentOS="Current OS:"
+	Str_PACKAGEINFO_InstallMode="Installation Mode:"
+	Str_PACKAGEINFO_Confirm="Start the application installation process? Enter \"y\" or \"yes\" to confirm."
+	
+	Str_CHECKMD5PRINT_Head="Integrity check:"
+	Str_CHECKMD5PRINT_Sub_Head="Checking the integrity of the installation archives, please wait..."
+	Str_CHECKMD5PRINT_Hash_Not_Match="The archives hash sum does not match the value specified in the settings!"
+	Str_CHECKMD5PRINT_Hash_Not_Match2="The files may have been copied with errors or modified! Be careful!"
+	Str_CHECKMD5PRINT_Expected_pHash="Expected MD5 hash of \"Program Files\":"
+	Str_CHECKMD5PRINT_Expected_sHash="Expected MD5 hash of \"System Files\":"
+	Str_CHECKMD5PRINT_Expected_uHash="Expected MD5 hash of \"User Files\":"
+	Str_CHECKMD5PRINT_Real_pHash="Real MD5 hash of \"Program Files\":"
+	Str_CHECKMD5PRINT_Real_sHash="Real MD5 hash of \"System Files\":"
+	Str_CHECKMD5PRINT_Real_uHash="Real MD5 hash of \"User Files\":"
+	Str_CHECKMD5PRINT_yes_To_Continue="Enter \"y\" or \"yes\" to continue installation (not recommended):"
+	Str_CHECKMD5PRINT_Enter_To_Continue="Press Enter to continue."
+	
+	Str_CHECKMD5_Head="Checking archives integrity:"
+	Str_CHECKMD5_Sub_Head="Do you want to check the integrity of the installation package?"
+	Str_CHECKMD5_Sub_Head2="(this may take some time if the application is large)"
+	Str_CHECKMD5_y_To_Check="Enter \"y\" or \"yes\" to check the integrity of the archives (recommended)."
+	
+	Str_PRINTINSTALLSETTINGS_Head="Installation settings"
+	Str_PRINTINSTALLSETTINGS_Temp_Dir="Temporary Directory:"
+	Str_PRINTINSTALLSETTINGS_App_Inst_Dir="Application install Directory:"
+	Str_PRINTINSTALLSETTINGS_Menu_Dirs="Menu files will be installed to:"
+	Str_PRINTINSTALLSETTINGS_Bin_Dir="Bin files will be installed to:"
+	Str_PRINTINSTALLSETTINGS_Copy_uData_To="User data will be installed in:"
+	Str_PRINTINSTALLSETTINGS_Copy_uData_To2="This feature is not recommended to use, but some applications require it, so be careful."
+	Str_PRINTINSTALLSETTINGS_Copy_uData_To3="To disable this feature, change the variable \"User_Data_Copy_Confirm=false\"."
+	Str_PRINTINSTALLSETTINGS_Copy_uData_To4="(if the function is required, disabling it may break the program)"
+	Str_PRINTINSTALLSETTINGS_System_Mode="Use \"System\" mode only when installing software for all users!"
+	Str_PRINTINSTALLSETTINGS_System_Mode2="Root rights are required to perform the installation!"
+	Str_PRINTINSTALLSETTINGS_Before_Install="Please close all important applications before installation."
+	Str_PRINTINSTALLSETTINGS_Confirm="Enter \"y\" or \"yes\" to begin the installation."
+	Str_PRINTINSTALLSETTINGS_Helpers_Dir="Helper files will be installed to:"
+	Str_PRINTINSTALLSETTINGS_Desktop_Dir="Desktop shortcuts will be installed to:"
+	
+	Str_PREPAREINPUTFILES_Err_Unpack="Error unpacking temp files:"
+	Str_PREPAREINPUTFILES_Err_Unpack2="Try copying the installation files to another disk before running."
+	
+	Str_CHECKOUTPUTS_Head="Checking output directories:"
+	Str_CHECKOUTPUTS_Already_Present="Folders|Files already present"
+	Str_CHECKOUTPUTS_Attention="Continue installation and overwrite directories/files?"
+	Str_CHECKOUTPUTS_Attention2="Please make a backup copy of your data, if any, in the above directories."
+	Str_CHECKOUTPUTS_Confirm="Enter \"y\" or \"yes\" to continue."
+	
+	Str_INSTALLAPP_Head="Installing..."
+	Str_INSTALLAPP_No_Rights="No rights to the application installation directory?"
+	Str_INSTALLAPP_Create_Out="Creating output folder if it does not exist..."
+	Str_INSTALLAPP_Unpack_App="Unpacking application files..."
+	Str_INSTALLAPP_Unpack_Err="Error unpacking program files..."
+	Str_INSTALLAPP_Unpack_Err2="Broken archive? Or symbolic links with absolute paths as part of an application?"
+	Str_INSTALLAPP_Unpack_Err_Continue="Enter \"y\" or \"yes\" to continue the installation process..."
+	Str_INSTALLAPP_Unpack_Err_Abort="At the stage of unpacking program files."
+	Str_INSTALLAPP_Unpack_Continue="The installation continues..."
+	Str_INSTALLAPP_Set_Rights="Setting rights and owner..."
+	Str_INSTALLAPP_Install_Bin_Menu="Installing Bin files and copy menu files..."
+	Str_INSTALLAPP_Copy_uFiles="Copying user files...."
+	Str_INSTALLAPP_Copy_uFiles_Err="Error unpacking user files..."
+}
+
+function _SET_LOCALE() {
+	local Language="${LANG%%.*}"
+	local Locale_File="$Path_To_Script/locales/$Language"
+	
+	_SET_LOCALE_DEFAULT
+	
+	if [ $MODE_SILENT == true ]; then Locale_Display="-silent"
+	else
+		if [ -e "$Locale_File" ]; then
+			if [ $(grep Locale_Version "$Locale_File") == 'Locale_Version="1.9"' ]; then
+				Locale_Use_Default=false
+				Locale_Display="$Language"
+				source "$Locale_File"
+			fi
+		fi
+	fi
+}
 
 ######### ---- --------- ---- #########
 ######### -- END FUNCTIONS -- #########
