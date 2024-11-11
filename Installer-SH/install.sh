@@ -31,11 +31,12 @@ List_Warnings=""	#List_Warnings="${List_Warnings}\n _FUNCTION - Message."
 
 Current_DE="UnknownDE"
 
-Current_OS_Name_Full="Unknown"	# PRETTY_NAME		"Chimbalix 24.5 Alphachi"
-Current_OS_Name="Unknown"		# NAME				"Chimbalix"
-Current_OS_Name_ID="Unknown"	# ID				"chimbalix"
-Current_OS_Version="Unknown"	# VERSION_ID		"24.5"
-Current_OS_Codename="Unknown"	# VERSION_CODENAME	"alphachi"
+                                # os-release (main)    example                    lsb-release
+Current_OS_Name_Full="Unknown"  # PRETTY_NAME         "Chimbalix 24.5 Alphachi"   DISTRIB_DESCRIPTION
+Current_OS_Name="Unknown"       # NAME                "Chimbalix"                 DISTRIB_ID
+Current_OS_Name_ID="Unknown"    # ID                  "chimbalix"                 DISTRIB_ID
+Current_OS_Version="Unknown"    # VERSION_ID          "24.5"                      DISTRIB_RELEASE
+Current_OS_Codename="Unknown"   # VERSION_CODENAME    "alphachi"                  DISTRIB_CODENAME
 
 if [ -e "$User_Home/.config/user-dirs.dirs" ]; then
 	source "$User_Home/.config/user-dirs.dirs"; fi
@@ -224,6 +225,7 @@ function _CLEAR_TEMP() {
 	if [ -e "$Temp_Dir" ]; then
 		rm -rf "$Temp_Dir"; fi
 }
+
 function _CREATE_TEMP() {
 	_CLEAR_TEMP
 	mkdir "$Temp_Dir"
@@ -264,6 +266,12 @@ function _CHECK_SYSTEM() {
 		Current_OS_Name_ID="$ID"
 		Current_OS_Version="$VERSION_ID"
 		Current_OS_Codename="$VERSION_CODENAME"
+	elif [ -f "/etc/lsb-release" ]; then source "/etc/lsb-release"
+		Current_OS_Name_Full="$DISTRIB_DESCRIPTION"
+		Current_OS_Name="$DISTRIB_ID"
+		Current_OS_Name_ID="$DISTRIB_ID"
+		Current_OS_Version="$DISTRIB_RELEASE"
+		Current_OS_Codename="$DISTRIB_CODENAME"
 	else
 		if type uname &>/dev/null; then DistroVersion="$(uname -sr)"
 		else _ABORT "$Str_ATTENTION! ${Bold}${F_Yellow}$Str_CHECKOS_No_Distro_Name${F}${rBD}"; fi
