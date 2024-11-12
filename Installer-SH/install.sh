@@ -28,15 +28,15 @@ function _PACKAGE_SETTINGS() {
 ######### ---- SETTINGS ---- #########
 ######### ---- -------- ---- #########
 
-Install_User_Data=true         # Copy other data to the user's home directory: "true" / "false". Do not use this function unless necessary!
-Install_Helpers=false           # Adds "Default Applications" associations, please prepare files in "installer-data/system_files/helpers/" before using.
-Install_Desktop_Icons=true      # Place icons on the desktop (only for current user).
+Architecture="script"         # x86_64, x86, script, other
 
-Install_Mode="User"     # "System" / "User", In "User" mode, root rights are not required.
-Architecture="script"   # x86_64, x86, script, other
+Install_Desktop_Icons=true    # Place icons on the desktop (only for current user).
+Install_Mode="User"           # "System" / "User", In "User" mode, root rights are not required.
 
- # Unique name of the output directory.
-Unique_App_Folder_Name="example-application-19" #=> UNIQUE_APP_FOLDER_NAME
+Install_User_Data=false       # Copy other data to the user's home directory: "true" / "false". Do not use this function unless necessary!
+Install_Helpers=false         # Adds "Default Applications" associations, please prepare files in "installer-data/system_files/helpers/" before using.
+
+Unique_App_Folder_Name="example-application-19" #=> UNIQUE_APP_FOLDER_NAME, unique name of the output directory.
  # WARNING! Do not use capital letters in this place!
  # WARNING! This name is also used as a template for "bin" files in the "/usr/bin" directory.
  # good: ex-app-16, exapp-16.
