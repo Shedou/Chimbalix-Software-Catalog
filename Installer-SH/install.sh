@@ -37,7 +37,7 @@ Install_Mode="User"     # "System" / "User", In "User" mode, root rights are not
 Architecture="script"   # x86_64, x86, script, other
 
  # Unique name of the output directory.
-Unique_App_Folder_Name="example-application-18" #=> UNIQUE_APP_FOLDER_NAME
+Unique_App_Folder_Name="example-application-19" #=> UNIQUE_APP_FOLDER_NAME
  # WARNING! Do not use capital letters in this place!
  # WARNING! This name is also used as a template for "bin" files in the "/usr/bin" directory.
  # good: ex-app-16, exapp-16.
@@ -72,7 +72,7 @@ Info_Description="\
   2) Check the current \"install.sh\" file to configure the installation package."
 fi
 
-### ------------------------ ###
+ ### ------------------------ ###
  ### Basic Menu File Settings ###
  ### ------------------------ ###
  # Please manually prepare the menu files in the "installer-data/system_files/" directory before packaging the application,
@@ -103,14 +103,10 @@ Additional_Categories="chi-other;" #=> ADDITIONAL_CATEGORIES
  # URL: https://specifications.freedesktop.org/menu-spec/latest/category-registry.html
  # URL: https://specifications.freedesktop.org/menu-spec/latest/additional-category-registry.html
 
-######### - ------------ - #########
-######### - Archives MD5 - #########
-######### - ------------ - #########
-
+ # Archives MD5
 Archive_Program_Files_MD5=""
 Archive_System_Files_MD5=""
- # Not used if "Install_User_Data=false"
-Archive_User_Files_MD5=""
+Archive_User_Files_MD5="" # Not used if "Install_User_Data=false"
 
  # Extra check
 if [ ! -e "$Archive_User_Files" ] && [ $Install_User_Data == true ]; then Install_User_Data=false; fi
