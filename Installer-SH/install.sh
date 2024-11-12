@@ -28,15 +28,15 @@ function _MAIN() {
 
 function _PACKAGE_SETTINGS() {
 
-User_Data_Copy_Confirm=false	# Copy other data to the user's home directory: "true" / "false". Do not use this function unless necessary!
-Install_Helpers=false			# Adds "Default Applications" associations, please prepare files in "installer-data/system_files/helpers/" before using.
-Install_Desktop_Icons=true		# Place icons on the desktop (only for current user).
+Install_User_Data=false         # Copy other data to the user's home directory: "true" / "false". Do not use this function unless necessary!
+Install_Helpers=false           # Adds "Default Applications" associations, please prepare files in "installer-data/system_files/helpers/" before using.
+Install_Desktop_Icons=true      # Place icons on the desktop (only for current user).
 
-Install_Mode="User"		# "System" / "User", In "User" mode, root rights are not required.
-Architecture="script"	# x86_64, x86, script, other
+Install_Mode="User"     # "System" / "User", In "User" mode, root rights are not required.
+Architecture="script"   # x86_64, x86, script, other
 
  # Unique name of the output directory.
-Unique_App_Folder_Name="example_application_18" #=> UNIQUE_APP_FOLDER_NAME
+Unique_App_Folder_Name="example-application-18" #=> UNIQUE_APP_FOLDER_NAME
  # WARNING! Do not use capital letters in this place!
  # WARNING! This name is also used as a template for "bin" files in the "/usr/bin" directory.
  # good: ex_app-16, exapp-16.
@@ -112,12 +112,12 @@ Archive_Program_Files_MD5=""
 Archive_System_Files="$Path_Installer_Data/system_files.7z"
 Archive_System_Files_MD5=""
 
- # Not used if "User_Data_Copy_Confirm=false"
+ # Not used if "Install_User_Data=false"
 Archive_User_Files="$Path_Installer_Data/user_files.7z"
 Archive_User_Files_MD5=""
 
  # Extra check
-if [ ! -e "$Archive_User_Files" ] && [ $User_Data_Copy_Confirm == true ]; then User_Data_Copy_Confirm=false; fi
+if [ ! -e "$Archive_User_Files" ] && [ $Install_User_Data == true ]; then Install_User_Data=false; fi
 
 ######### - ------------ - #########
 ######### - Output paths - #########
@@ -353,7 +353,7 @@ function _CHECK_MD5_COMPARE() {
 	if [ "$Program_Files_MD5" != "$Archive_Program_Files_MD5" ]; then md5_pfiles_error=true; fi
 	if [ "$System_Files_MD5" != "$Archive_System_Files_MD5" ]; then md5_sfiles_error=true; fi
 	
-	if [ $User_Data_Copy_Confirm == true ]; then
+	if [ $Install_User_Data == true ]; then
 		User_Files_MD5=`md5sum "$Archive_User_Files" | awk '{print $1}'`
 		if [ "$User_Files_MD5" != "$Archive_User_Files_MD5" ]; then md5_ufiles_error=false; fi
 	fi
@@ -400,7 +400,7 @@ $Header
   ${Font_Green}The integrity of the installation archive has been successfully verified
    ${Font_Bold}$Str_CHECKMD5PRINT_Real_pHash${Font_Reset}  \"$Program_Files_MD5\"
    ${Font_Bold}$Str_CHECKMD5PRINT_Real_sHash${Font_Reset}   \"$System_Files_MD5\""
-		if [ $User_Data_Copy_Confirm == true ]; then echo -e "\
+		if [ $Install_User_Data == true ]; then echo -e "\
    ${Font_Bold}$Str_CHECKMD5PRINT_Real_uHash${Font_Reset}     \"$User_Files_MD5\""; fi
 		echo -e "${Font_Color_Reset}
   ${Font_Bold}$Str_CHECKMD5PRINT_Enter_To_Continue${Font_Reset}"
@@ -470,7 +470,7 @@ $Header
  -${Font_Bold}${Font_DarkGreen}$Str_PRINTINSTALLSETTINGS_Desktop_Dir${Font_Color_Reset}${Font_Reset}
    $Output_Desktop_Dir"; fi
 
-		if [ $User_Data_Copy_Confirm == true ]; then
+		if [ $Install_User_Data == true ]; then
 			echo -e "
  -$Str_ATTENTION! ${Font_Bold}${Font_DarkGreen}$Str_PRINTINSTALLSETTINGS_Copy_uData_To${Font_Color_Reset}${Font_Reset} $Output_User_Home
    $Str_PRINTINSTALLSETTINGS_Copy_uData_To2
@@ -625,7 +625,7 @@ $(for file in "${!arr_files_sorted[@]}"; do echo "   ${arr_files_sorted[$file]}"
 
 function _INSTALL_USER_DATA() {
 	# Copy user data
-	if [ $User_Data_Copy_Confirm == true ]; then
+	if [ $Install_User_Data == true ]; then
 		if [ $MODE_SILENT == false ]; then echo " $Str_INSTALLAPP_Copy_uFiles"; fi
 		
 		if ! "$Tool_SevenZip_bin" x -aoa "$Archive_User_Files" -o"$Output_User_Home/" &> /dev/null; then
@@ -744,7 +744,7 @@ $Header
 			_INSTALL_DESKTOP_ICONS; fi
 		
 		# Copy user data
-		if [ $User_Data_Copy_Confirm == true ]; then _INSTALL_USER_DATA; fi
+		if [ $Install_User_Data == true ]; then _INSTALL_USER_DATA; fi
 		
 		all_ok=true
 		
@@ -805,7 +805,7 @@ $Header
 			_INSTALL_DESKTOP_ICONS; fi
 		
 		# Copy user data
-		if [ $User_Data_Copy_Confirm == true ]; then _INSTALL_USER_DATA; fi
+		if [ $Install_User_Data == true ]; then _INSTALL_USER_DATA; fi
 		
 		all_ok=true
 		
@@ -968,7 +968,7 @@ function _SET_LOCALE_DEFAULT() {
 	Str_PRINTINSTALLSETTINGS_Bin_Dir="Bin files will be installed to:"
 	Str_PRINTINSTALLSETTINGS_Copy_uData_To="User data will be installed in:"
 	Str_PRINTINSTALLSETTINGS_Copy_uData_To2="This feature is not recommended to use, but some applications require it, so be careful."
-	Str_PRINTINSTALLSETTINGS_Copy_uData_To3="To disable this feature, change the variable \"User_Data_Copy_Confirm=false\"."
+	Str_PRINTINSTALLSETTINGS_Copy_uData_To3="To disable this feature, change the variable \"Install_User_Data=false\"."
 	Str_PRINTINSTALLSETTINGS_Copy_uData_To4="(if the function is required, disabling it may break the program)"
 	Str_PRINTINSTALLSETTINGS_System_Mode="Use \"System\" mode only when installing software for all users!"
 	Str_PRINTINSTALLSETTINGS_System_Mode2="Root rights are required to perform the installation!"
