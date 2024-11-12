@@ -30,8 +30,9 @@ function _PACKAGE_SETTINGS() {
 
 Architecture="script"         # x86_64, x86, script, other
 
-Install_Desktop_Icons=true    # Place icons on the desktop (only for current user).
 Install_Mode="User"           # "System" / "User", In "User" mode, root rights are not required.
+
+Install_Desktop_Icons=true    # Place icons on the desktop (only for current user).
 
 Install_User_Data=false       # Copy other data to the user's home directory: "true" / "false". Do not use this function unless necessary!
 Install_Helpers=false         # Adds "Default Applications" associations, please prepare files in "installer-data/system_files/helpers/" before using.
@@ -153,8 +154,8 @@ function _INIT_GLOBAL_VARIABLES() {
 	Tool_Gio_Trust_Xfce="$Path_Installer_Data/tools/gio-trust-xfce.sh"
 	Tool_Prepare_Base="$Path_Installer_Data/tools/prepare-portsoft-menu.sh"
 	
-	List_Errors=""		#List_Errors="${List_Errors}\n _FUNCTION - Message."
-	List_Warnings=""	#List_Warnings="${List_Warnings}\n _FUNCTION - Message."
+	List_Errors=""    # _ERROR "Title" "Message."
+	List_Warnings=""  # _WARNING "Title" "Message."
 	
 	Current_DE="UnknownDE"
                                 	# os-release (main)    example                    lsb-release
@@ -175,7 +176,7 @@ function _INIT_GLOBAL_PATHS() {
 	Archive_System_Files="$Path_Installer_Data/system_files.7z"
 	Archive_User_Files="$Path_Installer_Data/user_files.7z"
 	if [ ! -e "$Archive_User_Files" ] && [ $Install_User_Data == true ]; then
-		Install_User_Data=false; List_Warnings="${List_Warnings}\n _INIT_GLOBAL_PATHS - Archive_User_Files not found, Install_User_Data is disabled.\n   Please correct the settings according to the application."; fi # Extra check
+		Install_User_Data=false; _WARNING "_INIT_GLOBAL_PATHS" "Archive_User_Files not found, Install_User_Data is disabled.\n   Please correct the settings according to the application."; fi # Extra check
 	
 	# Application installation directory.
 	Out_PortSoft_System="/portsoft"
@@ -258,6 +259,24 @@ $Header
 	_CLEAR_TEMP
 	
 	read pause; clear; exit 1 # Double clear resets styles before going to the system terminal window.
+}
+
+function _ERROR() {
+	local err_first="Empty error title"
+	local err_second="empty error description."
+	if [ ! -z "$1" ]; then local err_first="$1"; fi
+	if [ ! -z "$2" ]; then local err_second="$2"; fi
+	
+	List_Errors="${List_Errors}\n    $err_first - $err_second"
+}
+
+function _WARNING() {
+	local warn_first="Empty warning title"
+	local warn_second="empty warning description."
+	if [ ! -z "$1" ]; then local warn_first="$1"; fi
+	if [ ! -z "$2" ]; then local warn_second="$2"; fi
+	
+	List_Warnings="${List_Warnings}\n    $warn_first - $warn_second"
 }
 
 ######### Base functions #########
@@ -688,7 +707,7 @@ function _INSTALL_DESKTOP_ICONS() {
 		# Trust Desktop files
 		if [ "$Current_DE" == "xfce" ]; then
 			_INSTALL_DESKTOP_ICONS_TRUST_XFCE; fi
-	else List_Errors="${List_Errors}\n _INSTALL_DESKTOP_ICONS - Input_Desktop_Dir not found."; fi
+	else _ERROR "_INSTALL_DESKTOP_ICONS" "Input_Desktop_Dir not found."; fi
 }
 
 ######### Install Desktop Icons #########
@@ -832,7 +851,7 @@ function _PREPARE_UNINSTALLER_SYSTEM() {
 			local CurrentFile="${All_Files[$filename]}"
 			sudo sed -i "s~FilesToDelete=(~&\n$CurrentFile~" "$Output_Uninstaller"
 		done
-	else List_Errors="${List_Errors}\n _PREPARE_UNINSTALLER_SYSTEM - Output_Uninstaller not found."; fi
+	else _ERROR "_PREPARE_UNINSTALLER_SYSTEM" "Output_Uninstaller not found."; fi
 }
 
 function _PREPARE_UNINSTALLER_USER() {
@@ -843,7 +862,7 @@ function _PREPARE_UNINSTALLER_USER() {
 			local CurrentFile="${All_Files[$filename]}"
 			sed -i "s~FilesToDelete=(~&\n$CurrentFile~" "$Output_Uninstaller"
 		done
-	else List_Errors="${List_Errors}\n _PREPARE_UNINSTALLER_USER - Output_Uninstaller not found."; fi
+	else _ERROR "_PREPARE_UNINSTALLER_USER" "Output_Uninstaller not found."; fi
 }
 
 function _PREPARE_UNINSTALLER() {
