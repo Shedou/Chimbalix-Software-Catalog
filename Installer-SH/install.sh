@@ -46,7 +46,7 @@ Unique_App_Folder_Name="example-application-19" #=> UNIQUE_APP_FOLDER_NAME, uniq
 ######### - ------------------- - #########
 ######### - Package Information - #########
 ######### - ------------------- - #########
-Header="${Font_BG_Black}${Font_Red}${Font_Bold} -=: Software Installer Script for Chimbalix (Installer-SH v1.9) - Lang: ${Font_Bold}$Locale_Display${Font_Reset} :=-${Font_Reset}${Font_Color_Reset}\n"
+Header="${Font_Red}${Font_Bold} -=: Software Installer Script for Chimbalix (Installer-SH v1.9) - Lang: $Locale_Display :=-${Font_Reset}${Font_Color_Reset}\n"
 
 Info_Name="Example Application"
 Info_Version="1.9"
@@ -243,9 +243,12 @@ function _CREATE_TEMP() {
 function _ABORT() {
 	clear
 	
+	local abort_message="${Font_Red}message not set...${Font_Color_Reset}"
+	if [ ! -z "$1" ]; then local abort_message="$1"; fi
+	
 	echo -e "\
 $Header
-  $Str_ABORT_Msg $1"
+  $Str_ABORT_Msg $abort_message"
 	
 	if [ "$List_Errors" != "" ]; then echo -e "
   ${Font_Bold}${Font_Red}- $Str_ABORT_Errors${Font_Color_Reset}${Font_Reset} $List_Errors"; fi
@@ -319,6 +322,7 @@ function _CHECK_SYSTEM() {
 	# Check DE
 	_CHECK_SYSTEM_DE
 	
+	# Check PortSoft
 	if [ "$Current_OS_Name" != "Chimbalix" ]; then
 		if [ ! -e "$Output_PortSoft" ] || [ ! -e "$Output_Menu_DDir" ]; then
 			if ! [[ -x "$Tool_Prepare_Base" ]]; then chmod +x "$Tool_Prepare_Base"; fi
@@ -336,7 +340,7 @@ function _CHECK_SYSTEM() {
 function _PRINT_PACKAGE_INFO() {
 if [ $MODE_SILENT == false ]; then
 	if [ $all_ok == true ]; then all_ok=false
-		echo -e "${Font_BG_Black}"; clear; # A crutch to fill the background completely...
+		clear
 		echo -e "\
 $Header
  ${Font_Bold}${Font_Cyan}$Str_PACKAGEINFO_Head${Font_Color_Reset}${Font_Reset}
@@ -529,8 +533,14 @@ fi
 ######### Prepare Input Files #########
 
 function _PREPARE_INPUT_FILES_GREP() {
-	local p_text="$1"; local p_path="$2"
-	grep -rl "$p_text" "$Temp_Dir" | xargs sed -i "s~$p_text~$p_path~g" &> /dev/null
+	local prepare_text="/tmp/ish"; local prepare_path="/tmp/ish"; local prepare_error=false
+	
+	if [ ! -z "$1" ] && [ ! -z "$2" ]; then local prepare_text="$1"; local prepare_path="$2"
+	else local prepare_error=true; _WARNING "PREPARE_INPUT_FILES_GREP" "not enough arguments for the function to work."; fi
+	
+	if [ $prepare_error == false ]; then 
+		grep -rl "$prepare_text" "$Temp_Dir" | xargs sed -i "s~$prepare_text~$prepare_path~g" &> /dev/null
+	fi
 }
 
 function _PREPARE_INPUT_FILES() {
