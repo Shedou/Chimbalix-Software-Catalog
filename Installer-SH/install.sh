@@ -8,8 +8,9 @@ Arguments=("$@")
 function _MAIN() {
 	_INIT_GLOBAL_VARIABLES
 	_CHECK_SYSTEM
+	_INIT_DEFAULT_PATHS
 	_SET_LOCALE
-	_PACKAGE_SETTINGS;
+	_PACKAGE_SETTINGS
 	printf '\033[8;30;110t' # Resize terminal Window (110x30)
 	_PRINT_PACKAGE_INFO
 	_CHECK_MD5
@@ -39,8 +40,8 @@ Architecture="script"   # x86_64, x86, script, other
 Unique_App_Folder_Name="example-application-18" #=> UNIQUE_APP_FOLDER_NAME
  # WARNING! Do not use capital letters in this place!
  # WARNING! This name is also used as a template for "bin" files in the "/usr/bin" directory.
- # good: ex_app-16, exapp-16.
- # BAD: Ex_app-16, ExApp-16.
+ # good: ex-app-16, exapp-16.
+ # BAD: Ex-app-16, ExApp-16.
 
 ######### - ------------------- - #########
 ######### - Package Information - #########
@@ -102,68 +103,17 @@ Additional_Categories="chi-other;" #=> ADDITIONAL_CATEGORIES
  # URL: https://specifications.freedesktop.org/menu-spec/latest/category-registry.html
  # URL: https://specifications.freedesktop.org/menu-spec/latest/additional-category-registry.html
 
-######### - -------------- - #########
-######### - Archives paths - #########
-######### - -------------- - #########
+######### - ------------ - #########
+######### - Archives MD5 - #########
+######### - ------------ - #########
 
-Archive_Program_Files="$Path_Installer_Data/program_files.7z"
 Archive_Program_Files_MD5=""
-
-Archive_System_Files="$Path_Installer_Data/system_files.7z"
 Archive_System_Files_MD5=""
-
  # Not used if "Install_User_Data=false"
-Archive_User_Files="$Path_Installer_Data/user_files.7z"
 Archive_User_Files_MD5=""
 
  # Extra check
 if [ ! -e "$Archive_User_Files" ] && [ $Install_User_Data == true ]; then Install_User_Data=false; fi
-
-######### - ------------ - #########
-######### - Output paths - #########
-######### - ------------ - #########
-
- # Application installation directory.
-Out_PortSoft_System="/portsoft"					# DO NOT CHANGE!
-Out_PortSoft_User="$User_Home/.local/portsoft"	# DO NOT CHANGE!
-
-Out_Install_Dir_System="$Out_PortSoft_System/$Architecture/$Unique_App_Folder_Name"
-Out_Install_Dir_User="$Out_PortSoft_User/$Architecture/$Unique_App_Folder_Name"
-
-Out_App_Folder_Owner=root:root	# Only for "System" mode, username:group
-Out_App_Folder_Permissions=755	# Only for "System" mode.
-
-Temp_Dir="/tmp/$Unique_App_Folder_Name""_$RANDOM""_$RANDOM" # TEMP Directory
-
-Out_User_Bin_Dir="$User_Home/.local/bin" # Works starting from Chimbalix 24.4
-Out_User_Helpers_Dir="$User_Home/.local/share/xfce4/helpers"
-Out_User_Desktop_Dir="$XDG_DESKTOP_DIR"
-Out_User_Menu_files="$User_Home/.config/menus/applications-merged"		# DO NOT CHANGE!
-Out_User_Menu_DDir="$User_Home/.local/share/desktop-directories/apps"	# DO NOT CHANGE!
-Out_User_Menu_Apps="$User_Home/.local/share/applications/apps"			# DO NOT CHANGE!
-
-Out_System_Bin_Dir="/usr/bin"
-Out_System_Helpers_Dir="/usr/share/xfce4/helpers"
-Out_System_Menu_Files="/etc/xdg/menus/applications-merged"	# DO NOT CHANGE!
-Out_System_Menu_DDir="/usr/share/desktop-directories/apps"	# DO NOT CHANGE!
-Out_System_Menu_Apps="/usr/share/applications/apps"			# DO NOT CHANGE!
-
-# The "PATH_TO_FOLDER" variable points to the application installation directory without the trailing slash (Output_Install_Dir), for example "/portsoft/x86_64/example_application".
-Output_Install_Dir=""; Output_Bin_Dir=""; Output_Helpers_Dir=""; Output_Desktop_Dir="$Out_User_Desktop_Dir"
-Output_Menu_Files=""; Output_Menu_DDir=""; Output_Menu_Apps=""; Output_User_Home="$User_Home"
-Output_PortSoft=""
-
-if [ "$Install_Mode" == "System" ]; then
-	Output_Install_Dir="$Out_Install_Dir_System"; Output_Bin_Dir="$Out_System_Bin_Dir"; Output_Helpers_Dir="$Out_System_Helpers_Dir"
-	Output_Menu_Files="$Out_System_Menu_Files"; Output_Menu_DDir="$Out_System_Menu_DDir"; Output_Menu_Apps="$Out_System_Menu_Apps"
-	Output_PortSoft="$Out_PortSoft_System"
-else
-	Output_Install_Dir="$Out_Install_Dir_User"; Output_Bin_Dir="$Out_User_Bin_Dir"; Output_Helpers_Dir="$Out_User_Helpers_Dir"
-	Output_Menu_Files="$Out_User_Menu_files"; Output_Menu_DDir="$Out_User_Menu_DDir"; Output_Menu_Apps="$Out_User_Menu_Apps"
-	Output_PortSoft="$Out_PortSoft_User"
-fi
-
-Output_Uninstaller="$Output_Install_Dir/$Program_Uninstaller_File" # Uninstaller template file.
 }
 
 ######### -- ------------ -- #########
@@ -179,6 +129,10 @@ Output_Uninstaller="$Output_Install_Dir/$Program_Uninstaller_File" # Uninstaller
 ######### Global variables #########
 
 function _INIT_GLOBAL_VARIABLES() {
+	### --------------------------- ###
+	### Do not edit variables here! ###
+	### --------------------------- ###
+	
 	# Font styles: "${Font_Bold} BLACK TEXT ${Font_Reset} normal text."
 	Font_Bold="\e[1m"; Font_Dim="\e[2m"; Font_Reset="\e[22m";
 	Font_Color_Reset='\033[39m'; BG_Color_Reset='\033[49m'; # Reset colors
@@ -195,6 +149,9 @@ function _INIT_GLOBAL_VARIABLES() {
 	
 	User_Home="$HOME"
 	User_Name="$USER"
+	User_Desktop_Dir="$HOME/Desktop"
+	if [ -e "$User_Home/.config/user-dirs.dirs" ]; then
+		source "$User_Home/.config/user-dirs.dirs"; User_Desktop_Dir="$XDG_DESKTOP_DIR"; fi
 	
 	MODE_DEBUG=false
 	MODE_SILENT=false; if [ "${Arguments[$1]}" == "-silent" ]; then MODE_SILENT=true; fi
@@ -216,9 +173,59 @@ function _INIT_GLOBAL_VARIABLES() {
 	Current_OS_Name_ID="Unknown"    # ID                  "chimbalix"                 DISTRIB_ID
 	Current_OS_Version="Unknown"    # VERSION_ID          "24.5"                      DISTRIB_RELEASE
 	Current_OS_Codename="Unknown"   # VERSION_CODENAME    "alphachi"                  DISTRIB_CODENAME
+	
+}
 
-if [ -e "$User_Home/.config/user-dirs.dirs" ]; then
-	source "$User_Home/.config/user-dirs.dirs"; fi
+function _INIT_DEFAULT_PATHS() {
+	### --------------------------- ###
+	### Do not edit variables here! ###
+	### --------------------------- ###
+	
+	Archive_Program_Files="$Path_Installer_Data/program_files.7z"
+	Archive_System_Files="$Path_Installer_Data/system_files.7z"
+	Archive_User_Files="$Path_Installer_Data/user_files.7z"
+	
+	# Application installation directory.
+	Out_PortSoft_System="/portsoft"                 # DO NOT CHANGE!
+	Out_PortSoft_User="$User_Home/.local/portsoft"  # DO NOT CHANGE!
+	
+	Out_Install_Dir_System="$Out_PortSoft_System/$Architecture/$Unique_App_Folder_Name"
+	Out_Install_Dir_User="$Out_PortSoft_User/$Architecture/$Unique_App_Folder_Name"
+	
+	Out_App_Folder_Owner=root:root	# Only for "System" mode, username:group
+	Out_App_Folder_Permissions=755	# Only for "System" mode.
+	
+	Temp_Dir="/tmp/$Unique_App_Folder_Name""_$RANDOM""_$RANDOM" # TEMP Directory
+	
+	Out_User_Bin_Dir="$User_Home/.local/bin" # Works starting from Chimbalix 24.4
+	Out_User_Helpers_Dir="$User_Home/.local/share/xfce4/helpers"
+	Out_User_Desktop_Dir="$User_Desktop_Dir"
+	Out_User_Menu_files="$User_Home/.config/menus/applications-merged"		# DO NOT CHANGE!
+	Out_User_Menu_DDir="$User_Home/.local/share/desktop-directories/apps"	# DO NOT CHANGE!
+	Out_User_Menu_Apps="$User_Home/.local/share/applications/apps"			# DO NOT CHANGE!
+	
+	Out_System_Bin_Dir="/usr/bin"
+	Out_System_Helpers_Dir="/usr/share/xfce4/helpers"
+	Out_System_Menu_Files="/etc/xdg/menus/applications-merged"	# DO NOT CHANGE!
+	Out_System_Menu_DDir="/usr/share/desktop-directories/apps"	# DO NOT CHANGE!
+	Out_System_Menu_Apps="/usr/share/applications/apps"			# DO NOT CHANGE!
+	
+	# The "PATH_TO_FOLDER" variable points to the application installation directory without the trailing slash (Output_Install_Dir), for example "/portsoft/x86_64/example_application".
+	Output_Install_Dir=""; Output_Bin_Dir=""; Output_Helpers_Dir=""; Output_Desktop_Dir="$Out_User_Desktop_Dir"
+	Output_Menu_Files=""; Output_Menu_DDir=""; Output_Menu_Apps=""; Output_User_Home="$User_Home"
+	Output_PortSoft=""
+	
+	if [ "$Install_Mode" == "System" ]; then
+		Output_Install_Dir="$Out_Install_Dir_System"; Output_Bin_Dir="$Out_System_Bin_Dir"; Output_Helpers_Dir="$Out_System_Helpers_Dir"
+		Output_Menu_Files="$Out_System_Menu_Files"; Output_Menu_DDir="$Out_System_Menu_DDir"; Output_Menu_Apps="$Out_System_Menu_Apps"
+		Output_PortSoft="$Out_PortSoft_System"
+	else
+		Output_Install_Dir="$Out_Install_Dir_User"; Output_Bin_Dir="$Out_User_Bin_Dir"; Output_Helpers_Dir="$Out_User_Helpers_Dir"
+		Output_Menu_Files="$Out_User_Menu_files"; Output_Menu_DDir="$Out_User_Menu_DDir"; Output_Menu_Apps="$Out_User_Menu_Apps"
+		Output_PortSoft="$Out_PortSoft_User"
+	fi
+	
+	Output_Uninstaller="$Output_Install_Dir/$Program_Uninstaller_File" # Uninstaller template file.
 }
 
 ######### Global variables #########
