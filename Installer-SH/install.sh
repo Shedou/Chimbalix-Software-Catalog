@@ -46,7 +46,7 @@ Unique_App_Folder_Name="example-application-19" #=> UNIQUE_APP_FOLDER_NAME, uniq
 ######### - ------------------- - #########
 ######### - Package Information - #########
 ######### - ------------------- - #########
-Header="${Font_Red}${Font_Bold} -=: Software Installer Script for Chimbalix (Installer-SH v1.9) - Lang: $Locale_Display :=-${Font_Reset}${Font_Color_Reset}\n"
+Header="${Font_Red}${Font_Bold} -=: Universal Software Installer Script for Chimbalix (Installer-SH v1.9) - Lang: $Locale_Display :=-${Font_Reset}${Font_Color_Reset}\n"
 
 Info_Name="Example Application"
 Info_Version="1.9"
@@ -62,13 +62,12 @@ Info_Developer="Chimbal"
 Info_URL="https://github.com/Shedou/Chimbalix-Software-Catalog"
 if [ $Locale_Use_Default == true ]; then # Use this description if there is no suitable localization file:
 Info_Description="\
-  1) This installer (short description):
+  1) This universal installer (short description):
      - Suitable for installation on stand-alone PCs without Internet access.
      - Stores installation files in a 7-zip archive (good compression and fast unpacking).
      - Two installation modes:
        . User - install only for the current User ($User_Name), does not require root rights.
        . System - For all users, root rights are required.
-     - Allows you to set permissions for the application directory (in \"System\" mode only).
   2) Check the current \"install.sh\" file to configure the installation package."
 fi
 
@@ -78,17 +77,17 @@ fi
  # Please manually prepare the menu files in the "installer-data/system_files/" directory before packaging the application,
  # this functionality does not allow you to fully customize the menu files.
  # Use the variable names given in the comments to simplify the preparation of menu files.
-Menu_Directory_Name="Example Application 1.9"	#=> MENU_DIRECTORY_NAME
-Menu_Directory_Icon="icon.png"					#=> MENU_DIRECTORY_ICON
+Menu_Directory_Name="Example Application 1.9"   #=> MENU_DIRECTORY_NAME
+Menu_Directory_Icon="icon.png"                  #=> MENU_DIRECTORY_ICON
 
-Program_Executable_File="program/example-application"	#=> PROGRAM_EXECUTABLE_FILE
-Program_Name_In_Menu="Example Application 1.9"			#=> PROGRAM_NAME_IN_MENU
-Program_Icon_In_Menu="icon.png"							#=> PROGRAM_ICON_IN_MENU
-Program_Exe_Run_In_Terminal="true"						#=> PROGRAM_EXE_RUN_IN_TERMINAL
-Program_Install_Mode="$Install_Mode"					#=> PROGRAM_INSTALL_MODE
+Program_Executable_File="program/example-application"   #=> PROGRAM_EXECUTABLE_FILE
+Program_Name_In_Menu="Example Application 1.9"          #=> PROGRAM_NAME_IN_MENU
+Program_Icon_In_Menu="icon.png"                         #=> PROGRAM_ICON_IN_MENU
+Program_Exe_Run_In_Terminal="true"                      #=> PROGRAM_EXE_RUN_IN_TERMINAL
+Program_Install_Mode="$Install_Mode"                    #=> PROGRAM_INSTALL_MODE
 
-Program_Uninstaller_File="ish-software-uninstaller.sh"			#=> PROGRAM_UNINSTALLER_FILE
-Program_Uninstaller_Icon="ish-software-uninstaller-icon.png"	#=> PROGRAM_UNINSTALLER_ICON
+Program_Uninstaller_File="ish-software-uninstaller.sh"          #=> PROGRAM_UNINSTALLER_FILE
+Program_Uninstaller_Icon="ish-software-uninstaller-icon.png"    #=> PROGRAM_UNINSTALLER_ICON
 
 
  # Additional menu categories that will include the main application shortcuts.
@@ -103,7 +102,7 @@ Additional_Categories="chi-other;" #=> ADDITIONAL_CATEGORIES
  # URL: https://specifications.freedesktop.org/menu-spec/latest/category-registry.html
  # URL: https://specifications.freedesktop.org/menu-spec/latest/additional-category-registry.html
 
- # Archives MD5
+ # Archives MD5 Hash
 Archive_Program_Files_MD5=""
 Archive_System_Files_MD5=""
 Archive_User_Files_MD5="" # Not used if "Install_User_Data=false"
@@ -158,7 +157,7 @@ function _INIT_GLOBAL_VARIABLES() {
 	List_Warnings=""  # _WARNING "Title" "Message."
 	
 	Current_DE="UnknownDE"
-                                	# os-release (main)    example                    lsb-release
+                                    # os-release (main)    example                    lsb-release
 	Current_OS_Name_Full="Unknown"  # PRETTY_NAME         "Chimbalix 24.5 Alphachi"   DISTRIB_DESCRIPTION
 	Current_OS_Name="Unknown"       # NAME                "Chimbalix"                 DISTRIB_ID
 	Current_OS_Name_ID="Unknown"    # ID                  "chimbalix"                 DISTRIB_ID
@@ -185,8 +184,8 @@ function _INIT_GLOBAL_PATHS() {
 	Out_Install_Dir_System="$Out_PortSoft_System/$Architecture/$Unique_App_Folder_Name"
 	Out_Install_Dir_User="$Out_PortSoft_User/$Architecture/$Unique_App_Folder_Name"
 	
-	Out_App_Folder_Owner=root:root	# Only for "System" mode, username:group
-	Out_App_Folder_Permissions=755	# Only for "System" mode.
+	Out_App_Folder_Owner=root:root  # Only for "System" mode, username:group
+	Out_App_Folder_Permissions=755  # Only for "System" mode.
 	
 	Temp_Dir="/tmp/$Unique_App_Folder_Name""_$RANDOM""_$RANDOM" # TEMP Directory
 	

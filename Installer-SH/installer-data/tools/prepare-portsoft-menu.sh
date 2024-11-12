@@ -2,7 +2,7 @@
 # This Script part of "Installer-SH"
 ######### --------- #########
 all_ok=true
-Base_Header="${Font_Red}${Font_Bold} -=: Prepare PortSoft and Menu (Installer-SH v1.8) :=-${Font_Reset}${Font_Color_Reset}\n"
+Base_Header="${Font_Red}${Font_Bold} -=: Preparing PortSoft and Menu (Installer-SH part) :=-${Font_Reset}${Font_Color_Reset}\n"
 Base_Temp_Dir="/tmp/chimbalix-portsoft-menu-prepare""_$RANDOM""_$RANDOM" # TEMP Directory
 
 ######### - Archive path - #########
