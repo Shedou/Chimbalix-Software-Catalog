@@ -193,7 +193,7 @@ function _INIT_GLOBAL_PATHS() {
 	Out_User_Bin_Dir="$User_Home/.local/bin" # Works starting from Chimbalix 24.4
 	Out_User_Helpers_Dir="$User_Home/.local/share/xfce4/helpers"
 	Out_User_Desktop_Dir="$User_Desktop_Dir"
-	Out_User_Menu_files="$User_Home/.config/menus/applications-merged"
+	Out_User_Menu_Files="$User_Home/.config/menus/applications-merged"
 	Out_User_Menu_DDir="$User_Home/.local/share/desktop-directories/apps"
 	Out_User_Menu_Apps="$User_Home/.local/share/applications/apps"
 	
@@ -214,7 +214,7 @@ function _INIT_GLOBAL_PATHS() {
 		Output_PortSoft="$Out_PortSoft_System"
 	else
 		Output_Install_Dir="$Out_Install_Dir_User"; Output_Bin_Dir="$Out_User_Bin_Dir"; Output_Helpers_Dir="$Out_User_Helpers_Dir"
-		Output_Menu_Files="$Out_User_Menu_files"; Output_Menu_DDir="$Out_User_Menu_DDir"; Output_Menu_Apps="$Out_User_Menu_Apps"
+		Output_Menu_Files="$Out_User_Menu_Files"; Output_Menu_DDir="$Out_User_Menu_DDir"; Output_Menu_Apps="$Out_User_Menu_Apps"
 		Output_PortSoft="$Out_PortSoft_User"
 	fi
 	
@@ -285,8 +285,7 @@ function _WARNING() {
 ######### ------------ #########
 ######### Check System #########
 
-function _CHECK_SYSTEM() {
-	# Check OS
+function _CHECK_SYSTEM_VERSION() {
 	if [ -f "/etc/os-release" ]; then source "/etc/os-release"
 		Current_OS_Name_Full="$PRETTY_NAME"
 		Current_OS_Name="$NAME"
@@ -303,13 +302,22 @@ function _CHECK_SYSTEM() {
 		if type uname &>/dev/null; then DistroVersion="$(uname -sr)"
 		else _ABORT "$Str_ATTENTION! ${Font_Bold}${Font_Yellow}$Str_CHECKOS_No_Distro_Name${Font_Color_Reset}${Font_Reset}"; fi
 	fi
-	
-	# Check DE
+}
+
+function _CHECK_SYSTEM_DE() {
 	if [ $DESKTOP_SESSION ]; then Current_DE="$DESKTOP_SESSION"
 	elif [ $XDG_SESSION_DESKTOP ]; then Current_DE="$XDG_SESSION_DESKTOP"
 	elif [ $XDG_CURRENT_DESKTOP ]; then Current_DE="$XDG_CURRENT_DESKTOP"
 	elif [ $GDMSESSION ]; then Current_DE="$GDMSESSION"
 	fi
+}
+
+function _CHECK_SYSTEM() {
+	# Check System Version
+	_CHECK_SYSTEM_VERSION
+	
+	# Check DE
+	_CHECK_SYSTEM_DE
 	
 	if [ "$Current_OS_Name" != "Chimbalix" ]; then
 		if [ ! -e "$Output_PortSoft" ] || [ ! -e "$Output_Menu_DDir" ]; then
