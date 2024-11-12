@@ -46,7 +46,6 @@ Unique_App_Folder_Name="example-application-19" #=> UNIQUE_APP_FOLDER_NAME, uniq
 ######### - ------------------- - #########
 ######### - Package Information - #########
 ######### - ------------------- - #########
-Header="${Font_Red}${Font_Bold} -=: Universal Software Installer Script for Chimbalix (Installer-SH v1.9) - Lang: $Locale_Display :=-${Font_Reset}${Font_Color_Reset}\n"
 
 Info_Name="Example Application"
 Info_Version="1.9"
@@ -89,7 +88,6 @@ Program_Install_Mode="$Install_Mode"                    #=> PROGRAM_INSTALL_MODE
 Program_Uninstaller_File="ish-software-uninstaller.sh"          #=> PROGRAM_UNINSTALLER_FILE
 Program_Uninstaller_Icon="ish-software-uninstaller-icon.png"    #=> PROGRAM_UNINSTALLER_ICON
 
-
  # Additional menu categories that will include the main application shortcuts.
  # Please do not use this variable in the uninstaller shortcut file.
 Additional_Categories="chi-other;" #=> ADDITIONAL_CATEGORIES
@@ -106,6 +104,9 @@ Additional_Categories="chi-other;" #=> ADDITIONAL_CATEGORIES
 Archive_Program_Files_MD5=""
 Archive_System_Files_MD5=""
 Archive_User_Files_MD5="" # Not used if "Install_User_Data=false"
+
+ # Header
+Header="${Font_Red}${Font_Bold} -=: Universal Software Installer Script for Chimbalix (Installer-SH v1.9) - Lang: $Locale_Display :=-${Font_Reset}${Font_Color_Reset}\n"
 
 ######### -- ------------ -- #########
 ######### -- END SETTINGS -- #########
@@ -157,13 +158,12 @@ function _INIT_GLOBAL_VARIABLES() {
 	List_Warnings=""  # _WARNING "Title" "Message."
 	
 	Current_DE="UnknownDE"
-                                    # os-release (main)    example                    lsb-release
+	                                # os-release (main)    example (Chimbalix 24.5+)  lsb-release
 	Current_OS_Name_Full="Unknown"  # PRETTY_NAME         "Chimbalix 24.5 Alphachi"   DISTRIB_DESCRIPTION
 	Current_OS_Name="Unknown"       # NAME                "Chimbalix"                 DISTRIB_ID
 	Current_OS_Name_ID="Unknown"    # ID                  "chimbalix"                 DISTRIB_ID
 	Current_OS_Version="Unknown"    # VERSION_ID          "24.5"                      DISTRIB_RELEASE
 	Current_OS_Codename="Unknown"   # VERSION_CODENAME    "alphachi"                  DISTRIB_CODENAME
-	
 }
 
 function _INIT_GLOBAL_PATHS() {
@@ -187,7 +187,7 @@ function _INIT_GLOBAL_PATHS() {
 	Out_App_Folder_Owner=root:root  # Only for "System" mode, username:group
 	Out_App_Folder_Permissions=755  # Only for "System" mode.
 	
-	Temp_Dir="/tmp/$Unique_App_Folder_Name""_$RANDOM""_$RANDOM" # TEMP Directory
+	Temp_Dir="/tmp/installer-sh/$Unique_App_Folder_Name""_$RANDOM""_$RANDOM" # TEMP Directory
 	
 	Out_User_Bin_Dir="$User_Home/.local/bin" # Works starting from Chimbalix 24.4
 	Out_User_Helpers_Dir="$User_Home/.local/share/xfce4/helpers"
@@ -201,6 +201,8 @@ function _INIT_GLOBAL_PATHS() {
 	Out_System_Menu_Files="/etc/xdg/menus/applications-merged"
 	Out_System_Menu_DDir="/usr/share/desktop-directories/apps"
 	Out_System_Menu_Apps="/usr/share/applications/apps"
+	
+	Temp_Test="/tmp/installer-sh"
 	
 	# The "PATH_TO_FOLDER" variable points to the application installation directory without the trailing slash (Output_Install_Dir), for example "/portsoft/x86_64/example_application".
 	Output_Install_Dir="/tmp/ish"; Output_Bin_Dir="/tmp/ish"; Output_Helpers_Dir="/tmp/ish"; Output_Desktop_Dir="$Out_User_Desktop_Dir"
@@ -230,17 +232,34 @@ function _INIT_GLOBAL_PATHS() {
 ######### Base functions #########
 
 function _CLEAR_TEMP() {
-	if [ -e "$Temp_Dir" ]; then
-		rm -rf "$Temp_Dir"; fi
+	if [ ! -z "$Temp_Dir" ]; then
+		if [ -e "$Temp_Dir" ]; then
+			local clear_temp_test="$(echo "$Temp_Dir" | cut -d/ -f 1-3)"
+			if [ "$clear_temp_test" == "$Temp_Test" ]; then
+				if ! rm -rf "$Temp_Dir"; then _ABORT "Error clearinG temporary directory...\n   ($Temp_Dir)"; fi
+			else _ABORT "$clear_temp_test != $Temp_Test"; fi
+		fi
+	fi
 }
 
 function _CREATE_TEMP() {
-	_CLEAR_TEMP
-	mkdir "$Temp_Dir"
+	if [ ! -z "$Temp_Dir" ]; then
+		_CLEAR_TEMP
+		local create_temp_test="$(echo "$Temp_Dir" | cut -d/ -f 1-3)"
+		if [ "$create_temp_test" == "$Temp_Test" ]; then
+			if ! mkdir -p "$Temp_Dir"; then _ABORT "Error Creating temporary directory...\n   ($Temp_Dir)"; fi
+		else _ABORT "$create_temp_test != $Temp_Test"; fi
+	fi
 }
 
 function _ABORT() {
 	clear
+	
+	if [ -z "$Header" ];             then local Header=" -= OPERATING SYSTEM NOT SUPPORTED? =-\n"; fi
+	if [ -z "$Str_ABORT_Msg" ];      then local Str_ABORT_Msg="Exit code -"; fi
+	if [ -z "$Str_ABORT_Exit" ];     then local Str_ABORT_Exit="Press Enter or close the window to exit."; fi
+	if [ -z "$Str_ABORT_Errors" ];   then local Str_ABORT_Errors="Errors:"; fi
+	if [ -z "$Str_ABORT_Warnings" ]; then local Str_ABORT_Warnings="Warnings:"; fi
 	
 	local abort_message="${Font_Red}message not set...${Font_Color_Reset}"
 	if [ ! -z "$1" ]; then local abort_message="$1"; fi
@@ -256,7 +275,8 @@ $Header
   ${Font_Bold}${Font_Yellow}- $Str_ABORT_Warnings${Font_Color_Reset}${Font_Reset} $List_Warnings"; fi
 	
 	echo -e "
-  $Str_ABORT_Exit"
+  $Str_ABORT_Exit
+  $Temp_Dirt"
 	
 	_CLEAR_TEMP
 	
@@ -302,16 +322,23 @@ function _CHECK_SYSTEM_VERSION() {
 		Current_OS_Codename="$DISTRIB_CODENAME"
 	else
 		if type uname &>/dev/null; then DistroVersion="$(uname -sr)"
-		else _ABORT "$Str_ATTENTION! ${Font_Bold}${Font_Yellow}$Str_CHECKOS_No_Distro_Name${Font_Color_Reset}${Font_Reset}"; fi
+		else _ABORT "The name of the operating system / kernel is not defined!"; fi
 	fi
 }
 
 function _CHECK_SYSTEM_DE() {
-	if [ $DESKTOP_SESSION ]; then Current_DE="$DESKTOP_SESSION"
-	elif [ $XDG_SESSION_DESKTOP ]; then Current_DE="$XDG_SESSION_DESKTOP"
-	elif [ $XDG_CURRENT_DESKTOP ]; then Current_DE="$XDG_CURRENT_DESKTOP"
-	elif [ $GDMSESSION ]; then Current_DE="$GDMSESSION"
+	local check_system_de_raw=""
+	
+	if   [ $XDG_SESSION_DESKTOP ]; then local check_system_de_raw="$XDG_SESSION_DESKTOP"
+	elif [ $DESKTOP_SESSION ];     then local check_system_de_raw="$DESKTOP_SESSION"
+	elif [ $XDG_CURRENT_DESKTOP ]; then local check_system_de_raw="$XDG_CURRENT_DESKTOP"
+	elif [ $GDMSESSION ];          then local check_system_de_raw="$GDMSESSION"
 	fi
+	
+	# XFCE
+	if [ "$check_system_de_raw" == "xfce" ]; then local check_system_de_raw="XFCE"; fi
+	
+	Current_DE="$check_system_de_raw"
 }
 
 function _CHECK_SYSTEM() {
@@ -697,7 +724,7 @@ function _INSTALL_HELPERS_XFCE_USER() {
 
 function _INSTALL_HELPERS() {
 	if [ $Install_Helpers == true ]; then
-		if [ $Current_DE == "xfce" ]; then
+		if [ $Current_DE == "XFCE" ]; then
 			if [ "$Install_Mode" == "System" ]; then _INSTALL_HELPERS_XFCE_SYSTEM; else _INSTALL_HELPERS_XFCE_USER; fi; fi
 	fi
 }
@@ -722,7 +749,7 @@ function _INSTALL_DESKTOP_ICONS() {
 		cp -rf "$Input_Desktop_Dir/." "$Output_Desktop_Dir"
 		
 		# Trust Desktop files
-		if [ "$Current_DE" == "xfce" ]; then
+		if [ "$Current_DE" == "XFCE" ]; then
 			_INSTALL_DESKTOP_ICONS_TRUST_XFCE; fi
 	else _ERROR "_INSTALL_DESKTOP_ICONS" "Input_Desktop_Dir not found."; fi
 }
@@ -910,7 +937,7 @@ function _POST_INSTALL_UPDATE_MENU_KDE() {
 function _POST_INSTALL() {
 	if [ $all_ok == true ]; then
 		# Restart taskbar
-		if [ "$Current_DE" == "xfce" ]; then
+		if [ "$Current_DE" == "XFCE" ]; then
 			_POST_INSTALL_UPDATE_MENU_XFCE; fi
 		
 		if [ "$Current_DE" == "KDE" ]; then
@@ -946,8 +973,6 @@ function _SET_LOCALE_DEFAULT() {
 	Str_ABORT_Exit="Press Enter or close the window to exit."
 	Str_ABORT_Errors="Errors:"
 	Str_ABORT_Warnings="Warnings:"
-	
-	Str_CHECKOS_No_Distro_Name="The name of the operating system / kernel is not defined!"
 	
 	Str_BASEINFO_Head="Installing basic components:"
 	Str_BASEINFO_Warning="Warning! If you are here - you are not using Chimbalix,\n  other Linux distributions require some preparation, the following components must be installed:"
