@@ -2,7 +2,7 @@
 # This Script part of "Installer-SH"
 ######### --------- #########
 all_ok=true
-Base_Header="${Font_BG_Black}${Font_Red}${Font_Bold} -=: Prepare PortSoft and Menu (Installer-SH v1.8) :=-${Font_Reset}${Font_Color_Reset}\n"
+Base_Header="${Font_Red}${Font_Bold} -=: Prepare PortSoft and Menu (Installer-SH v1.8) :=-${Font_Reset}${Font_Color_Reset}\n"
 Base_Temp_Dir="/tmp/chimbalix-portsoft-menu-prepare""_$RANDOM""_$RANDOM" # TEMP Directory
 
 ######### - Archive path - #########
@@ -22,7 +22,7 @@ function _BASE_MAIN() {
 function _BASE_PRINT_INFO() {
 if [ $MODE_SILENT == false ]; then
 	if [ $all_ok == true ]; then all_ok=false
-		echo -e "${Font_BG_Black}"; clear;
+		clear
 		echo -e "\
 $Base_Header
  ${Font_Bold}${Font_Cyan}$Str_BASEINFO_Head${Font_Color_Reset}${Font_Reset}
