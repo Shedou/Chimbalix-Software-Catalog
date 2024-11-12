@@ -8,9 +8,9 @@ Arguments=("$@")
 function _MAIN() {
 	_INIT_GLOBAL_VARIABLES
 	_CHECK_SYSTEM
-	_INIT_DEFAULT_PATHS
 	_SET_LOCALE
 	_PACKAGE_SETTINGS
+	_INIT_GLOBAL_PATHS
 	printf '\033[8;30;110t' # Resize terminal Window (110x30)
 	_PRINT_PACKAGE_INFO
 	_CHECK_MD5
@@ -23,13 +23,12 @@ function _MAIN() {
 	_POST_INSTALL
 }
 
+function _PACKAGE_SETTINGS() {
 ######### ---- -------- ---- #########
 ######### ---- SETTINGS ---- #########
 ######### ---- -------- ---- #########
 
-function _PACKAGE_SETTINGS() {
-
-Install_User_Data=false         # Copy other data to the user's home directory: "true" / "false". Do not use this function unless necessary!
+Install_User_Data=true         # Copy other data to the user's home directory: "true" / "false". Do not use this function unless necessary!
 Install_Helpers=false           # Adds "Default Applications" associations, please prepare files in "installer-data/system_files/helpers/" before using.
 Install_Desktop_Icons=true      # Place icons on the desktop (only for current user).
 
@@ -108,15 +107,10 @@ Archive_Program_Files_MD5=""
 Archive_System_Files_MD5=""
 Archive_User_Files_MD5="" # Not used if "Install_User_Data=false"
 
- # Extra check
-if [ ! -e "$Archive_User_Files" ] && [ $Install_User_Data == true ]; then Install_User_Data=false; fi
-}
-
-######### -- ------------ -- #########
 ######### -- ------------ -- #########
 ######### -- END SETTINGS -- #########
 ######### -- ------------ -- #########
-######### -- ------------ -- #########
+}
 
 ######### ---------------- #########
 ######### ---------------- #########
@@ -143,9 +137,9 @@ function _INIT_GLOBAL_VARIABLES() {
 	Locale_Use_Default=true # don't change!
 	Locale_Display="Default"
 	
-	User_Home="$HOME"
 	User_Name="$USER"
-	User_Desktop_Dir="$HOME/Desktop"
+	User_Home="$HOME"
+	User_Desktop_Dir="$User_Home/Desktop"
 	if [ -e "$User_Home/.config/user-dirs.dirs" ]; then
 		source "$User_Home/.config/user-dirs.dirs"; User_Desktop_Dir="$XDG_DESKTOP_DIR"; fi
 	
@@ -172,7 +166,7 @@ function _INIT_GLOBAL_VARIABLES() {
 	
 }
 
-function _INIT_DEFAULT_PATHS() {
+function _INIT_GLOBAL_PATHS() {
 	### --------------------------- ###
 	### Do not edit variables here! ###
 	### --------------------------- ###
@@ -180,10 +174,12 @@ function _INIT_DEFAULT_PATHS() {
 	Archive_Program_Files="$Path_Installer_Data/program_files.7z"
 	Archive_System_Files="$Path_Installer_Data/system_files.7z"
 	Archive_User_Files="$Path_Installer_Data/user_files.7z"
+	if [ ! -e "$Archive_User_Files" ] && [ $Install_User_Data == true ]; then
+		Install_User_Data=false; List_Warnings="${List_Warnings}\n _INIT_GLOBAL_PATHS - Archive_User_Files not found, Install_User_Data is disabled.\n   Please correct the settings according to the application."; fi # Extra check
 	
 	# Application installation directory.
-	Out_PortSoft_System="/portsoft"                 # DO NOT CHANGE!
-	Out_PortSoft_User="$User_Home/.local/portsoft"  # DO NOT CHANGE!
+	Out_PortSoft_System="/portsoft"
+	Out_PortSoft_User="$User_Home/.local/portsoft"
 	
 	Out_Install_Dir_System="$Out_PortSoft_System/$Architecture/$Unique_App_Folder_Name"
 	Out_Install_Dir_User="$Out_PortSoft_User/$Architecture/$Unique_App_Folder_Name"
@@ -196,20 +192,20 @@ function _INIT_DEFAULT_PATHS() {
 	Out_User_Bin_Dir="$User_Home/.local/bin" # Works starting from Chimbalix 24.4
 	Out_User_Helpers_Dir="$User_Home/.local/share/xfce4/helpers"
 	Out_User_Desktop_Dir="$User_Desktop_Dir"
-	Out_User_Menu_files="$User_Home/.config/menus/applications-merged"		# DO NOT CHANGE!
-	Out_User_Menu_DDir="$User_Home/.local/share/desktop-directories/apps"	# DO NOT CHANGE!
-	Out_User_Menu_Apps="$User_Home/.local/share/applications/apps"			# DO NOT CHANGE!
+	Out_User_Menu_files="$User_Home/.config/menus/applications-merged"
+	Out_User_Menu_DDir="$User_Home/.local/share/desktop-directories/apps"
+	Out_User_Menu_Apps="$User_Home/.local/share/applications/apps"
 	
 	Out_System_Bin_Dir="/usr/bin"
 	Out_System_Helpers_Dir="/usr/share/xfce4/helpers"
-	Out_System_Menu_Files="/etc/xdg/menus/applications-merged"	# DO NOT CHANGE!
-	Out_System_Menu_DDir="/usr/share/desktop-directories/apps"	# DO NOT CHANGE!
-	Out_System_Menu_Apps="/usr/share/applications/apps"			# DO NOT CHANGE!
+	Out_System_Menu_Files="/etc/xdg/menus/applications-merged"
+	Out_System_Menu_DDir="/usr/share/desktop-directories/apps"
+	Out_System_Menu_Apps="/usr/share/applications/apps"
 	
 	# The "PATH_TO_FOLDER" variable points to the application installation directory without the trailing slash (Output_Install_Dir), for example "/portsoft/x86_64/example_application".
-	Output_Install_Dir=""; Output_Bin_Dir=""; Output_Helpers_Dir=""; Output_Desktop_Dir="$Out_User_Desktop_Dir"
-	Output_Menu_Files=""; Output_Menu_DDir=""; Output_Menu_Apps=""; Output_User_Home="$User_Home"
-	Output_PortSoft=""
+	Output_Install_Dir="/tmp/ish"; Output_Bin_Dir="/tmp/ish"; Output_Helpers_Dir="/tmp/ish"; Output_Desktop_Dir="$Out_User_Desktop_Dir"
+	Output_Menu_Files="/tmp/ish"; Output_Menu_DDir="/tmp/ish"; Output_Menu_Apps="/tmp/ish"; Output_User_Home="$User_Home"
+	Output_PortSoft="/tmp/ish"
 	
 	if [ "$Install_Mode" == "System" ]; then
 		Output_Install_Dir="$Out_Install_Dir_System"; Output_Bin_Dir="$Out_System_Bin_Dir"; Output_Helpers_Dir="$Out_System_Helpers_Dir"
