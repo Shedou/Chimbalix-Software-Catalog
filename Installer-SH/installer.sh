@@ -562,11 +562,12 @@ $Header
 
  -${Font_Bold}${Font_DarkGreen}$Str_PRINTINSTALLSETTINGS_Bin_Dir${Font_Color_Reset}${Font_Reset}
    $Output_Bin_Dir"
-
+		
 		if [ $Install_Helpers == true ]; then
-			echo -e "
+			if [ $Current_DE == "XFCE" ]; then
+				echo -e "
  -${Font_Bold}${Font_DarkGreen}$Str_PRINTINSTALLSETTINGS_Helpers_Dir${Font_Color_Reset}${Font_Reset}
-   $Output_Helpers_Dir"; fi
+   $Output_Helpers_Dir"; fi; fi
 
 		if [ $Install_Desktop_Icons == true ]; then
 			echo -e "
