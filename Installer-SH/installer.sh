@@ -348,10 +348,18 @@ function _CHECK_SYSTEM_DE() {
 	fi
 	
 	# Normalize
+	### XFCE - LXDE - LXQT - SWAY - OPENBOX
 	if [ "$check_system_de_raw" == "xfce" ]; then local check_system_de_raw="XFCE"; fi
 	if [ "$check_system_de_raw" == "lxde" ]; then local check_system_de_raw="LXDE"; fi
+	
 	if [ "$check_system_de_raw" == "lxqt" ]; then local check_system_de_raw="LXQT"; fi
 	if [ "$check_system_de_raw" == "LXQt" ]; then local check_system_de_raw="LXQT"; fi
+	
+	if [ "$check_system_de_raw" == "openbox" ]; then local check_system_de_raw="OPENBOX"; fi
+	if [ "$check_system_de_raw" == "sway" ]; then local check_system_de_raw="SWAY"; fi
+	
+	# Extra checks
+	if [ "$check_system_de_raw" == "OPENBOX" ]; then _WARNING "Weird DE (Openbox)" "This DE may not follow XDG specifications!\n    The installer is not designed to work with the specific structure of the OpenBox menu."; fi
 	
 	Current_DE="$check_system_de_raw"
 }
@@ -403,6 +411,13 @@ $Info_Description
 
  -${Font_Bold}${Font_DarkGreen}$Str_PACKAGEINFO_CurrentOS${Font_Color_Reset} $Current_OS_Name_Full ($Current_DE)${Font_Reset}
  -${Font_Bold}${Font_DarkGreen}$Str_PACKAGEINFO_InstallMode${Font_Color_Reset} $Install_Mode${Font_Reset}"
+	
+	if [ "$List_Errors" != "" ]; then echo -e "
+  ${Font_Bold}${Font_Red}- $Str_ABORT_Errors${Font_Color_Reset}${Font_Reset} $List_Errors"; fi
+	
+	if [ "$List_Warnings" != "" ]; then echo -e "
+  ${Font_Bold}${Font_Yellow}- $Str_ABORT_Warnings${Font_Color_Reset}${Font_Reset} $List_Warnings"; fi
+	
 		echo -e "\n $Str_PACKAGEINFO_Confirm"
 		read package_info_confirm
 		if [ "$package_info_confirm" == "y" ] || [ "$package_info_confirm" == "yes" ]; then all_ok=true
@@ -992,6 +1007,10 @@ function _POST_INSTALL_UPDATE_MENU_KDE() {
 	fi
 }
 
+function _POST_INSTALL_UPDATE_MENU_OPENBOX() {
+	openbox --restart &> /dev/null
+}
+
 function _POST_INSTALL() {
 	if [ $all_ok == true ]; then
 		# Restart taskbar
@@ -1002,14 +1021,12 @@ function _POST_INSTALL() {
 		#	_POST_INSTALL_UPDATE_MENU_LXQT
 		fi
 		
-		if [ "$Current_DE" == "LXDE" ]; then
-			_POST_INSTALL_UPDATE_MENU_LXDE; fi
+		# The installer is not designed to work with the specific structure of the OpenBox menu.
+		#if [ "$Current_DE" == "OPENBOX" ]; then _POST_INSTALL_UPDATE_MENU_OPENBOX; fi
 		
-		if [ "$Current_DE" == "XFCE" ]; then
-			_POST_INSTALL_UPDATE_MENU_XFCE; fi
-		
-		if [ "$Current_DE" == "KDE" ]; then
-			_POST_INSTALL_UPDATE_MENU_KDE; fi
+		if [ "$Current_DE" == "LXDE" ];    then _POST_INSTALL_UPDATE_MENU_LXDE; fi
+		if [ "$Current_DE" == "XFCE" ];    then _POST_INSTALL_UPDATE_MENU_XFCE; fi
+		if [ "$Current_DE" == "KDE" ];     then _POST_INSTALL_UPDATE_MENU_KDE; fi
 		
 		# Exit
 		if [ $MODE_SILENT == false ]; then _ABORT "${Font_Bold}${Font_Green}$Str_Complete_Install${Font_Color_Reset}${Font_Reset}"; fi
