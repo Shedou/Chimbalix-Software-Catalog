@@ -950,7 +950,7 @@ function _PREPARE_UNINSTALLER() {
 ######### ------------ #########
 ######### Post Install #########
 
-function _POST_INSTALL_UPDATE_MENU_LXQT() { ### WARNING! This function has been abandoned!
+function _POST_INSTALL_UPDATE_MENU_LXQT() { ### WARNING! This function has been abandoned! ###
 	local panel_restarted=false
 	
 	while [ $panel_restarted == false ]; do
@@ -995,10 +995,12 @@ function _POST_INSTALL_UPDATE_MENU_KDE() {
 function _POST_INSTALL() {
 	if [ $all_ok == true ]; then
 		# Restart taskbar
-		
+
+		if [ "$Current_DE" == "LXQT" ]; then
+			_WARNING "Weird DE (LXQt)" "Re-login to the system if new shortcuts do not appear in the menu!"
 		### WARNING! This can break the desktop due to the fault of LXQt developers, who did not provide the ability to restart their Panel normally...
-		#if [ "$Current_DE" == "LXQT" ]; then
-		#	_POST_INSTALL_UPDATE_MENU_LXQT; fi
+		#	_POST_INSTALL_UPDATE_MENU_LXQT
+		fi
 		
 		if [ "$Current_DE" == "LXDE" ]; then
 			_POST_INSTALL_UPDATE_MENU_LXDE; fi
