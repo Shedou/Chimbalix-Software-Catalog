@@ -190,6 +190,13 @@ function _INIT_GLOBAL_PATHS() {
 	
 	Temp_Dir="/tmp/installer-sh/$Unique_App_Folder_Name""_$RANDOM""_$RANDOM" # TEMP Directory
 	
+	Input_Bin_Dir="$Temp_Dir/bin"
+	Input_Helpers_Dir="$Temp_Dir/xfce4/helpers"
+	Input_Desktop_Dir="$Temp_Dir/desktop"
+	Input_Menu_Files_Dir="$Temp_Dir/menu/applications-merged"
+	Input_Menu_Desktop_Dir="$Temp_Dir/menu/desktop-directories/apps"
+	Input_Menu_Apps_Dir="$Temp_Dir/menu/apps"
+	
 	Out_User_Bin_Dir="$User_Home/.local/bin" # Works starting from Chimbalix 24.4
 	Out_User_Helpers_Dir="$User_Home/.local/share/xfce4/helpers"
 	Out_User_Desktop_Dir="$User_Desktop_Dir"
@@ -220,6 +227,7 @@ function _INIT_GLOBAL_PATHS() {
 		Output_PortSoft="$Out_PortSoft_User"
 	fi
 	
+	Output_Files_All=("/tmp/ish") # Files list for Uninstaller
 	Output_Uninstaller="$Output_Install_Dir/$Program_Uninstaller_File" # Uninstaller template file.
 }
 
@@ -602,7 +610,7 @@ function _PREPARE_INPUT_FILES() {
 		local All_Renamed=false
 		while [ $All_Renamed == false ]; do
 			if find "$Temp_Dir/" -name "UNIQUE_APP_FOLDER_NAME*" | sed -e "p;s~UNIQUE_APP_FOLDER_NAME~$Unique_App_Folder_Name~" | xargs -n2 mv &> /dev/null; then
-				All_Renamed=true
+				local All_Renamed=true
 			fi
 		done
 		
@@ -610,38 +618,30 @@ function _PREPARE_INPUT_FILES() {
 		#	mv $file `echo $file | sed "s~UNIQUE_APP_FOLDER_NAME~$Unique_App_Folder_Name~"`
 		#done
 		
-		Input_Bin_Dir="$Temp_Dir/bin"
-		Input_Helpers_Dir="$Temp_Dir/xfce4/helpers"
-		Input_Desktop_Dir="$Temp_Dir/desktop"
-		Input_Menu_Files_Dir="$Temp_Dir/menu/applications-merged"
-		Input_Menu_Desktop_Dir="$Temp_Dir/menu/desktop-directories/apps"
-		Input_Menu_Apps_Dir="$Temp_Dir/menu/apps"
-		
-		Files_Bin_Dir=( $(ls "$Input_Bin_Dir") )
-		Files_Menu=( $(ls "$Input_Menu_Files_Dir") )
-		Files_Menu_Dir=( $(ls "$Input_Menu_Desktop_Dir") )
-		Files_Menu_Apps=( $(ls "$Input_Menu_Apps_Dir") )
+		local Files_Bin_Dir=( $(ls "$Input_Bin_Dir") )
+		local Files_Menu=( $(ls "$Input_Menu_Files_Dir") )
+		local Files_Menu_Dir=( $(ls "$Input_Menu_Desktop_Dir") )
+		local Files_Menu_Apps=( $(ls "$Input_Menu_Apps_Dir") )
 		
 		local arr_0=(); local arr_1=(); local arr_2=(); local arr_3=(); local arr_4=(); local arr_5=()
-		All_Files=()
 		
-		for file in "${!Files_Bin_Dir[@]}"; do arr_0[$file]="$Output_Bin_Dir/${Files_Bin_Dir[$file]}"; done
+		for file in "${!Files_Bin_Dir[@]}"; do local arr_0[$file]="$Output_Bin_Dir/${Files_Bin_Dir[$file]}"; done
 		
 		if [ $Install_Helpers == true ]; then 
-			Files_Helpers_Dir=( $(ls "$Input_Helpers_Dir") )
-			for file in "${!Files_Helpers_Dir[@]}"; do arr_1[$file]="$Output_Helpers_Dir/${Files_Helpers_Dir[$file]}"; done
+			local Files_Helpers_Dir=( $(ls "$Input_Helpers_Dir") )
+			for file in "${!Files_Helpers_Dir[@]}"; do local arr_1[$file]="$Output_Helpers_Dir/${Files_Helpers_Dir[$file]}"; done
 		fi
 		
 		if [ $Install_Desktop_Icons == true ]; then 
-			Files_Desktop_Dir=( $(ls "$Input_Desktop_Dir") )
-			for file in "${!Files_Desktop_Dir[@]}"; do arr_2[$file]="$Output_Desktop_Dir/${Files_Desktop_Dir[$file]}"; done
+			local Files_Desktop_Dir=( $(ls "$Input_Desktop_Dir") )
+			for file in "${!Files_Desktop_Dir[@]}"; do local arr_2[$file]="$Output_Desktop_Dir/${Files_Desktop_Dir[$file]}"; done
 		fi
 		
-		for file in "${!Files_Menu[@]}"; do arr_3[$file]="$Output_Menu_Files/${Files_Menu[$file]}"; done
-		for file in "${!Files_Menu_Dir[@]}"; do arr_4[$file]="$Output_Menu_DDir/${Files_Menu_Dir[$file]}"; done
-		for file in "${!Files_Menu_Apps[@]}"; do arr_5[$file]="$Output_Menu_Apps/${Files_Menu_Apps[$file]}"; done
+		for file in "${!Files_Menu[@]}"; do local arr_3[$file]="$Output_Menu_Files/${Files_Menu[$file]}"; done
+		for file in "${!Files_Menu_Dir[@]}"; do local arr_4[$file]="$Output_Menu_DDir/${Files_Menu_Dir[$file]}"; done
+		for file in "${!Files_Menu_Apps[@]}"; do local arr_5[$file]="$Output_Menu_Apps/${Files_Menu_Apps[$file]}"; done
 		
-		All_Files=("$Output_Install_Dir" "${arr_0[@]}" "${arr_1[@]}" "${arr_2[@]}" "${arr_3[@]}" "${arr_4[@]}" "${arr_5[@]}")
+		Output_Files_All=("$Output_Install_Dir" "${arr_0[@]}" "${arr_1[@]}" "${arr_2[@]}" "${arr_3[@]}" "${arr_4[@]}" "${arr_5[@]}")
 		all_ok=true
 		
 		if [ $MODE_DEBUG == true ]; then echo "_PREPARE_INPUT_FILES - all_ok = $all_ok"; read pause; fi
@@ -659,7 +659,7 @@ function _CHECK_OUTPUTS() {
 		local error=false
 		local arr_files_sorted=()
 		
-		for file in "${!All_Files[@]}"; do if [ -e "${All_Files[$file]}" ]; then arr_files_sorted[$file]="${All_Files[$file]}"; error=true; fi; done
+		for file in "${!Output_Files_All[@]}"; do if [ -e "${Output_Files_All[$file]}" ]; then arr_files_sorted[$file]="${Output_Files_All[$file]}"; error=true; fi; done
 		
 		if [ $error == true ]; then
 			clear
@@ -897,8 +897,8 @@ function _PREPARE_UNINSTALLER_SYSTEM() {
 		sudo chmod 755 "$Output_Uninstaller"
 		sudo chown $Out_App_Folder_Owner "$Output_Uninstaller"
 	
-		for filename in "${!All_Files[@]}"; do
-			local CurrentFile="${All_Files[$filename]}"
+		for filename in "${!Output_Files_All[@]}"; do
+			local CurrentFile="${Output_Files_All[$filename]}"
 			sudo sed -i "s~FilesToDelete=(~&\n$CurrentFile~" "$Output_Uninstaller"
 		done
 	else _ERROR "_PREPARE_UNINSTALLER_SYSTEM" "Output_Uninstaller not found."; fi
@@ -908,8 +908,8 @@ function _PREPARE_UNINSTALLER_USER() {
 	if [ -e "$Output_Uninstaller" ]; then
 		chmod 744 "$Output_Uninstaller"
 	
-		for filename in "${!All_Files[@]}"; do
-			local CurrentFile="${All_Files[$filename]}"
+		for filename in "${!Output_Files_All[@]}"; do
+			local CurrentFile="${Output_Files_All[$filename]}"
 			sed -i "s~FilesToDelete=(~&\n$CurrentFile~" "$Output_Uninstaller"
 		done
 	else _ERROR "_PREPARE_UNINSTALLER_USER" "Output_Uninstaller not found."; fi
