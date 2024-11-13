@@ -358,20 +358,21 @@ function _CHECK_SYSTEM_DE() {
 	if [ "$check_system_de_raw" == "lxqt" ];    then local check_system_de_raw="LXQT"; fi
 	if [ "$check_system_de_raw" == "LXQt" ];    then local check_system_de_raw="LXQT"; fi
 	if [ "$check_system_de_raw" == "Lubuntu" ]; then local check_system_de_raw="LXQT"; fi
+	
 	if [ "$check_system_de_raw" == "cinnamon" ];   then local check_system_de_raw="CINNAMON"; fi
 	if [ "$check_system_de_raw" == "X-Cinnamon" ]; then local check_system_de_raw="CINNAMON"; fi
 	
 	if [ "$check_system_de_raw" == "budgie-desktop" ]; then local check_system_de_raw="BUDGIE"; fi
-	if [ "$check_system_de_raw" == "Budgie" ]; then local check_system_de_raw="BUDGIE"; fi
+	if [ "$check_system_de_raw" == "Budgie" ];         then local check_system_de_raw="BUDGIE"; fi
 	
 	if [ "$check_system_de_raw" == "openbox" ]; then local check_system_de_raw="OPENBOX"; fi
-	if [ "$check_system_de_raw" == "sway" ]; then local check_system_de_raw="SWAY"; fi
+	if [ "$check_system_de_raw" == "sway" ];    then local check_system_de_raw="SWAY"; fi
 	
 	# Extra checks
 	if [ "$check_system_de_raw" == "OPENBOX" ]; then _WARNING "Weird DE (Openbox)" "This DE may not follow XDG specifications!\n    The installer is not designed to work with the specific structure of the OpenBox menu."; fi
-	if [ "$check_system_de_raw" == "SWAY" ]; then _WARNING "Weird DE (Sway)" "What the hell..."; fi
-	if [ "$check_system_de_raw" == "LXQT" ]; then _WARNING "Weird DE (LXQt)" "Re-login to the system if new shortcuts do not appear in the menu!"; fi
-	if [ "$check_system_de_raw" == "BUDGIE" ]; then _WARNING "Weird DE (Budgie)" "New shortcuts may not appear in the menu..."; fi
+	if [ "$check_system_de_raw" == "SWAY" ];    then _WARNING "Weird DE (Sway)" "What the hell..."; fi
+	if [ "$check_system_de_raw" == "LXQT" ];    then _WARNING "Weird DE (LXQt)" "Re-login to the system if new shortcuts do not appear in the menu!"; fi
+	if [ "$check_system_de_raw" == "BUDGIE" ];  then _WARNING "Weird DE (Budgie)" "New shortcuts may not appear in the menu..."; fi
 	
 	Current_DE="$check_system_de_raw"
 }
