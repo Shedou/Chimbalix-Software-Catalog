@@ -734,6 +734,7 @@ function _INSTALL_USER_DATA() {
 #  ~/.local/share/xfce4/helpers/
 
 function _INSTALL_HELPERS_XFCE_SYSTEM() {
+	if [ ! -e "$Output_Helpers_Dir" ]; then sudo mkdir -p "$Output_Helpers_Dir"; fi
 	sudo cp -rf "$Input_Helpers_Dir/." "$Output_Helpers_Dir"
 }
 
@@ -747,8 +748,10 @@ function _INSTALL_HELPERS_XFCE_USER() {
 
 function _INSTALL_HELPERS() {
 	if [ $Install_Helpers == true ]; then
-		if [ $Current_DE == "XFCE" ]; then
-			if [ "$Install_Mode" == "System" ]; then _INSTALL_HELPERS_XFCE_SYSTEM; else _INSTALL_HELPERS_XFCE_USER; fi; fi
+		if [ -e "$Input_Helpers_Dir" ]; then
+			if [ $Current_DE == "XFCE" ]; then
+				if [ "$Install_Mode" == "System" ]; then _INSTALL_HELPERS_XFCE_SYSTEM; else _INSTALL_HELPERS_XFCE_USER; fi; fi
+		else _ERROR "_INSTALL_HELPERS" "Input_Helpers_Dir not found."; fi
 	fi
 }
 
