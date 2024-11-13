@@ -471,8 +471,7 @@ function _CHECK_MD5_PRINT() {
 	clear
 	echo -e "\
 $Header
- ${Font_Bold}${Font_Cyan}$Str_CHECKMD5PRINT_Head${Font_Color_Reset}${Font_Reset}
-  $Str_CHECKMD5PRINT_Sub_Head"
+ ${Font_Bold}${Font_Cyan}$Str_CHECKMD5PRINT_Head${Font_Color_Reset}${Font_Reset}"
 	
 	if [ $md5_warning == true ]; then
 		echo -e "\
@@ -520,15 +519,13 @@ if [ $MODE_SILENT == false ]; then
 $Header
  ${Font_Bold}${Font_Cyan}$Str_CHECKMD5_Head${Font_Color_Reset}${Font_Reset}
   $Str_CHECKMD5_Sub_Head
-   $Str_CHECKMD5_Sub_Head2
-  
-  $Str_CHECKMD5_y_To_Check"
-		read check_md5_confirm
-		if [ "$check_md5_confirm" == "y" ] || [ "$check_md5_confirm" == "yes" ]; then
-			_CHECK_MD5_COMPARE
-			_CHECK_MD5_PRINT
-		else all_ok=true; fi
-	
+   $Str_CHECKMD5_Sub_Head2"
+		
+		_CHECK_MD5_COMPARE
+		_CHECK_MD5_PRINT
+		
+		all_ok=true
+		
 	if [ $MODE_DEBUG == true ]; then echo "_CHECK_MD5 - all_ok = $all_ok"; read pause; fi
 	else _ABORT "$Str_ERROR! ${Font_Bold}${Font_Yellow}$Str_Error_All_Ok _CHECK_MD5 ${Font_Color_Reset}${Font_Reset}"; fi
 else
@@ -1099,7 +1096,6 @@ function _SET_LOCALE_DEFAULT() {
 	Str_PACKAGEINFO_Confirm="Start the application installation process? Enter \"y\" or \"yes\" to confirm."
 	
 	Str_CHECKMD5PRINT_Head="Integrity check:"
-	Str_CHECKMD5PRINT_Sub_Head="Checking the integrity of the installation archives, please wait..."
 	Str_CHECKMD5PRINT_Hash_Not_Match="The archives hash sum does not match the value specified in the settings!"
 	Str_CHECKMD5PRINT_Hash_Not_Match2="The files may have been copied with errors or modified! Be careful!"
 	Str_CHECKMD5PRINT_Expected_pHash="Expected MD5 hash of \"Program Files\":"
@@ -1112,7 +1108,7 @@ function _SET_LOCALE_DEFAULT() {
 	Str_CHECKMD5PRINT_Enter_To_Continue="Press Enter to continue."
 	
 	Str_CHECKMD5_Head="Checking archives integrity:"
-	Str_CHECKMD5_Sub_Head="Do you want to check the integrity of the installation package?"
+	Str_CHECKMD5_Sub_Head="Checking the integrity of the installation archives, please wait..."
 	Str_CHECKMD5_Sub_Head2="(this may take some time if the application is large)"
 	Str_CHECKMD5_y_To_Check="Enter \"y\" or \"yes\" to check the integrity of the archives (recommended)."
 	
