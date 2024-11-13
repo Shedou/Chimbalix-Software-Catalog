@@ -347,8 +347,11 @@ function _CHECK_SYSTEM_DE() {
 	elif [ $GDMSESSION ];          then local check_system_de_raw="$GDMSESSION"
 	fi
 	
-	# XFCE
+	# Normalize
 	if [ "$check_system_de_raw" == "xfce" ]; then local check_system_de_raw="XFCE"; fi
+	if [ "$check_system_de_raw" == "lxde" ]; then local check_system_de_raw="LXDE"; fi
+	if [ "$check_system_de_raw" == "lxqt" ]; then local check_system_de_raw="LXQT"; fi
+	if [ "$check_system_de_raw" == "LXQt" ]; then local check_system_de_raw="LXQT"; fi
 	
 	Current_DE="$check_system_de_raw"
 }
@@ -366,7 +369,7 @@ function _CHECK_SYSTEM() {
 
 function _CHECK_PORTSOFT() {
 	# Check PortSoft
-	if [ "$Current_OS_Name" == "Chimbalix" ]; then
+	if [ "$Current_OS_Name" != "Chimbalix" ]; then
 		if [ ! -e "$Output_PortSoft" ] || [ ! -e "$Output_Menu_DDir" ]; then
 			if ! [[ -x "$Tool_Prepare_Base" ]]; then chmod +x "$Tool_Prepare_Base"; fi
 			source "$Tool_Prepare_Base"
@@ -947,7 +950,39 @@ function _PREPARE_UNINSTALLER() {
 ######### ------------ #########
 ######### Post Install #########
 
-function _POST_INSTALL_UPDATE_MENU_XFCE() { xfce4-panel -r &> /dev/null; }
+function _POST_INSTALL_UPDATE_MENU_LXQT() { ### WARNING! This function has been abandoned!
+	local panel_restarted=false
+	
+	while [ $panel_restarted == false ]; do
+		if killall lxqt-panel &> /dev/null; then
+			for ((post_install_update_menu_lxqt=0; post_install_update_menu_lxqt<10; post_install_update_menu_lxqt++)); do
+				if [ $MODE_SILENT == false ]; then
+					echo " Restarting LXQt Panel..."; fi
+				
+				sleep 1s
+				
+				if ! pidof lxqt-panel; then
+					if setsid lxqt-panel & disown &> /dev/null; then
+						local panel_restarted=true
+						post_install_update_menu_lxqt=10
+					fi
+				fi
+			done
+		else
+			if ! pidof lxqt-panel; then
+				setsid lxqt-panel & disown &> /dev/null
+			fi
+		fi
+	done
+}
+
+function _POST_INSTALL_UPDATE_MENU_LXDE() {
+	lxpanelctl restart &> /dev/null
+}
+
+function _POST_INSTALL_UPDATE_MENU_XFCE() {
+	xfce4-panel -r &> /dev/null
+}
 
 function _POST_INSTALL_UPDATE_MENU_KDE() {
 	if type "kbuildsycoca7" &> /dev/null; then kbuildsycoca7 &> /dev/null
@@ -960,6 +995,14 @@ function _POST_INSTALL_UPDATE_MENU_KDE() {
 function _POST_INSTALL() {
 	if [ $all_ok == true ]; then
 		# Restart taskbar
+		
+		### WARNING! This can break the desktop due to the fault of LXQt developers, who did not provide the ability to restart their Panel normally...
+		#if [ "$Current_DE" == "LXQT" ]; then
+		#	_POST_INSTALL_UPDATE_MENU_LXQT; fi
+		
+		if [ "$Current_DE" == "LXDE" ]; then
+			_POST_INSTALL_UPDATE_MENU_LXDE; fi
+		
 		if [ "$Current_DE" == "XFCE" ]; then
 			_POST_INSTALL_UPDATE_MENU_XFCE; fi
 		
