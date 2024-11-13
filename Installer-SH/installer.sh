@@ -411,7 +411,7 @@ if [ $MODE_SILENT == false ]; then
 		echo -e "\
 $Header
  ${Font_Bold}${Font_Cyan}$Str_PACKAGEINFO_Head${Font_Color_Reset}${Font_Reset}
- -${Font_Bold}${Font_DarkYellow}$Str_PACKAGEINFO_Name${Font_Color_Reset} $Info_Name${Font_Reset} ($Info_Version,  $Architecture)
+ -${Font_Bold}${Font_DarkYellow}$Str_PACKAGEINFO_Name${Font_Color_Reset} $Info_Name${Font_Reset} ($Info_Version, $Architecture)
  -${Font_Bold}${Font_DarkYellow}$Str_PACKAGEINFO_ReleaseDate${Font_Reset}${Font_Color_Reset} $Info_Release_Date
  -${Font_Bold}${Font_DarkYellow}$Str_PACKAGEINFO_Category${Font_Reset}${Font_Color_Reset} $Info_Category
  -${Font_Bold}${Font_DarkYellow}$Str_PACKAGEINFO_Platform${Font_Reset}${Font_Color_Reset} $Info_Platform
