@@ -343,12 +343,12 @@ function _CHECK_SYSTEM_DE() {
 	
 	if   [ $XDG_SESSION_DESKTOP ]; then local check_system_de_raw="$XDG_SESSION_DESKTOP"
 	elif [ $DESKTOP_SESSION ];     then local check_system_de_raw="$DESKTOP_SESSION"
-	elif [ $XDG_CURRENT_DESKTOP ]; then local check_system_de_raw="$XDG_CURRENT_DESKTOP"
+	elif [ $XDG_CURRENT_DESKTOP ]; then local check_system_de_raw="$(echo "$XDG_CURRENT_DESKTOP" | cut -d: -f 1)"
 	elif [ $GDMSESSION ];          then local check_system_de_raw="$GDMSESSION"
 	fi
 	
 	# Normalize
-	### XFCE - LXDE - LXQT - SWAY - OPENBOX - CINNAMON - MATE
+	### XFCE - LXDE - LXQT - SWAY - OPENBOX - CINNAMON - MATE - BUDGIE
 	if [ "$check_system_de_raw" == "xfce" ]; then local check_system_de_raw="XFCE"; fi
 	if [ "$check_system_de_raw" == "lxde" ]; then local check_system_de_raw="LXDE"; fi
 	if [ "$check_system_de_raw" == "mate" ]; then local check_system_de_raw="MATE"; fi
@@ -358,12 +358,17 @@ function _CHECK_SYSTEM_DE() {
 	if [ "$check_system_de_raw" == "cinnamon" ];   then local check_system_de_raw="CINNAMON"; fi
 	if [ "$check_system_de_raw" == "X-Cinnamon" ]; then local check_system_de_raw="CINNAMON"; fi
 	
+	if [ "$check_system_de_raw" == "budgie-desktop" ]; then local check_system_de_raw="BUDGIE"; fi
+	if [ "$check_system_de_raw" == "Budgie" ]; then local check_system_de_raw="BUDGIE"; fi
+	
 	if [ "$check_system_de_raw" == "openbox" ]; then local check_system_de_raw="OPENBOX"; fi
 	if [ "$check_system_de_raw" == "sway" ]; then local check_system_de_raw="SWAY"; fi
 	
 	# Extra checks
 	if [ "$check_system_de_raw" == "OPENBOX" ]; then _WARNING "Weird DE (Openbox)" "This DE may not follow XDG specifications!\n    The installer is not designed to work with the specific structure of the OpenBox menu."; fi
 	if [ "$check_system_de_raw" == "SWAY" ]; then _WARNING "Weird DE (Sway)" "What the hell..."; fi
+	if [ "$check_system_de_raw" == "LXQT" ]; then _WARNING "Weird DE (LXQt)" "Re-login to the system if new shortcuts do not appear in the menu!"; fi
+	if [ "$check_system_de_raw" == "BUDGIE" ]; then _WARNING "Weird DE (Budgie)" "New shortcuts may not appear in the menu..."; fi
 	
 	Current_DE="$check_system_de_raw"
 }
@@ -1019,11 +1024,8 @@ function _POST_INSTALL() {
 	if [ $all_ok == true ]; then
 		# Restart taskbar
 
-		if [ "$Current_DE" == "LXQT" ]; then
-			_WARNING "Weird DE (LXQt)" "Re-login to the system if new shortcuts do not appear in the menu!"
-		### WARNING! This can break the desktop due to the fault of LXQt developers, who did not provide the ability to restart their Panel normally...
-		#	_POST_INSTALL_UPDATE_MENU_LXQT
-		fi
+		### WARNING! This can lead to a desktop crash, because the LXQt developers did not provide the ability to restart their panel normally...
+		#if [ "$Current_DE" == "LXQT" ]; then _POST_INSTALL_UPDATE_MENU_LXQT; fi
 		
 		# The installer is not designed to work with the specific structure of the OpenBox menu.
 		#if [ "$Current_DE" == "OPENBOX" ]; then _POST_INSTALL_UPDATE_MENU_OPENBOX; fi
