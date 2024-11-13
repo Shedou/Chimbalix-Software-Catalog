@@ -15,7 +15,8 @@ function _MAIN() {
 	_CHECK_PORTSOFT
 	_PRINT_PACKAGE_INFO
 	_CHECK_MD5
-	_PRINT_INSTALL_SETTINGS
+	_PRINT_INSTALL_SETTINGS # Last confirm stage
+	_CECK_EXECUTE_RIGHTS
 	_CREATE_TEMP
 	_PREPARE_INPUT_FILES
 	_CHECK_OUTPUTS
@@ -569,6 +570,25 @@ fi
 ######### Print installation settings #########
 ######### --------------------------- #########
 
+######### -------------------- #########
+######### Check execute rights #########
+
+_CECK_EXECUTE_RIGHTS() {
+	if ! [[ -x "$Tool_SevenZip_bin" ]]; then
+		if ! chmod +x "$Tool_SevenZip_bin"; then _ABORT "chmod Tool_SevenZip_bin error."; fi
+	fi
+	
+	if [ $Current_DE == "XFCE" ]; then
+		if ! [[ -x "$Tool_Gio_Trust_Xfce" ]]; then
+			if ! chmod +x "$Tool_Gio_Trust_Xfce"; then _ABORT "chmod Tool_Gio_Trust_Xfce error."; fi
+		fi
+	fi
+}
+
+######### Check execute rights #########
+######### -------------------- #########
+
+
 ######### ------------------- #########
 ######### Prepare Input Files #########
 
@@ -585,9 +605,6 @@ function _PREPARE_INPUT_FILES_GREP() {
 
 function _PREPARE_INPUT_FILES() {
 	if [ $all_ok == true ]; then all_ok=false
-		
-		if ! [[ -x "$Tool_SevenZip_bin" ]]; then chmod +x "$Tool_SevenZip_bin"; fi
-		
 		if ! "$Tool_SevenZip_bin" x "$Archive_System_Files" -o"$Temp_Dir/" &> /dev/null; then
 			_ABORT "$Str_PREPAREINPUTFILES_Err_Unpack (_PREPARE_INPUT_FILES). $Str_PREPAREINPUTFILES_Err_Unpack2"
 		fi
@@ -613,10 +630,6 @@ function _PREPARE_INPUT_FILES() {
 				local All_Renamed=true
 			fi
 		done
-		
-		#for file in `find "$Temp_Dir/" -type d -name 'UNIQUE_APP_FOLDER_NAME*'`; do
-		#	mv $file `echo $file | sed "s~UNIQUE_APP_FOLDER_NAME~$Unique_App_Folder_Name~"`
-		#done
 		
 		local Files_Bin_Dir=( $(ls "$Input_Bin_Dir") )
 		local Files_Menu=( $(ls "$Input_Menu_Files_Dir") )
@@ -656,12 +669,14 @@ function _PREPARE_INPUT_FILES() {
 
 function _CHECK_OUTPUTS() {
 	if [ $all_ok == true ]; then all_ok=false
-		local error=false
+		local check_outputs_error=false
 		local arr_files_sorted=()
 		
-		for file in "${!Output_Files_All[@]}"; do if [ -e "${Output_Files_All[$file]}" ]; then arr_files_sorted[$file]="${Output_Files_All[$file]}"; error=true; fi; done
+		for file in "${!Output_Files_All[@]}"; do
+			if [ -e "${Output_Files_All[$file]}" ]; then arr_files_sorted[$file]="${Output_Files_All[$file]}"; local check_outputs_error=true; fi
+		done
 		
-		if [ $error == true ]; then
+		if [ $check_outputs_error == true ]; then
 			clear
 			echo -e "\
 $Header
@@ -743,7 +758,6 @@ function _INSTALL_HELPERS() {
 
 function _INSTALL_DESKTOP_ICONS_TRUST_XFCE() {
 	for file in "${!Files_Desktop_Dir[@]}"; do
-		if ! [[ -x "$Tool_Gio_Trust_Xfce" ]]; then chmod +x "$Tool_Gio_Trust_Xfce"; fi
 		"$Tool_Gio_Trust_Xfce" -trust --silent "$Output_Desktop_Dir/${Files_Desktop_Dir[$file]}"
 	done
 }
