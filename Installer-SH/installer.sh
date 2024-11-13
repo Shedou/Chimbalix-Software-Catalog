@@ -714,9 +714,7 @@ function _INSTALL_USER_DATA() {
 		if [ $MODE_SILENT == false ]; then echo " $Str_INSTALLAPP_Copy_uFiles"; fi
 		
 		if ! "$Tool_SevenZip_bin" x -aoa "$Archive_User_Files" -o"$Output_User_Home/" &> /dev/null; then
-			echo " $Str_INSTALLAPP_Copy_uFiles_Err"
-			read pause
-		fi
+			_ERROR "_INSTALL_USER_DATA" "$Str_INSTALLAPP_Copy_uFiles_Err"; fi
 	fi
 	if [ $MODE_DEBUG == true ]; then echo "_INSTALL_APP - all_ok = $all_ok"; read pause; fi
 }
@@ -747,12 +745,10 @@ function _INSTALL_HELPERS_XFCE_USER() {
 ### -------------- ###
 
 function _INSTALL_HELPERS() {
-	if [ $Install_Helpers == true ]; then
-		if [ -e "$Input_Helpers_Dir" ]; then
-			if [ $Current_DE == "XFCE" ]; then
-				if [ "$Install_Mode" == "System" ]; then _INSTALL_HELPERS_XFCE_SYSTEM; else _INSTALL_HELPERS_XFCE_USER; fi; fi
-		else _ERROR "_INSTALL_HELPERS" "Input_Helpers_Dir not found."; fi
-	fi
+	if [ -e "$Input_Helpers_Dir" ]; then
+		if [ $Current_DE == "XFCE" ]; then
+			if [ "$Install_Mode" == "System" ]; then _INSTALL_HELPERS_XFCE_SYSTEM; else _INSTALL_HELPERS_XFCE_USER; fi; fi
+	else _ERROR "_INSTALL_HELPERS" "Input_Helpers_Dir not found."; fi
 }
 
 ######### Install Helpers #########
@@ -824,14 +820,16 @@ $Header
 		cp -rf "$Input_Menu_Apps_Dir/." "$Output_Menu_Apps"
 		
 		# Install Helpers
-		_INSTALL_HELPERS
+		if [ $Install_Helpers == true ]; then
+			_INSTALL_HELPERS; fi
 		
 		# Install Desktop files
 		if [ $Install_Desktop_Icons == true ]; then
 			_INSTALL_DESKTOP_ICONS; fi
 		
 		# Copy user data
-		if [ $Install_User_Data == true ]; then _INSTALL_USER_DATA; fi
+		if [ $Install_User_Data == true ]; then
+			_INSTALL_USER_DATA; fi
 		
 		all_ok=true
 		
