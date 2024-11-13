@@ -30,7 +30,8 @@ function _PACKAGE_SETTINGS() {
 ######### ---- SETTINGS ---- #########
 ######### ---- -------- ---- #########
 
-Architecture="script"         # x86_64, x86, script, other
+Program_Architecture="script" # x86_64, x86, script, other
+Tools_Architecture="x86_64"   # x86_64, x86,
 
 Install_Mode="User"           # "System" / "User", In "User" mode, root rights are not required.
 
@@ -154,7 +155,7 @@ function _INIT_GLOBAL_VARIABLES() {
 	Path_To_Script="$( dirname "$(readlink -f "$0")")"
 	Path_Installer_Data="$Path_To_Script/installer-data"
 	
-	if [ "$Architecture" == "x86" ]; then
+	if [ "$Tools_Architecture" == "x86" ]; then
 		Tool_SevenZip_bin="$Path_Installer_Data/tools/7zip/7zzs-x86"
 	else
 		Tool_SevenZip_bin="$Path_Installer_Data/tools/7zip/7zzs"; fi
@@ -189,8 +190,8 @@ function _INIT_GLOBAL_PATHS() {
 	Out_PortSoft_System="/portsoft"
 	Out_PortSoft_User="$User_Home/.local/portsoft"
 	
-	Out_Install_Dir_System="$Out_PortSoft_System/$Architecture/$Unique_App_Folder_Name"
-	Out_Install_Dir_User="$Out_PortSoft_User/$Architecture/$Unique_App_Folder_Name"
+	Out_Install_Dir_System="$Out_PortSoft_System/$Program_Architecture/$Unique_App_Folder_Name"
+	Out_Install_Dir_User="$Out_PortSoft_User/$Program_Architecture/$Unique_App_Folder_Name"
 	
 	Out_App_Folder_Owner=root:root  # Only for "System" mode, username:group
 	Out_App_Folder_Permissions=755  # Only for "System" mode.
@@ -417,7 +418,7 @@ if [ $MODE_SILENT == false ]; then
 		echo -e "\
 $Header
  ${Font_Bold}${Font_Cyan}$Str_PACKAGEINFO_Head${Font_Color_Reset}${Font_Reset}
- -${Font_Bold}${Font_DarkYellow}$Str_PACKAGEINFO_Name${Font_Color_Reset} $Info_Name${Font_Reset} ($Info_Version, $Architecture)
+ -${Font_Bold}${Font_DarkYellow}$Str_PACKAGEINFO_Name${Font_Color_Reset} $Info_Name${Font_Reset} ($Info_Version, $Program_Architecture)
  -${Font_Bold}${Font_DarkYellow}$Str_PACKAGEINFO_ReleaseDate${Font_Reset}${Font_Color_Reset} $Info_Release_Date
  -${Font_Bold}${Font_DarkYellow}$Str_PACKAGEINFO_Category${Font_Reset}${Font_Color_Reset} $Info_Category
  -${Font_Bold}${Font_DarkYellow}$Str_PACKAGEINFO_Platform${Font_Reset}${Font_Color_Reset} $Info_Platform
