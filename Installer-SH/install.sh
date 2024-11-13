@@ -12,13 +12,7 @@ function _MAIN() {
 	_PACKAGE_SETTINGS
 	_INIT_GLOBAL_PATHS
 	printf '\033[8;30;110t' # Resize terminal Window (110x30)
-	# Check PortSoft
-	if [ "$Current_OS_Name" != "Chimbalix" ]; then
-		if [ ! -e "$Output_PortSoft" ] || [ ! -e "$Output_Menu_DDir" ]; then
-			if ! [[ -x "$Tool_Prepare_Base" ]]; then chmod +x "$Tool_Prepare_Base"; fi
-			source "$Tool_Prepare_Base"
-		fi
-	fi
+	_CHECK_PORTSOFT
 	_PRINT_PACKAGE_INFO
 	_CHECK_MD5
 	_PRINT_INSTALL_SETTINGS
@@ -356,8 +350,21 @@ function _CHECK_SYSTEM() {
 	_CHECK_SYSTEM_DE
 }
 
-######### Check System #########
-######### ------------ #########
+######### Check PortSoft #########
+######### -------------- #########
+
+function _CHECK_PORTSOFT() {
+	# Check PortSoft
+	if [ "$Current_OS_Name" == "Chimbalix" ]; then
+		if [ ! -e "$Output_PortSoft" ] || [ ! -e "$Output_Menu_DDir" ]; then
+			if ! [[ -x "$Tool_Prepare_Base" ]]; then chmod +x "$Tool_Prepare_Base"; fi
+			source "$Tool_Prepare_Base"
+		fi
+	fi
+}
+
+######### Check PortSoft #########
+######### -------------- #########
 
 ######### ------------------------- #########
 ######### Print package information #########
