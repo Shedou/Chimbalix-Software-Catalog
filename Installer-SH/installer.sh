@@ -154,7 +154,11 @@ function _INIT_GLOBAL_VARIABLES() {
 	Path_To_Script="$( dirname "$(readlink -f "$0")")"
 	Path_Installer_Data="$Path_To_Script/installer-data"
 	
-	Tool_SevenZip_bin="$Path_Installer_Data/tools/7zip/7zzs"
+	if [ "$Architecture" == "x86" ]; then
+		Tool_SevenZip_bin="$Path_Installer_Data/tools/7zip/7zzs-x86"
+	else
+		Tool_SevenZip_bin="$Path_Installer_Data/tools/7zip/7zzs"; fi
+	
 	Tool_Gio_Trust_Xfce="$Path_Installer_Data/tools/gio-trust-xfce.sh"
 	Tool_Prepare_Base="$Path_Installer_Data/tools/prepare-portsoft-menu.sh"
 	
