@@ -348,12 +348,15 @@ function _CHECK_SYSTEM_DE() {
 	fi
 	
 	# Normalize
-	### XFCE - LXDE - LXQT - SWAY - OPENBOX
+	### XFCE - LXDE - LXQT - SWAY - OPENBOX - CINNAMON - MATE
 	if [ "$check_system_de_raw" == "xfce" ]; then local check_system_de_raw="XFCE"; fi
 	if [ "$check_system_de_raw" == "lxde" ]; then local check_system_de_raw="LXDE"; fi
+	if [ "$check_system_de_raw" == "mate" ]; then local check_system_de_raw="MATE"; fi
 	
 	if [ "$check_system_de_raw" == "lxqt" ]; then local check_system_de_raw="LXQT"; fi
 	if [ "$check_system_de_raw" == "LXQt" ]; then local check_system_de_raw="LXQT"; fi
+	if [ "$check_system_de_raw" == "cinnamon" ];   then local check_system_de_raw="CINNAMON"; fi
+	if [ "$check_system_de_raw" == "X-Cinnamon" ]; then local check_system_de_raw="CINNAMON"; fi
 	
 	if [ "$check_system_de_raw" == "openbox" ]; then local check_system_de_raw="OPENBOX"; fi
 	if [ "$check_system_de_raw" == "sway" ]; then local check_system_de_raw="SWAY"; fi
