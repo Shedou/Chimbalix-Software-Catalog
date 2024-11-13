@@ -94,7 +94,7 @@ Program_Uninstaller_Icon="ish-software-uninstaller-icon.png"    #=> PROGRAM_UNIN
 
  # Additional menu categories that will include the main application shortcuts.
  # Please do not use this variable in the uninstaller shortcut file.
-Additional_Categories="chi-other;" #=> ADDITIONAL_CATEGORIES
+Additional_Categories="chi-other;Utility;Education;" #=> ADDITIONAL_CATEGORIES
  # -=== Chimbalix 24.4+ main categories:
  # chi-ai  chi-accessories  chi-accessories-fm  chi-view  chi-admin  chi-info  chi-info-bench  chi-info-help
  # chi-dev  chi-dev-other  chi-dev-ide  chi-edit  chi-edit-audiovideo  chi-edit-image  chi-edit-text  chi-games
