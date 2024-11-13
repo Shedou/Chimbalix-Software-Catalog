@@ -37,7 +37,7 @@ Install_Mode="User"           # "System" / "User", In "User" mode, root rights a
 Install_Desktop_Icons=true    # Place icons on the desktop (only for current user).
 
 Install_User_Data=false       # Copy other data to the user's home directory: "true" / "false". Do not use this function unless necessary!
-Install_Helpers=false         # Adds "Default Applications" associations, please prepare files in "installer-data/system_files/helpers/" before using.
+Install_Helpers=false         # XFCE Only! Adds "Default Applications" associations, please prepare files in "installer-data/system_files/helpers/" before using.
 
 Unique_App_Folder_Name="example-application-19" #=> UNIQUE_APP_FOLDER_NAME
 
@@ -348,12 +348,13 @@ function _CHECK_SYSTEM_DE() {
 	fi
 	
 	# Normalize
-	### XFCE - LXDE - LXQT - SWAY - OPENBOX - CINNAMON - MATE - BUDGIE
+	### XFCE - LXDE - LXQT - SWAY - OPENBOX - CINNAMON - MATE - BUDGIE - GNOME
 	if [ "$check_system_de_raw" == "xfce" ];    then local check_system_de_raw="XFCE"; fi
 	if [ "$check_system_de_raw" == "xubuntu" ]; then local check_system_de_raw="XFCE"; fi
 	
-	if [ "$check_system_de_raw" == "lxde" ]; then local check_system_de_raw="LXDE"; fi
-	if [ "$check_system_de_raw" == "mate" ]; then local check_system_de_raw="MATE"; fi
+	if [ "$check_system_de_raw" == "lxde" ];   then local check_system_de_raw="LXDE"; fi
+	if [ "$check_system_de_raw" == "mate" ];   then local check_system_de_raw="MATE"; fi
+	if [ "$check_system_de_raw" == "ubuntu" ]; then local check_system_de_raw="GNOME"; fi
 	
 	if [ "$check_system_de_raw" == "lxqt" ];    then local check_system_de_raw="LXQT"; fi
 	if [ "$check_system_de_raw" == "LXQt" ];    then local check_system_de_raw="LXQT"; fi
@@ -373,6 +374,7 @@ function _CHECK_SYSTEM_DE() {
 	if [ "$check_system_de_raw" == "SWAY" ];    then _WARNING "Weird DE (Sway)" "What the hell..."; fi
 	if [ "$check_system_de_raw" == "LXQT" ];    then _WARNING "Weird DE (LXQt)" "Re-login to the system if new shortcuts do not appear in the menu!"; fi
 	if [ "$check_system_de_raw" == "BUDGIE" ];  then _WARNING "Weird DE (Budgie)" "New shortcuts may not appear in the menu..."; fi
+	if [ "$check_system_de_raw" == "GNOME" ];   then _WARNING "Weird DE (GNOME)" "The menu doesn't match XDG specifications very well..."; fi
 	
 	Current_DE="$check_system_de_raw"
 }
@@ -671,8 +673,10 @@ function _PREPARE_INPUT_FILES() {
 		for file in "${!Files_Bin_Dir[@]}"; do local arr_0[$file]="$Output_Bin_Dir/${Files_Bin_Dir[$file]}"; done
 		
 		if [ $Install_Helpers == true ]; then 
-			local Files_Helpers_Dir=( $(ls "$Input_Helpers_Dir") )
-			for file in "${!Files_Helpers_Dir[@]}"; do local arr_1[$file]="$Output_Helpers_Dir/${Files_Helpers_Dir[$file]}"; done
+			if [ $Current_DE == "XFCE" ]; then
+				local Files_Helpers_Dir=( $(ls "$Input_Helpers_Dir") )
+				for file in "${!Files_Helpers_Dir[@]}"; do local arr_1[$file]="$Output_Helpers_Dir/${Files_Helpers_Dir[$file]}"; done
+			fi
 		fi
 		
 		if [ $Install_Desktop_Icons == true ]; then 
