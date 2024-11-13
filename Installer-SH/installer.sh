@@ -341,20 +341,23 @@ function _CHECK_SYSTEM_VERSION() {
 function _CHECK_SYSTEM_DE() {
 	local check_system_de_raw=""
 	
-	if   [ $XDG_SESSION_DESKTOP ]; then local check_system_de_raw="$XDG_SESSION_DESKTOP"
+	if   [ $XDG_CURRENT_DESKTOP ]; then local check_system_de_raw="$(echo "$XDG_CURRENT_DESKTOP" | cut -d: -f 1)"
+	elif [ $XDG_SESSION_DESKTOP ]; then local check_system_de_raw="$XDG_SESSION_DESKTOP"
 	elif [ $DESKTOP_SESSION ];     then local check_system_de_raw="$DESKTOP_SESSION"
-	elif [ $XDG_CURRENT_DESKTOP ]; then local check_system_de_raw="$(echo "$XDG_CURRENT_DESKTOP" | cut -d: -f 1)"
 	elif [ $GDMSESSION ];          then local check_system_de_raw="$GDMSESSION"
 	fi
 	
 	# Normalize
 	### XFCE - LXDE - LXQT - SWAY - OPENBOX - CINNAMON - MATE - BUDGIE
-	if [ "$check_system_de_raw" == "xfce" ]; then local check_system_de_raw="XFCE"; fi
+	if [ "$check_system_de_raw" == "xfce" ];    then local check_system_de_raw="XFCE"; fi
+	if [ "$check_system_de_raw" == "xubuntu" ]; then local check_system_de_raw="XFCE"; fi
+	
 	if [ "$check_system_de_raw" == "lxde" ]; then local check_system_de_raw="LXDE"; fi
 	if [ "$check_system_de_raw" == "mate" ]; then local check_system_de_raw="MATE"; fi
 	
-	if [ "$check_system_de_raw" == "lxqt" ]; then local check_system_de_raw="LXQT"; fi
-	if [ "$check_system_de_raw" == "LXQt" ]; then local check_system_de_raw="LXQT"; fi
+	if [ "$check_system_de_raw" == "lxqt" ];    then local check_system_de_raw="LXQT"; fi
+	if [ "$check_system_de_raw" == "LXQt" ];    then local check_system_de_raw="LXQT"; fi
+	if [ "$check_system_de_raw" == "Lubuntu" ]; then local check_system_de_raw="LXQT"; fi
 	if [ "$check_system_de_raw" == "cinnamon" ];   then local check_system_de_raw="CINNAMON"; fi
 	if [ "$check_system_de_raw" == "X-Cinnamon" ]; then local check_system_de_raw="CINNAMON"; fi
 	
