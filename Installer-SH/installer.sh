@@ -360,6 +360,7 @@ function _CHECK_SYSTEM_DE() {
 	
 	# Extra checks
 	if [ "$check_system_de_raw" == "OPENBOX" ]; then _WARNING "Weird DE (Openbox)" "This DE may not follow XDG specifications!\n    The installer is not designed to work with the specific structure of the OpenBox menu."; fi
+	if [ "$check_system_de_raw" == "SWAY" ]; then _WARNING "Weird DE (Sway)" "What the hell..."; fi
 	
 	Current_DE="$check_system_de_raw"
 }
