@@ -353,7 +353,9 @@ function _CHECK_SYSTEM_DE() {
 	fi
 	
 	# Normalize
-	### XFCE - LXDE - LXQT - SWAY - OPENBOX - CINNAMON - MATE - BUDGIE - GNOME - NOTSPECIFIED
+	### XFCE - LXDE - LXQT - SWAY - OPENBOX - CINNAMON - MATE - BUDGIE - GNOME - KDE
+	if [ "$check_system_de_raw" == "plasma" ];  then local check_system_de_raw="KDE"; fi
+	
 	if [ "$check_system_de_raw" == "xfce" ];    then local check_system_de_raw="XFCE"; fi
 	if [ "$check_system_de_raw" == "xubuntu" ]; then local check_system_de_raw="XFCE"; fi
 	
@@ -381,8 +383,14 @@ function _CHECK_SYSTEM_DE() {
 	if [ "$check_system_de_raw" == "BUDGIE" ];  then _WARNING "Weird DE (Budgie)" "New shortcuts may not appear in the menu..."; fi
 	if [ "$check_system_de_raw" == "GNOME" ];   then _WARNING "Weird DE (GNOME)" "The menu doesn't match XDG specifications very well..."; fi
 	
-	if [ "$check_system_de_raw" == "" ];   then _WARNING "Weird DE info" "The system does not specify the name of the current working environment..."; fi
-	if [ "$check_system_de_raw" == "" ];   then local check_system_de_raw="NOTSPECIFIED"; fi
+	if [ "$check_system_de_raw" == "" ];   then
+		_WARNING "Weird DE info" "The system does not specify the name of the current working environment..."
+		local check_system_de_raw="NOTSPECIFIED"
+		if xfce4-session --version; then local check_system_de_raw="XFCE"
+		elif plasmashell --version; then local check_system_de_raw="KDE"
+		elif gnome-shell --version; then local check_system_de_raw="GNOME"
+		fi
+	fi
 	
 	Current_DE="$check_system_de_raw"
 }
