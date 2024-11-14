@@ -5,7 +5,9 @@
 - [Image Editors - Krita, Inkscape and others...](Image-Editors.md)
 
 ## Installer-SH
-The Installer-SH directory contains the main script and tools (including examples) for preparing standalone installation packages (DEV FOLDER), check Installer-SH-Old-Versions folder for stable versions.
+The Installer-SH-Dev directory contains the main script and tools (including examples) for preparing standalone installation packages, and is under active development.
+
+Stable versions of Installer-SH can be found in the Installer-SH-Old-Versions directory.
 
 ## Universal Software Packages (Chimbalix 24.2+ and other Linux)
 
