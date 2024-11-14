@@ -353,7 +353,7 @@ function _CHECK_SYSTEM_DE() {
 	fi
 	
 	# Normalize
-	### XFCE - LXDE - LXQT - SWAY - OPENBOX - CINNAMON - MATE - BUDGIE - GNOME
+	### XFCE - LXDE - LXQT - SWAY - OPENBOX - CINNAMON - MATE - BUDGIE - GNOME - NOTSPECIFIED
 	if [ "$check_system_de_raw" == "xfce" ];    then local check_system_de_raw="XFCE"; fi
 	if [ "$check_system_de_raw" == "xubuntu" ]; then local check_system_de_raw="XFCE"; fi
 	
@@ -382,7 +382,7 @@ function _CHECK_SYSTEM_DE() {
 	if [ "$check_system_de_raw" == "GNOME" ];   then _WARNING "Weird DE (GNOME)" "The menu doesn't match XDG specifications very well..."; fi
 	
 	if [ "$check_system_de_raw" == "" ];   then _WARNING "Weird DE" "The system does not specify the name of the current working environment..."; fi
-	if [ "$check_system_de_raw" == "" ];   then local check_system_de_raw="Not specified"; fi
+	if [ "$check_system_de_raw" == "" ];   then local check_system_de_raw="NOTSPECIFIED"; fi
 	
 	Current_DE="$check_system_de_raw"
 }
