@@ -9,6 +9,8 @@ The Installer-SH directory contains the main script and tools (including example
 
 ## Universal Software Packages (Chimbalix 24.2+ and other Linux)
 
+[Mozilla Firefox v128.4.0 ESR - x86_64 / x86 - (ISH v1.9)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/firefox12840esr)
+
 [Mozilla Firefox v132.0.2 - x86_64 / x86 - (ISH v1.9)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/firefox13202)
 
 [Blender v4.3.0 Beta - (ISH v1.8)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/blender430b)
