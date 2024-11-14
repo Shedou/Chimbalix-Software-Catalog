@@ -381,7 +381,7 @@ function _CHECK_SYSTEM_DE() {
 	if [ "$check_system_de_raw" == "BUDGIE" ];  then _WARNING "Weird DE (Budgie)" "New shortcuts may not appear in the menu..."; fi
 	if [ "$check_system_de_raw" == "GNOME" ];   then _WARNING "Weird DE (GNOME)" "The menu doesn't match XDG specifications very well..."; fi
 	
-	if [ "$check_system_de_raw" == "" ];   then _WARNING "Weird DE" "The system does not specify the name of the current working environment..."; fi
+	if [ "$check_system_de_raw" == "" ];   then _WARNING "Weird DE info" "The system does not specify the name of the current working environment..."; fi
 	if [ "$check_system_de_raw" == "" ];   then local check_system_de_raw="NOTSPECIFIED"; fi
 	
 	Current_DE="$check_system_de_raw"
