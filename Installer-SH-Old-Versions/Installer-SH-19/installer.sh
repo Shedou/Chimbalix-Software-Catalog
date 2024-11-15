@@ -4,6 +4,9 @@
 # FreeSpace=$(df -m "$Out_InstallDir" | grep "/" | awk '{print $4}')
 Arguments=("$@")
 
+### !!! ###
+Tools_Architecture="x86_64"   # x86_64, x86
+
 # Main function, don't change!
 function _MAIN() {
 	_INIT_GLOBAL_VARIABLES
@@ -11,12 +14,12 @@ function _MAIN() {
 	_SET_LOCALE
 	_PACKAGE_SETTINGS
 	_INIT_GLOBAL_PATHS
+	_CECK_EXECUTE_RIGHTS
 	printf '\033[8;30;110t' # Resize terminal Window (110x30)
 	_CHECK_PORTSOFT
 	_PRINT_PACKAGE_INFO
 	_CHECK_MD5
 	_PRINT_INSTALL_SETTINGS # Last confirm stage
-	_CECK_EXECUTE_RIGHTS
 	_CREATE_TEMP
 	_PREPARE_INPUT_FILES
 	_CHECK_OUTPUTS
@@ -31,7 +34,7 @@ function _PACKAGE_SETTINGS() {
 ######### ---- -------- ---- #########
 
 Program_Architecture="script" # x86_64, x86, script, other
-Tools_Architecture="x86_64"   # x86_64, x86,
+#
 
 Install_Mode="User"           # "System" / "User", In "User" mode, root rights are not required.
 
