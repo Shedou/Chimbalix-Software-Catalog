@@ -8,11 +8,11 @@ The version and hints are in the file "install.sh".
 
 Normal installation, just run:
 
-`install.sh`
+> `installer.sh`
 
 Silent installation, no output if everything is installed without errors:
 
-`install.sh -silent`
+> `installer.sh -silent`
 
 ### Creating installation packages (v1.7):
 
@@ -26,3 +26,13 @@ Silent installation, no output if everything is installed without errors:
 8) If everything is correct, in the "installer-data" directory, delete everything except the "tools" folder and the "program_files.7z / system_files.7z" archives
 9) Checking that everything worked correctly.
 10) If a problem is found, come back and fix it.
+
+### Extra:
+
+TAR extract:
+
+> `tar -xf Installer-SH.tar`
+
+TAR pack:
+
+> `tar --owner=ish --group=ish -cf Installer-SH.tar Installer-SH`
