@@ -474,6 +474,7 @@ function _CHECK_PORTSOFT() {
 		if [ ! -e "$Output_PortSoft" ] || [ ! -e "$Output_Menu_DDir" ]; then
 			if ! [[ -x "$Tool_Prepare_Base" ]]; then chmod +x "$Tool_Prepare_Base"; fi
 			source "$Tool_Prepare_Base"
+			_CLEAR_BACKGROUND
 		fi
 	fi
 }
