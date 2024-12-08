@@ -129,8 +129,8 @@ ${Font_DarkRed}Font_DarkRed ${Font_DarkGreen}Font_DarkGreen ${Font_DarkYellow}Fo
 ${Font_Red}Font_Red     ${Font_Green}Font_Green     ${Font_Yellow}Font_Yellow     ${Font_Blue}Font_Blue     ${Font_Magenta}Font_Magenta     ${Font_Cyan}Font_Cyan
 ${Font_Color_Reset}
 ${Font_BG_Black}Font_BG_Black ${Font_BG_DarkGray}Font_BG_DarkGray ${Font_Black}${Font_BG_Gray}Font_BG_Gray ${Font_BG_White}Font_BG_White ${Font_BG_Reset} ${Font_Color_Reset}
-${Font_BG_DarkRed}Font_BG_DarkRed ${Font_BG_DarkGreen}Font_BG_DarkGreen ${Font_BG_DarkYellow}Font_BG_DarkYellow ${Font_BG_DarkBlue}Font_BG_DarkBlue ${Font_BG_DarkMagenta}Font_BG_DarkMagenta ${Font_BG_Reset} ${Font_Black}
-${Font_BG_Red}Font_BG_Red     ${Font_BG_Green}Font_BG_Green     ${Font_BG_Yellow}Font_BG_Yellow     ${Font_BG_Blue}Font_BG_Blue     ${Font_BG_Magenta}Font_BG_Magenta     ${Font_BG_Reset} ${Font_Color_Reset}"
+${Font_BG_DarkRed}Font_BG_DRed ${Font_BG_DarkGreen}Font_BG_DGreen ${Font_BG_DarkYellow}Font_BG_DYellow ${Font_BG_DarkBlue}Font_BG_DBlue ${Font_BG_DarkMagenta}Font_BG_DMagenta ${Font_BG_DarkCyan}Font_BG_DCyan${Font_BG_Reset} ${Font_Black}
+${Font_BG_Red}Font_BG_Red  ${Font_BG_Green}Font_BG_Green  ${Font_BG_Yellow}Font_BG_Yellow  ${Font_BG_Blue}Font_BG_Blue  ${Font_BG_Magenta}Font_BG_Magenta  ${Font_BG_Cyan}Font_BG_Cyan${Font_BG_Reset} ${Font_Color_Reset}"
 }
 
 ######### ---------------- #########
@@ -145,48 +145,56 @@ function _INIT_GLOBAL_VARIABLES() {
 	### --------------------------- ###
 	
 	# Font styles: "${Font_Bold} BLACK TEXT ${Font_Reset} normal text."
+	# '\e[38;2;128;128;255m'
+	#     fg m  R   G   B
+	# \e - escape code, [38 - foreground, [48 - background
+	#
 	# '\033[38;5;165m'
-	# \033 - escape code
-	# [38 - foreground
-	# ;5 - change color
-	# ;165m - 8 bit color number
+	# 165m - 8 bit color number
+	
 	Font_Bold="\e[1m"
 	Font_Dim="\e[2m"
 	Font_Reset="\e[22m"
-	Font_Color_Reset='\033[38;5;255m'
-	Font_BG_Reset='\033[48;5;16m'
-	Font_Black='\033[38;5;16m'
-	Font_DarkGray='\033[38;5;240m'
-	Font_Gray='\033[38;5;248m'
-	Font_White='\033[38;5;255m'
-	Font_DarkRed='\033[38;5;160m'
-	Font_DarkGreen='\033[38;5;40m'
-	Font_DarkYellow='\033[38;5;220m'
-	Font_DarkBlue='\033[38;5;27m'
-	Font_DarkMagenta='\033[38;5;129m'
-	Font_DarkCyan='\033[38;5;45m'
-	Font_Red='\033[38;5;196m'
-	Font_Green='\033[38;5;46m'
-	Font_Yellow='\033[38;5;226m'
-	Font_Blue='\033[38;5;33m'
-	Font_Magenta='\033[38;5;201m'
-	Font_Cyan='\033[38;5;551m'
-	Font_BG_Black='\033[48;5;16m'
-	Font_BG_DarkGray='\033[48;5;240m'
-	Font_BG_Gray='\033[48;5;248m'
-	Font_BG_White='\033[48;5;255m'
-	Font_BG_DarkRed='\033[41m'
-	Font_BG_DarkGreen='\033[42m'
-	Font_BG_DarkYellow='\033[43m'
-	Font_BG_DarkBlue='\033[44m'
-	Font_BG_DarkMagenta='\033[45m'
-	Font_BG_DarkCyan='\033[46m'
-	Font_BG_Red='\033[101m'
-	Font_BG_Green='\033[102m'
-	Font_BG_Yellow='\033[103m'
-	Font_BG_Blue='\033[104m'
-	Font_BG_Magenta='\033[105m'
-	Font_BG_Cyan='\033[106m'
+	Font_Color_Reset='\e[38;5;255m'
+	Font_BG_Reset='\e[48;5;16m'
+	
+	Font_Black='\e[38;5;16m'
+	Font_DarkGray='\e[38;5;240m'
+	Font_Gray='\e[38;5;248m'
+	Font_White='\e[38;5;255m'
+	
+	Font_DarkRed='\e[38;2;200;0;0m'
+	Font_DarkGreen='\e[38;2;0;180;0m'
+	Font_DarkYellow='\e[38;2;160;136;0m'
+	Font_DarkBlue='\e[38;2;96;96;200m'
+	Font_DarkMagenta='\e[38;2;200;0;200m'
+	Font_DarkCyan='\e[38;2;40;180;160m'
+	
+	Font_Red='\e[38;2;255;96;96m'
+	Font_Green='\e[38;2;128;255;128m'
+	Font_Yellow='\e[38;2;255;255;0m'
+	Font_Blue='\e[38;2;128;128;255m'
+	Font_Magenta='\e[38;2;255;48;255m'
+	Font_Cyan='\e[38;2;90;255;240m'
+	
+	Font_BG_Black='\e[48;5;16m'
+	Font_BG_DarkGray='\e[48;5;240m'
+	Font_BG_Gray='\e[48;5;248m'
+	Font_BG_White='\e[48;5;255m'
+	
+	Font_BG_DarkRed='\e[48;2;200;0;0m'
+	Font_BG_DarkGreen='\e[48;2;0;180;0m'
+	Font_BG_DarkYellow='\e[48;2;160;136;0m'
+	Font_BG_DarkBlue='\e[48;2;96;96;200m'
+	Font_BG_DarkMagenta='\e[48;2;200;0;200m'
+	Font_BG_DarkCyan='\e[48;2;40;180;160m'
+	
+	Font_BG_Red='\e[48;2;255;96;96m'
+	Font_BG_Green='\e[48;2;128;255;128m'
+	Font_BG_Yellow='\e[48;2;255;255;0m'
+	Font_BG_Blue='\e[48;2;128;128;255m'
+	Font_BG_Magenta='\e[48;2;255;48;255m'
+	Font_BG_Cyan='\e[48;2;90;255;240m'
 	
 	all_ok=true
 	Locale_Use_Default=true # don't change!
