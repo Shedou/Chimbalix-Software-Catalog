@@ -144,11 +144,12 @@ function _INIT_GLOBAL_VARIABLES() {
 	### Do not edit variables here! ###
 	### --------------------------- ###
 	
-	# Font styles: "${Font_Bold} BLACK TEXT ${Font_Reset} normal text."
+	### Font styles: "${Font_Bold} BLACK TEXT ${Font_Reset} normal text."
 	# '\e[38;2;128;128;255m'
 	#     fg m  R   G   B
 	# \e - escape code, [38 - foreground, [48 - background
 	#
+	### Old distributions do not support the RGB method, you need to make crutches...
 	# '\033[38;5;165m'
 	# 165m - 8 bit color number
 	
