@@ -34,6 +34,8 @@ function _INSTALLER_SETTINGS() {
 	Install_Desktop_Icons=true    # Place icons on the desktop (only for current user).
 	Install_User_Data=false       # Copy other data to the user's home directory: "true" / "false". Do not use this function unless necessary!
 	Install_Helpers=false         # XFCE Only! Adds "Default Applications" associations, please prepare files in "installer-data/system_files/helpers/" before using.
+	
+	debug_test_colors=true        # Test colors (for debugging purposes)
 }
 
 function _PACKAGE_SETTINGS() {
@@ -119,6 +121,16 @@ Header="${Font_Red}${Font_Bold} -=: Universal Software Installer Script for Chim
 ######### -- ------------ -- #########
 }
 
+function _TEST_COLORS() {
+	echo -e "${Font_Bold}
+${Font_Black}Q${Font_DarkGray}W${Font_Gray}E${Font_White}R${Font_Color_Reset}T
+${Font_DarkRed}Y${Font_DarkGreen}U${Font_DarkYellow}I${Font_DarkBlue}O${Font_DarkMagenta}P${Font_DarkCyan}A
+${Font_Red}S${Font_Green}D${Font_Yellow}F${Font_Blue}G${Font_Magenta}H${Font_Cyan}J
+${Font_Color_Reset}
+${Font_BG_Black}K${Font_BG_DarkGray}L${Font_BG_Gray}Z${Font_BG_White}X${Font_BG_Reset}
+${Font_BG_DarkRed}C${Font_BG_DarkGreen}V${Font_BG_DarkYellow}B${Font_BG_DarkBlue}N${Font_BG_DarkMagenta}M${Font_BG_Reset}"
+}
+
 ######### ---------------- #########
 ######### ---------------- #########
 ######### ---------------- #########
@@ -139,8 +151,8 @@ function _INIT_GLOBAL_VARIABLES() {
 	Font_Bold="\e[1m"
 	Font_Dim="\e[2m"
 	Font_Reset="\e[22m"
-	Font_Color_Reset='\033[39m'
-	BG_Color_Reset='\033[49m' # Reset colors
+	Font_Color_Reset='\033[38;5;255m'
+	Font_BG_Reset='\033[48;5;16m'
 	Font_Black='\033[38;5;16m'
 	Font_DarkGray='\033[38;5;240m'
 	Font_Gray='\033[38;5;248m'
@@ -490,6 +502,8 @@ $Info_Description
 	
 	if [ "$List_Warnings" != "" ]; then echo -e "
   ${Font_Bold}${Font_Yellow}- $Str_ABORT_Warnings${Font_Color_Reset}${Font_Reset} $List_Warnings"; fi
+	
+	if [ $Debug_Test_Colors == true ]; then _TEST_COLORS; fi
 	
 		echo -e "\n $Str_PACKAGEINFO_Confirm"
 		read package_info_confirm
