@@ -122,15 +122,15 @@ Header="${Font_Red}${Font_Bold} -=: Universal Software Installer Script for Chim
 }
 
 function _TEST_COLORS() {
-	echo -e "${Font_Bold}
+	echo -e "${Font_Bold} TEST COLORS
 ${Font_Black}Font_Black ${Font_DarkGray}Font_DarkGray ${Font_Gray}Font_Gray ${Font_White}Font_White ${Font_Color_Reset}
 
 ${Font_DarkRed}Font_DarkRed ${Font_DarkGreen}Font_DarkGreen ${Font_DarkYellow}Font_DarkYellow ${Font_DarkBlue}Font_DarkBlue ${Font_DarkMagenta}Font_DarkMagenta ${Font_DarkCyan}Font_DarkCyan
-${Font_Red}Font_Red ${Font_Green}Font_Green ${Font_Yellow}Font_Yellow ${Font_Blue}Font_Blue ${Font_Magenta}Font_Magenta ${Font_Cyan}Font_Cyan
+${Font_Red}Font_Red     ${Font_Green}Font_Green     ${Font_Yellow}Font_Yellow     ${Font_Blue}Font_Blue     ${Font_Magenta}Font_Magenta     ${Font_Cyan}Font_Cyan
 ${Font_Color_Reset}
 ${Font_BG_Black}Font_BG_Black ${Font_BG_DarkGray}Font_BG_DarkGray ${Font_Black}${Font_BG_Gray}Font_BG_Gray ${Font_BG_White}Font_BG_White ${Font_BG_Reset} ${Font_Color_Reset}
 ${Font_BG_DarkRed}Font_BG_DarkRed ${Font_BG_DarkGreen}Font_BG_DarkGreen ${Font_BG_DarkYellow}Font_BG_DarkYellow ${Font_BG_DarkBlue}Font_BG_DarkBlue ${Font_BG_DarkMagenta}Font_BG_DarkMagenta ${Font_BG_Reset} ${Font_Black}
-${Font_BG_Red}Font_BG_Red ${Font_BG_Green}Font_BG_Green ${Font_BG_Yellow}Font_BG_Yellow ${Font_BG_Blue}Font_BG_Blue ${Font_BG_Magenta}Font_BG_Magenta ${Font_BG_Reset} ${Font_Color_Reset}"
+${Font_BG_Red}Font_BG_Red     ${Font_BG_Green}Font_BG_Green     ${Font_BG_Yellow}Font_BG_Yellow     ${Font_BG_Blue}Font_BG_Blue     ${Font_BG_Magenta}Font_BG_Magenta     ${Font_BG_Reset} ${Font_Color_Reset}"
 }
 
 ######### ---------------- #########
