@@ -503,7 +503,7 @@ $Info_Description
 	if [ "$List_Warnings" != "" ]; then echo -e "
   ${Font_Bold}${Font_Yellow}- $Str_ABORT_Warnings${Font_Color_Reset}${Font_Reset} $List_Warnings"; fi
 	
-	if [ $Debug_Test_Colors == true ]; then _TEST_COLORS; fi
+	if [ "$Debug_Test_Colors" == true ]; then _TEST_COLORS; fi
 	
 		echo -e "\n $Str_PACKAGEINFO_Confirm"
 		read package_info_confirm
