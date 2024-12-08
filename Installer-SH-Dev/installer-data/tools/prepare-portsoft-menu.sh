@@ -31,11 +31,11 @@ $Base_Header
 
   $Str_BASEINFO_Warning
 
- -${Font_Bold}${Font_DarkYellow}$Str_BASEINFO_PortSoft${Font_Color_Reset}${Font_Reset}
+ -${Font_Bold}${Font_Yellow}$Str_BASEINFO_PortSoft${Font_Color_Reset}${Font_Reset}
    $Str_BASEINFO_PortSoft_Full
      $Output_PortSoft
   
- -${Font_Bold}${Font_DarkYellow}$Str_BASEINFO_MenuApps${Font_Color_Reset}${Font_Reset}
+ -${Font_Bold}${Font_Yellow}$Str_BASEINFO_MenuApps${Font_Color_Reset}${Font_Reset}
    $Str_BASEINFO_MenuApps_Full
      $Output_Menu_Files/apps.menu
      $Output_Menu_DDir/apps.directory
