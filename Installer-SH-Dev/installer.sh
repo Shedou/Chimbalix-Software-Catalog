@@ -136,8 +136,11 @@ function _INIT_GLOBAL_VARIABLES() {
 	# [38 - foreground
 	# ;5 - change color
 	# ;165m - 8 bit color number
-	Font_Bold="\e[1m"; Font_Dim="\e[2m"; Font_Reset="\e[22m";
-	Font_Color_Reset='\033[39m'; BG_Color_Reset='\033[49m'; # Reset colors
+	Font_Bold="\e[1m"
+	Font_Dim="\e[2m"
+	Font_Reset="\e[22m";
+	Font_Color_Reset='\033[39m'
+	BG_Color_Reset='\033[49m' # Reset colors
 	Font_Black='\033[30m'
 	Font_DarkGray='\033[90m'
 	Font_Gray='\033[37m'
