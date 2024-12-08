@@ -251,7 +251,9 @@ function _INIT_GLOBAL_PATHS() {
 
 function _CLEAR_BACKGROUND() {
 	setterm -background black -clear
+	setterm -foreground white -clear
 	echo -ne '\e]11;black\e\\'
+	echo -ne '\e]10;white\e\\'
 }
 
 function _CLEAR_TEMP() {
