@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Script version 1.6
+# Script version 1.7
 # LICENSE for this script is at the end of this file
 ## ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ##
 ## ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ##
@@ -20,7 +20,7 @@ BG_Red='\033[101m'; BG_Green='\033[102m'; BG_Yellow='\033[103m'; BG_Blue='\033[1
 ## ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ##
 
 Current_DE="$XDG_SESSION_DESKTOP"
-Header="${F_Red}${Bold} -=: Software Uninstaller Script (Installer-SH v1.8) :=-${rBD}${F}\n"
+Header="${F_Red}${Bold} -=: Software Uninstaller Script (Installer-SH) :=-${rBD}${F}\n"
 printf '\033[8;30;110t' # Resize terminal Window
 
 # Welcome message

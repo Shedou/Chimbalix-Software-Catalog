@@ -1,15 +1,13 @@
 #!/usr/bin/env bash
-# Script version 1.9
+# Script version 2.0
 # LICENSE for this script is at the end of this file
 # FreeSpace=$(df -m "$Out_InstallDir" | grep "/" | awk '{print $4}')
 Arguments=("$@")
 
-### !!! ###
-Tools_Architecture="x86_64"   # x86_64, x86
-
 # Main function, don't change!
 function _MAIN() {
 	_INIT_GLOBAL_VARIABLES
+	_INSTALLER_SETTINGS
 	_CHECK_SYSTEM
 	_SET_LOCALE
 	_PACKAGE_SETTINGS
@@ -28,22 +26,22 @@ function _MAIN() {
 	_POST_INSTALL
 }
 
+function _INSTALLER_SETTINGS() {
+	Tools_Architecture="x86_64"   # x86_64, x86
+	Program_Architecture="script" # x86_64, x86, script, other
+	
+	Install_Mode="User"           # "System" / "User", In "User" mode, root rights are not required.
+	Install_Desktop_Icons=true    # Place icons on the desktop (only for current user).
+	Install_User_Data=false       # Copy other data to the user's home directory: "true" / "false". Do not use this function unless necessary!
+	Install_Helpers=false         # XFCE Only! Adds "Default Applications" associations, please prepare files in "installer-data/system_files/helpers/" before using.
+}
+
 function _PACKAGE_SETTINGS() {
 ######### ---- -------- ---- #########
 ######### ---- SETTINGS ---- #########
 ######### ---- -------- ---- #########
 
-Program_Architecture="script" # x86_64, x86, script, other
-#
-
-Install_Mode="User"           # "System" / "User", In "User" mode, root rights are not required.
-
-Install_Desktop_Icons=true    # Place icons on the desktop (only for current user).
-
-Install_User_Data=false       # Copy other data to the user's home directory: "true" / "false". Do not use this function unless necessary!
-Install_Helpers=false         # XFCE Only! Adds "Default Applications" associations, please prepare files in "installer-data/system_files/helpers/" before using.
-
-Unique_App_Folder_Name="example-application-19" #=> UNIQUE_APP_FOLDER_NAME
+Unique_App_Folder_Name="example-application-20" #=> UNIQUE_APP_FOLDER_NAME
 
  # Unique name of the output directory.
  # WARNING! Do not use capital letters in this place!
@@ -56,8 +54,8 @@ Unique_App_Folder_Name="example-application-19" #=> UNIQUE_APP_FOLDER_NAME
 ######### - ------------------- - #########
 
 Info_Name="Example Application"
-Info_Version="1.9"
-Info_Release_Date="2024-11-xx"
+Info_Version="2.0"
+Info_Release_Date="2024-12-xx"
 Info_Category="Other"
 Info_Platform="Linux"
 Info_Installed_Size="~1 MiB"
@@ -84,11 +82,11 @@ fi
  # Please manually prepare the menu files in the "installer-data/system_files/" directory before packaging the application,
  # this functionality does not allow you to fully customize the menu files.
  # Use the variable names given in the comments to simplify the preparation of menu files.
-Menu_Directory_Name="Example Application 1.9"   #=> MENU_DIRECTORY_NAME
+Menu_Directory_Name="Example Application 2.0"   #=> MENU_DIRECTORY_NAME
 Menu_Directory_Icon="icon.png"                  #=> MENU_DIRECTORY_ICON
 
 Program_Executable_File="program/example-application"   #=> PROGRAM_EXECUTABLE_FILE
-Program_Name_In_Menu="Example Application 1.9"          #=> PROGRAM_NAME_IN_MENU
+Program_Name_In_Menu="Example Application 2.0"          #=> PROGRAM_NAME_IN_MENU
 Program_Icon_In_Menu="icon.png"                         #=> PROGRAM_ICON_IN_MENU
 Program_Exe_Run_In_Terminal="true"                      #=> PROGRAM_EXE_RUN_IN_TERMINAL
 Program_Install_Mode="$Install_Mode"                    #=> PROGRAM_INSTALL_MODE
@@ -114,7 +112,7 @@ Archive_System_Files_MD5=""
 Archive_User_Files_MD5="" # Not used if "Install_User_Data=false"
 
  # Header
-Header="${Font_Red}${Font_Bold} -=: Universal Software Installer Script for Chimbalix (Installer-SH v1.9) - Lang: $Locale_Display :=-${Font_Reset}${Font_Color_Reset}\n"
+Header="${Font_Red}${Font_Bold} -=: Universal Software Installer Script for Chimbalix (Installer-SH v2.0) - Lang: $Locale_Display :=-${Font_Reset}${Font_Color_Reset}\n"
 
 ######### -- ------------ -- #########
 ######### -- END SETTINGS -- #########
