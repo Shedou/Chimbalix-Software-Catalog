@@ -122,15 +122,15 @@ Header="${Font_Red}${Font_Bold} -=: Universal Software Installer Script for Chim
 }
 
 function _TEST_COLORS() {
-	echo -e "${Font_Bold} TEST COLORS
-${Font_Black}Font_Black ${Font_DarkGray}Font_DarkGray ${Font_Gray}Font_Gray ${Font_White}Font_White ${Font_Color_Reset}
+	echo -e "\n${Font_Bold} -= TEST COLORS =-
+ ${Font_Black}Font_Black ${Font_DarkGray}Font_DarkGray ${Font_Gray}Font_Gray ${Font_White}Font_White ${Font_Color_Reset}
 
-${Font_DarkRed}Font_DarkRed ${Font_DarkGreen}Font_DarkGreen ${Font_DarkYellow}Font_DarkYellow ${Font_DarkBlue}Font_DarkBlue ${Font_DarkMagenta}Font_DarkMagenta ${Font_DarkCyan}Font_DarkCyan
-${Font_Red}Font_Red     ${Font_Green}Font_Green     ${Font_Yellow}Font_Yellow     ${Font_Blue}Font_Blue     ${Font_Magenta}Font_Magenta     ${Font_Cyan}Font_Cyan
-${Font_Color_Reset}
-${Font_BG_Black}Font_BG_Black ${Font_BG_DarkGray}Font_BG_DarkGray ${Font_Black}${Font_BG_Gray}Font_BG_Gray ${Font_BG_White}Font_BG_White ${Font_BG_Reset} ${Font_Color_Reset}
-${Font_BG_DarkRed}Font_BG_DRed ${Font_BG_DarkGreen}Font_BG_DGreen ${Font_BG_DarkYellow}Font_BG_DYellow ${Font_BG_DarkBlue}Font_BG_DBlue ${Font_BG_DarkMagenta}Font_BG_DMagenta ${Font_BG_DarkCyan}Font_BG_DCyan${Font_BG_Reset} ${Font_Black}
-${Font_BG_Red}Font_BG_Red  ${Font_BG_Green}Font_BG_Green  ${Font_BG_Yellow}Font_BG_Yellow  ${Font_BG_Blue}Font_BG_Blue  ${Font_BG_Magenta}Font_BG_Magenta  ${Font_BG_Cyan}Font_BG_Cyan${Font_BG_Reset} ${Font_Color_Reset}"
+ ${Font_DarkRed}DarkRed ${Font_DarkGreen}DarkGreen ${Font_DarkYellow}DarkYellow ${Font_DarkBlue}DarkBlue ${Font_DarkMagenta}DarkMagenta ${Font_DarkCyan}DarkCyan
+ ${Font_Red}Red     ${Font_Green}Green     ${Font_Yellow}Yellow     ${Font_Blue}Blue     ${Font_Magenta}Magenta     ${Font_Cyan}Cyan
+ ${Font_Color_Reset}
+ ${Font_Black_BG} Black_BG ${Font_DarkGray_BG} DarkGray_BG ${Font_Black}${Font_Gray_BG} Gray_BG ${Font_White_BG} White_BG ${Font_BG_Reset} ${Font_Color_Reset}
+ ${Font_DarkRed_BG} DRed_BG ${Font_DarkGreen_BG} DGreen_BG ${Font_DarkYellow_BG} DYellow_BG ${Font_DarkBlue_BG} DBlue_BG ${Font_DarkMagenta_BG} DMagenta_BG ${Font_DarkCyan_BG} DCyan_BG ${Font_BG_Reset}
+ ${Font_Black}${Font_Red_BG} Red_BG  ${Font_Green_BG} Green_BG  ${Font_Yellow_BG} Yellow_BG  ${Font_Blue_BG} Blue_BG  ${Font_Magenta_BG} Magenta_BG  ${Font_Cyan_BG} Cyan_BG  ${Font_BG_Reset}${Font_Color_Reset}"
 }
 
 ######### ---------------- #########
@@ -158,43 +158,40 @@ function _INIT_GLOBAL_VARIABLES() {
 	Font_Color_Reset='\e[38;5;255m'
 	Font_BG_Reset='\e[48;5;16m'
 	
-	Font_Black='\e[38;5;16m'
+	Font_Black='\e[38;5;233m'
+	Font_Black_BG='\e[48;5;233m'
 	Font_DarkGray='\e[38;5;240m'
+	Font_DarkGray_BG='\e[48;5;240m'
 	Font_Gray='\e[38;5;248m'
+	Font_Gray_BG='\e[48;5;248m'
 	Font_White='\e[38;5;255m'
+	Font_White_BG='\e[48;5;255m'
 	
 	Font_DarkRed='\e[38;2;200;0;0m'
+	Font_DarkRed_BG='\e[48;2;200;0;0m'
 	Font_DarkGreen='\e[38;2;0;180;0m'
-	Font_DarkYellow='\e[38;2;160;136;0m'
+	Font_DarkGreen_BG='\e[48;2;0;180;0m'
+	Font_DarkYellow='\e[38;2;180;146;0m'
+	Font_DarkYellow_BG='\e[48;2;180;146;0m'
 	Font_DarkBlue='\e[38;2;96;96;200m'
+	Font_DarkBlue_BG='\e[48;2;96;96;200m'
 	Font_DarkMagenta='\e[38;2;200;0;200m'
+	Font_DarkMagenta_BG='\e[48;2;200;0;200m'
 	Font_DarkCyan='\e[38;2;40;180;160m'
+	Font_DarkCyan_BG='\e[48;2;40;180;160m'
 	
 	Font_Red='\e[38;2;255;96;96m'
+	Font_Red_BG='\e[48;2;255;96;96m'
 	Font_Green='\e[38;2;128;255;128m'
-	Font_Yellow='\e[38;2;255;255;0m'
+	Font_Green_BG='\e[48;2;128;255;128m'
+	Font_Yellow='\e[38;2;245;245;0m'
+	Font_Yellow_BG='\e[48;2;245;245;0m'
 	Font_Blue='\e[38;2;128;128;255m'
+	Font_Blue_BG='\e[48;2;128;128;255m'
 	Font_Magenta='\e[38;2;255;48;255m'
+	Font_Magenta_BG='\e[48;2;255;48;255m'
 	Font_Cyan='\e[38;2;90;255;240m'
-	
-	Font_BG_Black='\e[48;5;16m'
-	Font_BG_DarkGray='\e[48;5;240m'
-	Font_BG_Gray='\e[48;5;248m'
-	Font_BG_White='\e[48;5;255m'
-	
-	Font_BG_DarkRed='\e[48;2;200;0;0m'
-	Font_BG_DarkGreen='\e[48;2;0;180;0m'
-	Font_BG_DarkYellow='\e[48;2;160;136;0m'
-	Font_BG_DarkBlue='\e[48;2;96;96;200m'
-	Font_BG_DarkMagenta='\e[48;2;200;0;200m'
-	Font_BG_DarkCyan='\e[48;2;40;180;160m'
-	
-	Font_BG_Red='\e[48;2;255;96;96m'
-	Font_BG_Green='\e[48;2;128;255;128m'
-	Font_BG_Yellow='\e[48;2;255;255;0m'
-	Font_BG_Blue='\e[48;2;128;128;255m'
-	Font_BG_Magenta='\e[48;2;255;48;255m'
-	Font_BG_Cyan='\e[48;2;90;255;240m'
+	Font_Cyan_BG='\e[48;2;90;255;240m'
 	
 	all_ok=true
 	Locale_Use_Default=true # don't change!
@@ -308,6 +305,7 @@ function _INIT_GLOBAL_PATHS() {
 function _CLEAR_BACKGROUND() {
 	#setterm -background black -clear
 	#setterm -foreground white -clear
+	clear
 	echo -ne '\e]11;black\e\\'
 	echo -ne '\e]10;white\e\\'
 }
@@ -493,15 +491,15 @@ if [ $MODE_SILENT == false ]; then
 		echo -e "\
 $Header
  ${Font_Bold}${Font_Cyan}$Str_PACKAGEINFO_Head${Font_Color_Reset}${Font_Reset}
- -${Font_Bold}${Font_DarkYellow}$Str_PACKAGEINFO_Name${Font_Color_Reset} $Info_Name${Font_Reset} ($Info_Version, $Program_Architecture)
- -${Font_Bold}${Font_DarkYellow}$Str_PACKAGEINFO_ReleaseDate${Font_Reset}${Font_Color_Reset} $Info_Release_Date
- -${Font_Bold}${Font_DarkYellow}$Str_PACKAGEINFO_Category${Font_Reset}${Font_Color_Reset} $Info_Category
- -${Font_Bold}${Font_DarkYellow}$Str_PACKAGEINFO_Platform${Font_Reset}${Font_Color_Reset} $Info_Platform
- -${Font_Bold}${Font_DarkYellow}$Str_PACKAGEINFO_InstalledSize${Font_Reset}${Font_Color_Reset} $Info_Installed_Size
- -${Font_Bold}${Font_DarkYellow}$Str_PACKAGEINFO_Licensing${Font_Reset}${Font_Color_Reset} $Info_Licensing
- -${Font_Bold}${Font_DarkYellow}$Str_PACKAGEINFO_Developer${Font_Reset}${Font_Color_Reset} $Info_Developer
- -${Font_Bold}${Font_DarkYellow}$Str_PACKAGEINFO_URL${Font_Reset}${Font_Color_Reset} $Info_URL
- -${Font_Bold}${Font_DarkYellow}$Str_PACKAGEINFO_Description${Font_Color_Reset}${Font_Reset}
+ -${Font_Bold}${Font_Yellow}$Str_PACKAGEINFO_Name${Font_Color_Reset} $Info_Name${Font_Reset} ($Info_Version, $Program_Architecture)
+ -${Font_Bold}${Font_Yellow}$Str_PACKAGEINFO_ReleaseDate${Font_Reset}${Font_Color_Reset} $Info_Release_Date
+ -${Font_Bold}${Font_Yellow}$Str_PACKAGEINFO_Category${Font_Reset}${Font_Color_Reset} $Info_Category
+ -${Font_Bold}${Font_Yellow}$Str_PACKAGEINFO_Platform${Font_Reset}${Font_Color_Reset} $Info_Platform
+ -${Font_Bold}${Font_Yellow}$Str_PACKAGEINFO_InstalledSize${Font_Reset}${Font_Color_Reset} $Info_Installed_Size
+ -${Font_Bold}${Font_Yellow}$Str_PACKAGEINFO_Licensing${Font_Reset}${Font_Color_Reset} $Info_Licensing
+ -${Font_Bold}${Font_Yellow}$Str_PACKAGEINFO_Developer${Font_Reset}${Font_Color_Reset} $Info_Developer
+ -${Font_Bold}${Font_Yellow}$Str_PACKAGEINFO_URL${Font_Reset}${Font_Color_Reset} $Info_URL
+ -${Font_Bold}${Font_Yellow}$Str_PACKAGEINFO_Description${Font_Color_Reset}${Font_Reset}
 $Info_Description
 
  -${Font_Bold}${Font_DarkGreen}$Str_PACKAGEINFO_CurrentOS${Font_Color_Reset} $Current_OS_Name_Full ($Current_DE)${Font_Reset}
@@ -630,7 +628,7 @@ if [ $MODE_SILENT == false ]; then
 		_CLEAR_BACKGROUND
 		echo -e "\
 $Header
- ${Font_Bold}${Font_Cyan}$Str_PRINTINSTALLSETTINGS_Head (${Font_DarkYellow}$Install_Mode${Font_Cyan}):${Font_Color_Reset}${Font_Reset}
+ ${Font_Bold}${Font_Cyan}$Str_PRINTINSTALLSETTINGS_Head (${Font_Yellow}$Install_Mode${Font_Cyan}):${Font_Color_Reset}${Font_Reset}
 
  -${Font_Bold}${Font_DarkGreen}$Str_PRINTINSTALLSETTINGS_Temp_Dir${Font_Color_Reset}${Font_Reset} $Temp_Dir
  
