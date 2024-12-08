@@ -35,7 +35,7 @@ function _INSTALLER_SETTINGS() {
 	Install_User_Data=false       # Copy other data to the user's home directory: "true" / "false". Do not use this function unless necessary!
 	Install_Helpers=false         # XFCE Only! Adds "Default Applications" associations, please prepare files in "installer-data/system_files/helpers/" before using.
 	
-	debug_test_colors=true        # Test colors (for debugging purposes)
+	Debug_Test_Colors=true        # Test colors (for debugging purposes)
 }
 
 function _PACKAGE_SETTINGS() {
@@ -123,12 +123,14 @@ Header="${Font_Red}${Font_Bold} -=: Universal Software Installer Script for Chim
 
 function _TEST_COLORS() {
 	echo -e "${Font_Bold}
-${Font_Black}Q${Font_DarkGray}W${Font_Gray}E${Font_White}R${Font_Color_Reset}T
-${Font_DarkRed}Y${Font_DarkGreen}U${Font_DarkYellow}I${Font_DarkBlue}O${Font_DarkMagenta}P${Font_DarkCyan}A
-${Font_Red}S${Font_Green}D${Font_Yellow}F${Font_Blue}G${Font_Magenta}H${Font_Cyan}J
+${Font_Black}Font_Black ${Font_DarkGray}Font_DarkGray ${Font_Gray}Font_Gray ${Font_White}Font_White ${Font_Color_Reset}
+
+${Font_DarkRed}Font_DarkRed ${Font_DarkGreen}Font_DarkGreen ${Font_DarkYellow}Font_DarkYellow ${Font_DarkBlue}Font_DarkBlue ${Font_DarkMagenta}Font_DarkMagenta ${Font_DarkCyan}Font_DarkCyan
+${Font_Red}Font_Red ${Font_Green}Font_Green ${Font_Yellow}Font_Yellow ${Font_Blue}Font_Blue ${Font_Magenta}Font_Magenta ${Font_Cyan}Font_Cyan
 ${Font_Color_Reset}
-${Font_BG_Black}K${Font_BG_DarkGray}L${Font_BG_Gray}Z${Font_BG_White}X${Font_BG_Reset}
-${Font_BG_DarkRed}C${Font_BG_DarkGreen}V${Font_BG_DarkYellow}B${Font_BG_DarkBlue}N${Font_BG_DarkMagenta}M${Font_BG_Reset}"
+${Font_BG_Black}Font_BG_Black ${Font_BG_DarkGray}Font_BG_DarkGray ${Font_Black}${Font_BG_Gray}Font_BG_Gray ${Font_BG_White}Font_BG_White ${Font_BG_Reset} ${Font_Color_Reset}
+${Font_BG_DarkRed}Font_BG_DarkRed ${Font_BG_DarkGreen}Font_BG_DarkGreen ${Font_BG_DarkYellow}Font_BG_DarkYellow ${Font_BG_DarkBlue}Font_BG_DarkBlue ${Font_BG_DarkMagenta}Font_BG_DarkMagenta ${Font_BG_Reset} ${Font_Black}
+${Font_BG_Red}Font_BG_Red ${Font_BG_Green}Font_BG_Green ${Font_BG_Yellow}Font_BG_Yellow ${Font_BG_Blue}Font_BG_Blue ${Font_BG_Magenta}Font_BG_Magenta ${Font_BG_Reset} ${Font_Color_Reset}"
 }
 
 ######### ---------------- #########
