@@ -131,14 +131,45 @@ function _INIT_GLOBAL_VARIABLES() {
 	### --------------------------- ###
 	
 	# Font styles: "${Font_Bold} BLACK TEXT ${Font_Reset} normal text."
+	# '\033[38;5;165m'
+	# \033 - escape code
+	# [38 - foreground
+	# ;5 - change color
+	# ;165m - 8 bit color number
 	Font_Bold="\e[1m"; Font_Dim="\e[2m"; Font_Reset="\e[22m";
 	Font_Color_Reset='\033[39m'; BG_Color_Reset='\033[49m'; # Reset colors
-	Font_Black='\033[30m'; Font_DarkGray='\033[90m'; Font_Gray='\033[37m'; Font_White='\033[97m';
-	Font_DarkRed='\033[31m'; Font_DarkGreen='\033[32m'; Font_DarkYellow='\033[33m'; Font_DarkBlue='\033[34m'; Font_DarkMagenta='\033[35m'; Font_DarkCyan='\033[36m';
-	Font_Red='\033[91m'; Font_Green='\033[92m'; Font_Yellow='\033[93m'; Font_Blue='\033[94m'; Font_Magenta='\033[95m'; Font_Cyan='\033[96m';
-	Font_BG_Black='\033[40m'; Font_BG_DarkGray='\033[100m'; Font_BG_Gray='\033[47m'; Font_BG_White='\033[107m';
-	Font_BG_DarkRed='\033[41m'; Font_BG_DarkGreen='\033[42m'; Font_BG_DarkYellow='\033[43m'; Font_BG_DarkBlue='\033[44m'; Font_BG_DarkMagenta='\033[45m'; Font_BG_DarkCyan='\033[46m';
-	Font_BG_Red='\033[101m'; Font_BG_Green='\033[102m'; Font_BG_Yellow='\033[103m'; Font_BG_Blue='\033[104m'; Font_BG_Magenta='\033[105m'; Font_BG_Cyan='\033[106m';
+	Font_Black='\033[30m'
+	Font_DarkGray='\033[90m'
+	Font_Gray='\033[37m'
+	Font_White='\033[97m'
+	Font_DarkRed='\033[31m'
+	Font_DarkGreen='\033[32m'
+	Font_DarkYellow='\033[38;5;220m'
+	Font_DarkBlue='\033[34m'
+	Font_DarkMagenta='\033[35m'
+	Font_DarkCyan='\033[36m'
+	Font_Red='\033[91m'
+	Font_Green='\033[92m'
+	Font_Yellow='\033[93m'
+	Font_Blue='\033[94m'
+	Font_Magenta='\033[95m'
+	Font_Cyan='\033[96m'
+	Font_BG_Black='\033[40m'
+	Font_BG_DarkGray='\033[100m'
+	Font_BG_Gray='\033[47m'
+	Font_BG_White='\033[107m'
+	Font_BG_DarkRed='\033[41m'
+	Font_BG_DarkGreen='\033[42m'
+	Font_BG_DarkYellow='\033[43m'
+	Font_BG_DarkBlue='\033[44m'
+	Font_BG_DarkMagenta='\033[45m'
+	Font_BG_DarkCyan='\033[46m'
+	Font_BG_Red='\033[101m'
+	Font_BG_Green='\033[102m'
+	Font_BG_Yellow='\033[103m'
+	Font_BG_Blue='\033[104m'
+	Font_BG_Magenta='\033[105m'
+	Font_BG_Cyan='\033[106m'
 	
 	all_ok=true
 	Locale_Use_Default=true # don't change!
