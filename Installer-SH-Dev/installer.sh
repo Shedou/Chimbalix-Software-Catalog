@@ -249,6 +249,11 @@ function _INIT_GLOBAL_PATHS() {
 ######### -------------- #########
 ######### Base functions #########
 
+function _CLEAR_BACKGROUND() {
+	setterm -background black -clear
+	echo -ne '\e]11;black\e\\'
+}
+
 function _CLEAR_TEMP() {
 	if [ ! -z "$Temp_Dir" ]; then
 		if [ -e "$Temp_Dir" ]; then
@@ -271,7 +276,7 @@ function _CREATE_TEMP() {
 }
 
 function _ABORT() {
-	clear
+	_CLEAR_BACKGROUND
 	
 	if [ -z "$Header" ];             then local Header=" -= OPERATING SYSTEM NOT SUPPORTED? =-\n"; fi
 	if [ -z "$Str_ABORT_Msg" ];      then local Str_ABORT_Msg="Exit code -"; fi
@@ -426,7 +431,7 @@ function _CHECK_PORTSOFT() {
 function _PRINT_PACKAGE_INFO() {
 if [ $MODE_SILENT == false ]; then
 	if [ $all_ok == true ]; then all_ok=false
-		clear
+		_CLEAR_BACKGROUND
 		echo -e "\
 $Header
  ${Font_Bold}${Font_Cyan}$Str_PACKAGEINFO_Head${Font_Color_Reset}${Font_Reset}
@@ -487,7 +492,7 @@ function _CHECK_MD5_COMPARE() {
 }
 
 function _CHECK_MD5_PRINT() {
-	clear
+	_CLEAR_BACKGROUND
 	echo -e "\
 $Header
  ${Font_Bold}${Font_Cyan}$Str_CHECKMD5PRINT_Head${Font_Color_Reset}${Font_Reset}"
@@ -533,7 +538,7 @@ $Header
 function _CHECK_MD5() {
 if [ $MODE_SILENT == false ]; then
 	if [ $all_ok == true ]; then all_ok=false
-		clear
+		_CLEAR_BACKGROUND
 		echo -e "\
 $Header
  ${Font_Bold}${Font_Cyan}$Str_CHECKMD5_Head${Font_Color_Reset}${Font_Reset}
@@ -562,7 +567,7 @@ fi
 function _PRINT_INSTALL_SETTINGS() {
 if [ $MODE_SILENT == false ]; then
 	if [ $all_ok == true ]; then all_ok=false
-		clear
+		_CLEAR_BACKGROUND
 		echo -e "\
 $Header
  ${Font_Bold}${Font_Cyan}$Str_PRINTINSTALLSETTINGS_Head (${Font_DarkYellow}$Install_Mode${Font_Cyan}):${Font_Color_Reset}${Font_Reset}
@@ -834,7 +839,7 @@ function _INSTALL_DESKTOP_ICONS() {
 function _INSTALL_APP_USER() {
 	if [ $all_ok == true ]; then all_ok=false
 		if [ $MODE_SILENT == false ]; then
-			clear
+			_CLEAR_BACKGROUND
 			echo -e "\
 $Header
  ${Font_Bold}${Font_Cyan}$Str_INSTALL_APP_Head${Font_Color_Reset}${Font_Reset}"; fi
@@ -896,7 +901,7 @@ $Header
 function _INSTALL_APP_SYSTEM() {
 	if [ $all_ok == true ]; then all_ok=false
 		if [ $MODE_SILENT == false ]; then
-			clear
+			_CLEAR_BACKGROUND
 			echo -e "\
 $Header
  ${Font_Bold}${Font_Cyan}$Str_INSTALL_APP_Head${Font_Color_Reset}${Font_Reset}"; fi

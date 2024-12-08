@@ -24,7 +24,7 @@ function _BASE_MAIN() {
 function _BASE_PRINT_INFO() {
 if [ $MODE_SILENT == false ]; then
 	if [ $all_ok == true ]; then all_ok=false
-		clear
+		_CLEAR_BACKGROUND
 		echo -e "\
 $Base_Header
  ${Font_Bold}${Font_Cyan}$Str_BASEINFO_Head${Font_Color_Reset}${Font_Reset}
@@ -62,7 +62,7 @@ function _BASE_CHECK_MD5() {
 if [ $all_ok == true ]; then all_ok=false
 	Base_Data_MD5=`md5sum "$Archive_Base_Data" | awk '{print $1}'`
 	if [ "$Base_Data_MD5" != "$Archive_Base_Data_MD5" ]; then
-		clear
+		_CLEAR_BACKGROUND
 		echo -e "\
 $Base_Header
  ${Font_Bold}${Font_Cyan}$Str_CHECKMD5PRINT_Head${Font_Color_Reset}${Font_Reset}
