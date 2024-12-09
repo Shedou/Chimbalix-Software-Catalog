@@ -17,6 +17,7 @@ function _MAIN() {
 	_CECK_EXECUTE_RIGHTS
 	printf '\033[8;30;110t' # Resize terminal Window (110x30)
 	_CHECK_PORTSOFT
+	_CHECK_ERRORS
 	_PRINT_PACKAGE_INFO
 	_CHECK_MD5
 	_PRINT_INSTALL_SETTINGS # Last confirm stage
@@ -37,7 +38,7 @@ function _INSTALLER_SETTINGS() {
 	Install_User_Data=false       # Copy other data to the user's home directory: "true" / "false". Do not use this function unless necessary!
 	Install_Helpers=false         # XFCE Only! Adds "Default Applications" associations, please prepare files in "installer-data/system_files/helpers/" before using.
 	
-	Debug_Test_Colors=true       # Test colors (for debugging purposes)
+	Debug_Test_Colors=false       # Test colors (for debugging purposes)
 	Font_Styles_RGB=false         # Disabled for compatibility with older distributions, can be enabled manually.
 }
 
@@ -75,10 +76,7 @@ Info_Description="\
   1) This universal installer (short description):
      - Suitable for installation on stand-alone PCs without Internet access.
      - Stores installation files in a 7-zip archive (good compression and fast unpacking).
-     - Two installation modes:
-       . User - install only for the current User ($User_Name), does not require root rights.
-       . System - For all users, root rights are required.
-  2) Check the current \"install.sh\" file to configure the installation package."
+  2) Check the current \"installer.sh\" file to configure the installation package."
 fi
 
  ### ------------------------ ###
@@ -212,6 +210,7 @@ function _INIT_GLOBAL_VARIABLES() {
 	all_ok=true
 	Locale_Use_Default=true # don't change!
 	Locale_Display="Default"
+	Current_Architecture="Unknown"
 	
 	User_Name="$USER"
 	User_Home="$HOME"
@@ -495,8 +494,18 @@ function _CHECK_SYSTEM() {
 	# Check System Version
 	_CHECK_SYSTEM_VERSION
 	
+	Current_Architecture="$(uname -m)"
+	
 	# Check DE
 	_CHECK_SYSTEM_DE
+	
+	# Normalize Arch
+	if [ "$Current_Architecture" == "i686" ]; then Current_Architecture="x86"; fi
+	
+	if [ "$Tools_Architecture" != "$Current_Architecture" ]; then
+		if [ "$Current_OS_Name" == "Chimbalix" ]; then : # Chimbalix has 32-bit libraries, so it is possible to work within this distribution.
+		else _ABORT "The system architecture ($Current_Architecture) does not match the selected tools architecture ($Tools_Architecture)!"; fi
+	fi
 	
 	#if [ "$Current_OS_Name" == "Chimbalix" ]; then Font_Styles_RGB=true; fi
 }
@@ -517,6 +526,16 @@ function _CHECK_PORTSOFT() {
 
 ######### Check PortSoft #########
 ######### -------------- #########
+
+######### ------------ #########
+######### Check Errors #########
+
+function _CHECK_ERRORS() {
+	if [ "$Tools_Architecture" != "$Current_Architecture" ]; then _WARNING "$Str_CHECK_ERRORS_ARCH" "$Str_CHECK_ERRORS_ARCH_WARN"; fi
+}
+
+######### Check Errors #########
+######### ------------ #########
 
 ######### ------------------------- #########
 ######### Print package information #########
@@ -1280,6 +1299,9 @@ function _SET_LOCALE_DEFAULT() {
 	Str_CHECKSYSDE_DE_WEIRD_LXQT="Re-login to the system if new shortcuts do not appear in the menu!"
 	Str_CHECKSYSDE_DE_WEIRD_BUDGIE="New shortcuts may not appear in the menu..."
 	Str_CHECKSYSDE_DE_WEIRD_GNOME="The menu doesn't match XDG specifications very well...\n    Re-login to the system if new shortcuts do not appear in the menu!"
+	
+	Str_CHECK_ERRORS_ARCH="Attention!"
+	Str_CHECK_ERRORS_ARCH_WARN="The system architecture ($Current_Architecture) does not match the selected tools architecture ($Tools_Architecture)!"
 }
 
 function _SET_LOCALE() {
