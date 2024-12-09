@@ -429,9 +429,9 @@ function _CHECK_SYSTEM_DE() {
 	local check_de_err="0"
 	
 	if   [ $XDG_CURRENT_DESKTOP ]; then local check_de_raw="$(echo "$XDG_CURRENT_DESKTOP" | cut -d: -f 1)"
-	elif [ $XDG_SESSION_DESKTOP ]; then _WARNING "XDG_CURRENT_DESKTOP" "Not found..."; local check_de_raw="$XDG_SESSION_DESKTOP"
-	elif [ $DESKTOP_SESSION ];     then _WARNING "XDG_SESSION_DESKTOP" "Not found..."; local check_de_raw="$DESKTOP_SESSION"
-	else _WARNING "DESKTOP_SESSION" "Not found..."; fi
+	elif [ $XDG_SESSION_DESKTOP ]; then _WARNING "XDG_CURRENT_DESKTOP" "$Str_CHECKSYSDE_NotFound"; local check_de_raw="$XDG_SESSION_DESKTOP"
+	elif [ $DESKTOP_SESSION ];     then _WARNING "XDG_SESSION_DESKTOP" "$Str_CHECKSYSDE_NotFound"; local check_de_raw="$DESKTOP_SESSION"
+	else _WARNING "DESKTOP_SESSION" "$Str_CHECKSYSDE_NotFound"; fi
 	
 	# Normalize
 	### COSMIC - GNOME - KDE - LXDE - LXQT - MATE - RAZOR - ROX - TDE - UNITY - XFCE - EDE - CINNAMON - PANTHEON - DDE - ENDLESS - LEGACY - BUDGIE - OPENBOX - SWAY
@@ -471,7 +471,7 @@ function _CHECK_SYSTEM_DE() {
 	else local check_de_err="1"; fi
 	
 	if [ "$check_de_err" == "1" ]; then
-		_WARNING "DE Check" "The distribution did not provide correct information via the \"XDG\" variables..."
+		_WARNING "$Str_CHECKSYSDE_DE_CHECK" "$Str_CHECKSYSDE_XDG_INFO_INCORRECT"
 		
 		if xfce4-session --version &>/dev/null;    then local check_de_raw="XFCE"
 		elif plasmashell --version &>/dev/null;    then local check_de_raw="KDE"
@@ -481,11 +481,11 @@ function _CHECK_SYSTEM_DE() {
 fi
 	
 	# Extra checks
-	if [ "$check_de_raw" == "OPENBOX" ]; then _WARNING "Weird DE (Openbox)" "This DE may not follow XDG specifications!\n    The installer is not designed to work with the specific structure of the OpenBox menu."; fi
-	if [ "$check_de_raw" == "SWAY" ];    then _WARNING "Weird DE (Sway)" "What the hell..."; fi
-	if [ "$check_de_raw" == "LXQT" ];    then _WARNING "Weird DE (LXQt)" "Re-login to the system if new shortcuts do not appear in the menu!"; fi
-	if [ "$check_de_raw" == "BUDGIE" ];  then _WARNING "Weird DE (Budgie)" "New shortcuts may not appear in the menu..."; fi
-	if [ "$check_de_raw" == "GNOME" ];   then _WARNING "Weird DE (GNOME)" "The menu doesn't match XDG specifications very well...\n    Re-login to the system if new shortcuts do not appear in the menu!"; fi
+	if [ "$check_de_raw" == "OPENBOX" ]; then _WARNING "$Str_CHECKSYSDE_DE_WEIRD (Openbox)" "$Str_CHECKSYSDE_DE_WEIRD_OPENBOX"; fi
+	if [ "$check_de_raw" == "SWAY" ];    then _WARNING "$Str_CHECKSYSDE_DE_WEIRD (Sway)" "$Str_CHECKSYSDE_DE_WEIRD_SWAY"; fi
+	if [ "$check_de_raw" == "LXQT" ];    then _WARNING "$Str_CHECKSYSDE_DE_WEIRD (LXQt)" "$Str_CHECKSYSDE_DE_WEIRD_LXQT"; fi
+	if [ "$check_de_raw" == "BUDGIE" ];  then _WARNING "$Str_CHECKSYSDE_DE_WEIRD (Budgie)" "$Str_CHECKSYSDE_DE_WEIRD_BUDGIE"; fi
+	if [ "$check_de_raw" == "GNOME" ];   then _WARNING "$Str_CHECKSYSDE_DE_WEIRD (GNOME)" "$Str_CHECKSYSDE_DE_WEIRD_GNOME"; fi
 	
 	
 	Current_DE="$check_de_raw"
@@ -1272,6 +1272,17 @@ function _SET_LOCALE_DEFAULT() {
 	Str_INSTALLAPP_Install_Bin_Menu="Installing Bin files and copy menu files..."
 	Str_INSTALLAPP_Copy_uFiles="Copying user files...."
 	Str_INSTALLAPP_Copy_uFiles_Err="Error unpacking user files..."
+	
+	Str_CHECKSYSDE_NotFound="Not found..."
+	Str_CHECKSYSDE_XDG_INFO_INCORRECT="The distribution did not provide correct information via the \"XDG\" variables..."
+	Str_CHECKSYSDE_DE_CHECK="DE Check"
+	Str_CHECKSYSDE_DE_WEIRD="Weird DE"
+	Str_CHECKSYSDE_DE_WEIRD_OPENBOX="This DE may not follow XDG specifications!\n    The installer is not designed to work with the specific structure of the OpenBox menu."
+	Str_CHECKSYSDE_DE_WEIRD_SWAY="What the hell..."
+	Str_CHECKSYSDE_DE_WEIRD_LXQT="Re-login to the system if new shortcuts do not appear in the menu!"
+	Str_CHECKSYSDE_DE_WEIRD_BUDGIE="New shortcuts may not appear in the menu..."
+	Str_CHECKSYSDE_DE_WEIRD_GNOME="The menu doesn't match XDG specifications very well...\n    Re-login to the system if new shortcuts do not appear in the menu!"
+	
 }
 
 function _SET_LOCALE() {
