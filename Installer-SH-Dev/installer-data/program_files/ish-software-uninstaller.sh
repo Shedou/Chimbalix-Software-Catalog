@@ -6,21 +6,31 @@
 Path_To_Script="$( dirname "$(readlink -f "$0")")" # Current installer script directory.
 User_Dir=~ # Current User home directory.
 arg1="$1"
-# Font styles: "${Bold} BLACK TEXT ${rBD} normal text."
-Bold="\e[1m"; Dim="\e[2m"; rBD="\e[22m";
-# Font Colors:
-F='\033[39m'; BG='\033[49m'; # Reset colors
-F_Black='\033[30m'; F_DarkGray='\033[90m'; F_Gray='\033[37m'; F_White='\033[97m';
-F_DarkRed='\033[31m'; F_DarkGreen='\033[32m'; F_DarkYellow='\033[33m'; F_DarkBlue='\033[34m'; F_DarkMagenta='\033[35m'; F_DarkCyan='\033[36m';
-F_Red='\033[91m'; F_Green='\033[92m'; F_Yellow='\033[93m'; F_Blue='\033[94m'; F_Magenta='\033[95m'; F_Cyan='\033[96m';
-BG_Black='\033[40m'; BG_DarkGray='\033[100m'; BG_Gray='\033[47m'; BG_White='\033[107m';
-BG_DarkRed='\033[41m'; BG_DarkGreen='\033[42m'; BG_DarkYellow='\033[43m'; BG_DarkBlue='\033[44m'; BG_DarkMagenta='\033[45m'; BG_DarkCyan='\033[46m';
-BG_Red='\033[101m'; BG_Green='\033[102m'; BG_Yellow='\033[103m'; BG_Blue='\033[104m'; BG_Magenta='\033[105m'; BG_Cyan='\033[106m';
+# Font styles: "${Font_Bold} BLACK TEXT ${Font_Reset} normal text."
+Font_Bold="\e[1m"
+Font_Reset="\e[22m"
+Font_Reset_Color='\e[38;5;255m'
+Font_Reset_BG='\e[48;5;16m'
+
+Font_DarkRed='\e[38;5;160m'; Font_DarkRed_BG='\e[48;5;160m'
+Font_DarkGreen='\e[38;5;34m'; Font_DarkGreen_BG='\e[48;5;34m'
+Font_DarkYellow='\e[38;5;172m'; Font_DarkYellow_BG='\e[48;5;172m'
+Font_DarkBlue='\e[38;5;63m'; Font_DarkBlue_BG='\e[48;5;63m'
+Font_DarkMagenta='\e[38;5;164m'; Font_DarkMagenta_BG='\e[48;5;164m'
+Font_DarkCyan='\e[38;5;37m'; Font_DarkCyan_BG='\e[48;5;37m'
+
+Font_Red='\e[38;5;210m'; Font_Red_BG='\e[48;5;210m'
+Font_Green='\e[38;5;82m'; Font_Green_BG='\e[48;5;82m'
+Font_Yellow='\e[38;5;226m'; Font_Yellow_BG='\e[48;5;226m'
+Font_Blue='\e[38;5;111m'; Font_Blue_BG='\e[48;5;111m'
+Font_Magenta='\e[38;5;213m'; Font_Magenta_BG='\e[48;5;213m'
+Font_Cyan='\e[38;5;51m'; Font_Cyan_BG='\e[48;5;51m'
+
 ## ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ##
 ## ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ##
 
 Current_DE="$XDG_SESSION_DESKTOP"
-Header="${F_Red}${Bold} -=: Software Uninstaller Script (Installer-SH) :=-${rBD}${F}\n"
+Header="${F_Red}${Font_Bold} -=: Software Uninstaller Script (Installer-SH) :=-${Font_Reset}${Font_Reset_Color}\n"
 printf '\033[8;30;110t' # Resize terminal Window
 
 # Welcome message
@@ -37,7 +47,7 @@ function _remove {
 			if rm -rf "$file"; then
 				echo -ne " - ok.\n"
 			else
-				echo -ne "\n ${F_Yellow}${Bold}Need root rights... Try with sudo.${rBD}${F}\n"
+				echo -ne "\n ${F_Yellow}${Font_Bold}Need root rights... Try with sudo.${Font_Reset}${Font_Reset_Color}\n"
 				if sudo rm -rf "$file"; then if_sudo=true; fi
 			fi
 		else 
@@ -54,14 +64,14 @@ FilesToDelete=(
 
 # Display info and wait confirmation
 echo -e "\
- ${Bold}${F_Yellow}Attention!${F}${rBD} Make sure that you do not have any important data in the program directory!
+ ${Font_Bold}${F_Yellow}Attention!${Font_Reset_Color}${Font_Reset} Make sure that you do not have any important data in the program directory!
  
- ${Bold}The listed files and directories will be deleted if they are present in the system!${rBD}"
+ ${Font_Bold}The listed files and directories will be deleted if they are present in the system!${Font_Reset}"
 
-echo -e "${Bold} - Files to be deleted:${rBD}"
+echo -e "${Font_Bold} - Files to be deleted:${Font_Reset}"
 for i in "${!FilesToDelete[@]}"; do echo "   ${FilesToDelete[$i]}"; done
 
-echo -e "\n Enter \"${Bold}y${rBD}\" or \"${Bold}yes${rBD}\" to begin uninstallation."
+echo -e "\n Enter \"${Font_Bold}y${Font_Reset}\" or \"${Font_Bold}yes${Font_Reset}\" to begin uninstallation."
 Confirm=""
 read Confirm
 
@@ -69,7 +79,7 @@ read Confirm
 if [ "$Confirm" == "y" ] || [ "$Confirm" == "yes" ]; then
 	for i in "${!FilesToDelete[@]}"; do _remove "${FilesToDelete[$i]}"; done
 	if [ "$Current_DE" == "xfce" ]; then xfce4-panel -r &> /dev/null; fi
-	echo -e "\n ${Bold}${F_Green}Uninstallation completed.${F}${rBD}\n"
+	echo -e "\n ${Font_Bold}${F_Green}Uninstallation completed.${Font_Reset_Color}${Font_Reset}\n"
 fi
 
 echo " Press Enter to exit or close this window."
