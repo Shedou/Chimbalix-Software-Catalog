@@ -16,7 +16,7 @@ function _MAIN() {
 	_PACKAGE_SETTINGS
 	_INIT_GLOBAL_PATHS
 	_CECK_EXECUTE_RIGHTS
-	printf '\033[8;30;110t' # Resize terminal Window (110x30)
+	printf '\033[8;32;110t' # Resize terminal Window (110x32)
 	_CHECK_PORTSOFT
 	_CHECK_ERRORS
 	_PRINT_PACKAGE_INFO
