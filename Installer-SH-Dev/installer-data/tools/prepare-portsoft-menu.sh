@@ -4,7 +4,7 @@
 
 ######### --------- #########
 all_ok=true
-Base_Header="${Font_Red}${Font_Bold} -=: Preparing PortSoft and Menu (Installer-SH part) :=-${Font_Reset}${Font_Color_Reset}\n"
+Base_Header="${Font_Red}${Font_Bold} -=: Preparing PortSoft and Menu (Installer-SH part) :=-${Font_Reset}${Font_Reset_Color}\n"
 Base_Temp_Dir="/tmp/chimbalix-portsoft-menu-prepare""_$RANDOM""_$RANDOM" # TEMP Directory
 
 ######### - Archive path - #########
@@ -27,15 +27,15 @@ if [ $MODE_SILENT == false ]; then
 		_CLEAR_BACKGROUND
 		echo -e "\
 $Base_Header
- ${Font_Bold}${Font_Cyan}$Str_BASEINFO_Head${Font_Color_Reset}${Font_Reset}
+ ${Font_Bold}${Font_Cyan}$Str_BASEINFO_Head${Font_Reset_Color}${Font_Reset}
 
   $Str_BASEINFO_Warning
 
- -${Font_Bold}${Font_Yellow}$Str_BASEINFO_PortSoft${Font_Color_Reset}${Font_Reset}
+ -${Font_Bold}${Font_Yellow}$Str_BASEINFO_PortSoft${Font_Reset_Color}${Font_Reset}
    $Str_BASEINFO_PortSoft_Full
      $Output_PortSoft
   
- -${Font_Bold}${Font_Yellow}$Str_BASEINFO_MenuApps${Font_Color_Reset}${Font_Reset}
+ -${Font_Bold}${Font_Yellow}$Str_BASEINFO_MenuApps${Font_Reset_Color}${Font_Reset}
    $Str_BASEINFO_MenuApps_Full
      $Output_Menu_Files/apps.menu
      $Output_Menu_DDir/apps.directory
@@ -43,15 +43,15 @@ $Base_Header
   
   $Str_BASEINFO_Attention
 
- -${Font_Bold}${Font_DarkGreen}$Str_PACKAGEINFO_CurrentOS${Font_Color_Reset} $Current_OS_Name_Full ($Current_DE)${Font_Reset}
- -${Font_Bold}${Font_DarkGreen}$Str_PACKAGEINFO_InstallMode${Font_Color_Reset} $Install_Mode${Font_Reset}"
+ -${Font_Bold}${Font_DarkGreen}$Str_PACKAGEINFO_CurrentOS${Font_Reset_Color} $Current_OS_Name_Full ($Current_DE)${Font_Reset}
+ -${Font_Bold}${Font_DarkGreen}$Str_PACKAGEINFO_InstallMode${Font_Reset_Color} $Install_Mode${Font_Reset}"
 		echo -e "\n $Str_BASEINFO_Confirm"
 		read base_info_confirm
 		if [ "$base_info_confirm" == "y" ] || [ "$base_info_confirm" == "yes" ]; then all_ok=true
-		else _ABORT "${Font_Bold}${Font_Green}$Str_Interrupted_By_User${Font_Color_Reset}${Font_Reset}"; fi
+		else _ABORT "${Font_Bold}${Font_Green}$Str_Interrupted_By_User${Font_Reset_Color}${Font_Reset}"; fi
 		
 		if [ $MODE_DEBUG == true ]; then echo "_PRINT_PACKAGE_INFO - all_ok = $all_ok"; read pause; fi
-	else _ABORT "$Str_ERROR! ${Font_Bold}${Font_Yellow}$Str_Error_All_Ok _PRINT_PACKAGE_INFO ${Font_Color_Reset}${Font_Reset}"; fi
+	else _ABORT "$Str_ERROR! ${Font_Bold}${Font_Yellow}$Str_Error_All_Ok _PRINT_PACKAGE_INFO ${Font_Reset_Color}${Font_Reset}"; fi
 fi
 }
 
@@ -65,10 +65,10 @@ if [ $all_ok == true ]; then all_ok=false
 		_CLEAR_BACKGROUND
 		echo -e "\
 $Base_Header
- ${Font_Bold}${Font_Cyan}$Str_CHECKMD5PRINT_Head${Font_Color_Reset}${Font_Reset}
+ ${Font_Bold}${Font_Cyan}$Str_CHECKMD5PRINT_Head${Font_Reset_Color}${Font_Reset}
 
-  $Str_ATTENTION ${Font_Bold}${Font_DarkRed}$Str_BASECHECKMD5PRINT_Hash_Not_Match${Font_Color_Reset}
-  ${Font_Red}$Str_BASECHECKMD5PRINT_Hash_Not_Match2${Font_Color_Reset}${Font_Reset}
+  $Str_ATTENTION ${Font_Bold}${Font_DarkRed}$Str_BASECHECKMD5PRINT_Hash_Not_Match${Font_Reset_Color}
+  ${Font_Red}$Str_BASECHECKMD5PRINT_Hash_Not_Match2${Font_Reset_Color}${Font_Reset}
   
    ${Font_Bold}$Str_BASECHECKMD5PRINT_Expected_bHash${Font_Reset} \"$Archive_Base_Data_MD5\"
    ${Font_Bold}$Str_BASECHECKMD5PRINT_Real_bHash${Font_Reset}     \"$Base_Data_MD5\""
@@ -76,10 +76,10 @@ $Base_Header
 		echo -e "\n  $Str_CHECKMD5PRINT_yes_To_Continue"
 		read base_errors_confirm
 		if [ "$base_errors_confirm" == "y" ] || [ "$base_errors_confirm" == "yes" ]; then all_ok=true
-		else _ABORT "${Font_Bold}${Font_Green}$Str_Interrupted_By_User${Font_Color_Reset}${Font_Reset}"; fi
+		else _ABORT "${Font_Bold}${Font_Green}$Str_Interrupted_By_User${Font_Reset_Color}${Font_Reset}"; fi
 	else all_ok=true; fi
 	if [ $MODE_DEBUG == true ]; then echo "_BASE_CHECK_MD5 - all_ok = $all_ok"; read pause; fi
-else _ABORT "$Str_ERROR! ${Font_Bold}${Font_Yellow}$Str_Error_All_Ok _BASE_CHECK_MD5 ${Font_Color_Reset}${Font_Reset}"; fi
+else _ABORT "$Str_ERROR! ${Font_Bold}${Font_Yellow}$Str_Error_All_Ok _BASE_CHECK_MD5 ${Font_Reset_Color}${Font_Reset}"; fi
 }
 
 
@@ -89,7 +89,7 @@ if [ $all_ok == true ]; then all_ok=false
 	mkdir "$Base_Temp_Dir"
 	all_ok=true
 	if [ $MODE_DEBUG == true ]; then echo "_BASE_CREATE_TEMP - all_ok = $all_ok"; read pause; fi
-else _ABORT "$Str_ERROR! ${Font_Bold}${Font_Yellow}$Str_Error_All_Ok _BASE_CREATE_TEMP ${Font_Color_Reset}${Font_Reset}"; fi
+else _ABORT "$Str_ERROR! ${Font_Bold}${Font_Yellow}$Str_Error_All_Ok _BASE_CREATE_TEMP ${Font_Reset_Color}${Font_Reset}"; fi
 }
 function _BASE_DELETE_TEMP() {
 if [ -e "$Base_Temp_Dir" ]; then rm -rf "$Base_Temp_Dir"; fi;
