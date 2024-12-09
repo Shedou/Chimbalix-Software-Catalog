@@ -37,7 +37,7 @@ function _INSTALLER_SETTINGS() {
 	Install_User_Data=false       # Copy other data to the user's home directory: "true" / "false". Do not use this function unless necessary!
 	Install_Helpers=false         # XFCE Only! Adds "Default Applications" associations, please prepare files in "installer-data/system_files/helpers/" before using.
 	
-	Debug_Test_Colors=false       # Test colors (for debugging purposes)
+	Debug_Test_Colors=true       # Test colors (for debugging purposes)
 	Font_Styles_RGB=false         # Disabled for compatibility with older distributions, can be enabled manually.
 }
 
@@ -112,12 +112,12 @@ Additional_Categories="chi-other;Utility;Education;" #=> ADDITIONAL_CATEGORIES
  # URL: https://specifications.freedesktop.org/menu-spec/latest/additional-category-registry.html
 
  # Archives MD5 Hash
-Archive_Program_Files_MD5=""
-Archive_System_Files_MD5=""
-Archive_User_Files_MD5="" # Not used if "Install_User_Data=false"
+Archive_MD5_Program_Files_Hash=""
+Archive_MD5_System_Files_Hash=""
+Archive_MD5_User_Files_Hash="" # Not used if "Install_User_Data=false"
 
  # Header
-Header="${Font_Red}${Font_Bold} -=: Universal Software Installer Script for Chimbalix (Installer-SH v2.0) - Lang: $Locale_Display :=-${Font_Reset}${Font_Reset_Color}\n"
+Header="${Font_DarkYellow}${Font_Bold} -=: Universal Software Installer Script for Chimbalix (Installer-SH v2.0) - Lang: $Locale_Display :=-${Font_Reset}${Font_Reset_Color}\n"
 
 ######### -- ------------ -- #########
 ######### -- END SETTINGS -- #########
@@ -177,7 +177,7 @@ function _INIT_FONT_STYLES() {
 	else # For compatibility with older distributions...
 		Font_DarkRed='\e[38;5;160m'; Font_DarkRed_BG='\e[48;5;160m'
 		Font_DarkGreen='\e[38;5;34m'; Font_DarkGreen_BG='\e[48;5;34m'
-		Font_DarkYellow='\e[38;5;172m'; Font_DarkYellow_BG='\e[48;5;172m'
+		Font_DarkYellow='\e[38;5;178m'; Font_DarkYellow_BG='\e[48;5;178m'
 		Font_DarkBlue='\e[38;5;63m'; Font_DarkBlue_BG='\e[48;5;63m'
 		Font_DarkMagenta='\e[38;5;164m'; Font_DarkMagenta_BG='\e[48;5;164m'
 		Font_DarkCyan='\e[38;5;37m'; Font_DarkCyan_BG='\e[48;5;37m'
@@ -567,23 +567,21 @@ fi
 ######### Check and compare MD5 of archive #########
 
 function _CHECK_MD5_COMPARE() {
-	md5_pfiles_error=false; md5_sfiles_error=false; md5_ufiles_error=false
-	md5_warning=false;
+	MD5_ProgramFiles_Error=false; MD5_SystemFiles_Error=false; MD5_UserFiles_Error=false
+	MD5_Warning=false;
 	
-	Program_Files_MD5=`md5sum "$Archive_Program_Files" | awk '{print $1}'`
-	System_Files_MD5=`md5sum "$Archive_System_Files" | awk '{print $1}'`
+	MD5_Program_Files_Hash=`md5sum "$Archive_Program_Files" | awk '{print $1}'`
+	MD5_System_Files_Hash=`md5sum "$Archive_System_Files" | awk '{print $1}'`
 	
-	if [ "$Program_Files_MD5" != "$Archive_Program_Files_MD5" ]; then md5_pfiles_error=true; fi
-	if [ "$System_Files_MD5" != "$Archive_System_Files_MD5" ]; then md5_sfiles_error=true; fi
+	if [ "$MD5_Program_Files_Hash" != "$Archive_MD5_Program_Files_Hash" ]; then MD5_ProgramFiles_Error=true; fi
+	if [ "$MD5_System_Files_Hash" != "$Archive_MD5_System_Files_Hash" ]; then MD5_SystemFiles_Error=true; fi
 	
 	if [ $Install_User_Data == true ]; then
-		User_Files_MD5=`md5sum "$Archive_User_Files" | awk '{print $1}'`
-		if [ "$User_Files_MD5" != "$Archive_User_Files_MD5" ]; then md5_ufiles_error=false; fi
+		MD5_User_Files_Hash=`md5sum "$Archive_User_Files" | awk '{print $1}'`
+		if [ "$MD5_User_Files_Hash" != "$Archive_MD5_User_Files_Hash" ]; then MD5_UserFiles_Error=false; fi
 	fi
 	
-	if [ $md5_pfiles_error == true ] || [ $md5_sfiles_error == true ] || [ $md5_ufiles_error == true ]; then
-		md5_warning=true
-	fi
+	if [ $MD5_ProgramFiles_Error == true ] || [ $MD5_SystemFiles_Error == true ] || [ $MD5_UserFiles_Error == true ]; then MD5_Warning=true; fi
 }
 
 function _CHECK_MD5_PRINT() {
@@ -592,26 +590,26 @@ function _CHECK_MD5_PRINT() {
 $Header
  ${Font_Bold}${Font_Cyan}$Str_CHECKMD5PRINT_Head${Font_Reset_Color}${Font_Reset}"
 	
-	if [ $md5_warning == true ]; then
+	if [ $MD5_Warning == true ]; then
 		echo -e "\
 
   $Str_ATTENTION ${Font_Bold}${Font_DarkRed}$Str_CHECKMD5PRINT_Hash_Not_Match${Font_Reset_Color}
   ${Font_Red}$Str_CHECKMD5PRINT_Hash_Not_Match2${Font_Reset_Color}${Font_Reset}"
-		if [ $md5_pfiles_error == true ]; then
+		if [ $MD5_ProgramFiles_Error == true ]; then
 			echo -e "\
 
-   ${Font_Bold}$Str_CHECKMD5PRINT_Expected_pHash${Font_Reset} \"$Archive_Program_Files_MD5\"
-   ${Font_Bold}$Str_CHECKMD5PRINT_Real_pHash${Font_Reset}     \"$Program_Files_MD5\""; fi
-		if [ $md5_sfiles_error == true ]; then
+   ${Font_Bold}$Str_CHECKMD5PRINT_Expected_pHash${Font_Reset} \"$Archive_MD5_Program_Files_Hash\"
+   ${Font_Bold}$Str_CHECKMD5PRINT_Real_pHash${Font_Reset}     \"$MD5_Program_Files_Hash\""; fi
+		if [ $MD5_SystemFiles_Error == true ]; then
 			echo -e "\
 
-   ${Font_Bold}$Str_CHECKMD5PRINT_Expected_sHash${Font_Reset} \"$Archive_System_Files_MD5\"
-   ${Font_Bold}$Str_CHECKMD5PRINT_Real_sHash${Font_Reset}     \"$System_Files_MD5\""; fi
-		if [ $md5_ufiles_error == true ]; then
+   ${Font_Bold}$Str_CHECKMD5PRINT_Expected_sHash${Font_Reset} \"$Archive_MD5_System_Files_Hash\"
+   ${Font_Bold}$Str_CHECKMD5PRINT_Real_sHash${Font_Reset}     \"$MD5_System_Files_Hash\""; fi
+		if [ $MD5_UserFiles_Error == true ]; then
 			echo -e "\
 
-   ${Font_Bold}$Str_CHECKMD5PRINT_Expected_uHash${Font_Reset} \"$Archive_User_Files_MD5\"
-   ${Font_Bold}$Str_CHECKMD5PRINT_Real_uHash${Font_Reset}     \"$User_Files_MD5\""; fi
+   ${Font_Bold}$Str_CHECKMD5PRINT_Expected_uHash${Font_Reset} \"$Archive_MD5_User_Files_Hash\"
+   ${Font_Bold}$Str_CHECKMD5PRINT_Real_uHash${Font_Reset}     \"$MD5_User_Files_Hash\""; fi
 		echo -e "\n  $Str_CHECKMD5PRINT_yes_To_Continue"
 		read errors_confirm
     	if [ "$errors_confirm" == "y" ] || [ "$errors_confirm" == "yes" ]; then all_ok=true
@@ -620,10 +618,10 @@ $Header
 		all_ok=true
 		echo -e "
   ${Font_Green}The integrity of the installation archive has been successfully verified
-   ${Font_Bold}$Str_CHECKMD5PRINT_Real_pHash${Font_Reset}  \"$Program_Files_MD5\"
-   ${Font_Bold}$Str_CHECKMD5PRINT_Real_sHash${Font_Reset}   \"$System_Files_MD5\""
+   ${Font_Bold}$Str_CHECKMD5PRINT_Real_pHash${Font_Reset}  \"$MD5_Program_Files_Hash\"
+   ${Font_Bold}$Str_CHECKMD5PRINT_Real_sHash${Font_Reset}   \"$MD5_System_Files_Hash\""
 		if [ $Install_User_Data == true ]; then echo -e "\
-   ${Font_Bold}$Str_CHECKMD5PRINT_Real_uHash${Font_Reset}     \"$User_Files_MD5\""; fi
+   ${Font_Bold}$Str_CHECKMD5PRINT_Real_uHash${Font_Reset}     \"$MD5_User_Files_Hash\""; fi
 		echo -e "${Font_Reset_Color}
   ${Font_Bold}$Str_CHECKMD5PRINT_Enter_To_Continue${Font_Reset}"
 		read pause
@@ -649,7 +647,7 @@ $Header
 	else _ABORT "$Str_ERROR! ${Font_Bold}${Font_Yellow}$Str_Error_All_Ok _CHECK_MD5 ${Font_Reset_Color}${Font_Reset}"; fi
 else
 	_CHECK_MD5_COMPARE
-	if [ $md5_warning == true ]; then _CHECK_MD5_PRINT; fi
+	if [ $MD5_Warning == true ]; then _CHECK_MD5_PRINT; fi
 fi
 }
 
@@ -1282,7 +1280,6 @@ function _SET_LOCALE_DEFAULT() {
 	Str_CHECKSYSDE_DE_WEIRD_LXQT="Re-login to the system if new shortcuts do not appear in the menu!"
 	Str_CHECKSYSDE_DE_WEIRD_BUDGIE="New shortcuts may not appear in the menu..."
 	Str_CHECKSYSDE_DE_WEIRD_GNOME="The menu doesn't match XDG specifications very well...\n    Re-login to the system if new shortcuts do not appear in the menu!"
-	
 }
 
 function _SET_LOCALE() {
