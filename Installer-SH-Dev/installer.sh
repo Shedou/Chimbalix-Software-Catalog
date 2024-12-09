@@ -37,7 +37,7 @@ function _INSTALLER_SETTINGS() {
 	Install_Helpers=false         # XFCE Only! Adds "Default Applications" associations, please prepare files in "installer-data/system_files/helpers/" before using.
 	
 	Debug_Test_Colors=true        # Test colors (for debugging purposes)
-	Font_Styles_Fallback=false    # For compatibility with older distributions, it is enabled automatically when needed, but can be enabled manually.
+	Font_Styles_RGB=false         # Disabled for compatibility with older distributions, can be enabled manually.
 }
 
 function _PACKAGE_SETTINGS() {
@@ -124,7 +124,10 @@ Header="${Font_Red}${Font_Bold} -=: Universal Software Installer Script for Chim
 }
 
 function _TEST_COLORS() {
-	echo -e "\n${Font_Bold} -= TEST COLORS =-
+	echo -e "\n${Font_Bold} -= TEST COLORS =-"
+	if [ "$Font_Styles_RGB" == true ]; then echo -e " RGB Mode"
+	else echo -e " 8-bit table Mode"; fi
+	echo -e "
  ${Font_Black}Font_Black ${Font_DarkGray}Font_DarkGray ${Font_Gray}Font_Gray ${Font_White}Font_White ${Font_Color_Reset}
 
  ${Font_DarkRed}DarkRed ${Font_DarkGreen}DarkGreen ${Font_DarkYellow}DarkYellow ${Font_DarkBlue}DarkBlue ${Font_DarkMagenta}DarkMagenta ${Font_DarkCyan}DarkCyan
@@ -156,34 +159,34 @@ function _INIT_FONT_STYLES() {
 	Font_Gray='\e[38;5;248m'; Font_Gray_BG='\e[48;5;248m'
 	Font_White='\e[38;5;255m'; Font_White_BG='\e[48;5;255m'
 	
-	if [ "$Font_Styles_Fallback" == false ]; then
+	if [ "$Font_Styles_RGB" == true ]; then
 		Font_DarkRed='\e[38;2;200;0;0m'; Font_DarkRed_BG='\e[48;2;200;0;0m'
 		Font_DarkGreen='\e[38;2;0;180;0m'; Font_DarkGreen_BG='\e[48;2;0;180;0m'
 		Font_DarkYellow='\e[38;2;180;146;0m'; Font_DarkYellow_BG='\e[48;2;180;146;0m'
-		Font_DarkBlue='\e[38;2;96;96;200m'; Font_DarkBlue_BG='\e[48;2;96;96;200m'
+		Font_DarkBlue='\e[38;2;72;72;230m'; Font_DarkBlue_BG='\e[48;2;72;72;230m'
 		Font_DarkMagenta='\e[38;2;200;0;200m'; Font_DarkMagenta_BG='\e[48;2;200;0;200m'
 		Font_DarkCyan='\e[38;2;40;180;160m'; Font_DarkCyan_BG='\e[48;2;40;180;160m'
 		
 		Font_Red='\e[38;2;255;96;96m'; Font_Red_BG='\e[48;2;255;96;96m'
 		Font_Green='\e[38;2;128;255;128m'; Font_Green_BG='\e[48;2;128;255;128m'
-		Font_Yellow='\e[38;2;245;245;0m'; Font_Yellow_BG='\e[48;2;245;245;0m'
-		Font_Blue='\e[38;2;128;128;255m'; Font_Blue_BG='\e[48;2;128;128;255m'
-		Font_Magenta='\e[38;2;255;48;255m'; Font_Magenta_BG='\e[48;2;255;48;255m'
+		Font_Yellow='\e[38;2;245;245;64m'; Font_Yellow_BG='\e[48;2;245;245;64m'
+		Font_Blue='\e[38;2;160;160;255m'; Font_Blue_BG='\e[48;2;160;160;255m'
+		Font_Magenta='\e[38;2;255;96;255m'; Font_Magenta_BG='\e[48;2;255;96;255m'
 		Font_Cyan='\e[38;2;90;255;240m'; Font_Cyan_BG='\e[48;2;90;255;240m'
 	else # For compatibility with older distributions...
-		Font_DarkRed='\e[38;2;200;0;0m'; Font_DarkRed_BG='\e[48;2;200;0;0m'
-		Font_DarkGreen='\e[38;2;0;180;0m'; Font_DarkGreen_BG='\e[48;2;0;180;0m'
-		Font_DarkYellow='\e[38;2;180;146;0m'; Font_DarkYellow_BG='\e[48;2;180;146;0m'
-		Font_DarkBlue='\e[38;2;96;96;200m'; Font_DarkBlue_BG='\e[48;2;96;96;200m'
-		Font_DarkMagenta='\e[38;2;200;0;200m'; Font_DarkMagenta_BG='\e[48;2;200;0;200m'
-		Font_DarkCyan='\e[38;2;40;180;160m'; Font_DarkCyan_BG='\e[48;2;40;180;160m'
+		Font_DarkRed='\e[38;5;160m'; Font_DarkRed_BG='\e[48;5;160m'
+		Font_DarkGreen='\e[38;5;34m'; Font_DarkGreen_BG='\e[48;5;34m'
+		Font_DarkYellow='\e[38;5;172m'; Font_DarkYellow_BG='\e[48;5;172m'
+		Font_DarkBlue='\e[38;5;63m'; Font_DarkBlue_BG='\e[48;5;63m'
+		Font_DarkMagenta='\e[38;5;164m'; Font_DarkMagenta_BG='\e[48;5;164m'
+		Font_DarkCyan='\e[38;5;37m'; Font_DarkCyan_BG='\e[48;5;37m'
 		
-		Font_Red='\e[38;2;255;96;96m'; Font_Red_BG='\e[48;2;255;96;96m'
-		Font_Green='\e[38;2;128;255;128m'; Font_Green_BG='\e[48;2;128;255;128m'
-		Font_Yellow='\e[38;2;245;245;0m'; Font_Yellow_BG='\e[48;2;245;245;0m'
-		Font_Blue='\e[38;2;128;128;255m'; Font_Blue_BG='\e[48;2;128;128;255m'
-		Font_Magenta='\e[38;2;255;48;255m'; Font_Magenta_BG='\e[48;2;255;48;255m'
-		Font_Cyan='\e[38;2;90;255;240m'; Font_Cyan_BG='\e[48;2;90;255;240m'
+		Font_Red='\e[38;5;210m'; Font_Red_BG='\e[48;5;210m'
+		Font_Green='\e[38;5;82m'; Font_Green_BG='\e[48;5;82m'
+		Font_Yellow='\e[38;5;226m'; Font_Yellow_BG='\e[48;5;226m'
+		Font_Blue='\e[38;5;111m'; Font_Blue_BG='\e[48;5;111m'
+		Font_Magenta='\e[38;5;213m'; Font_Magenta_BG='\e[48;5;213m'
+		Font_Cyan='\e[38;5;51m'; Font_Cyan_BG='\e[48;5;51m'
 	fi
 }
 
@@ -475,6 +478,8 @@ function _CHECK_SYSTEM() {
 	
 	# Check DE
 	_CHECK_SYSTEM_DE
+	
+	#if [ "$Current_OS_Name" == "Chimbalix" ]; then Font_Styles_RGB=true; fi
 }
 
 ######### Check PortSoft #########
@@ -515,8 +520,8 @@ $Header
  -${Font_Bold}${Font_Yellow}$Str_PACKAGEINFO_Description${Font_Color_Reset}${Font_Reset}
 $Info_Description
 
- -${Font_Bold}${Font_DarkGreen}$Str_PACKAGEINFO_CurrentOS${Font_Color_Reset} $Current_OS_Name_Full ($Current_DE)${Font_Reset}
- -${Font_Bold}${Font_DarkGreen}$Str_PACKAGEINFO_InstallMode${Font_Color_Reset} $Install_Mode${Font_Reset}"
+ -${Font_Bold}${Font_Green}$Str_PACKAGEINFO_CurrentOS${Font_Color_Reset} $Current_OS_Name_Full ($Current_DE)${Font_Reset}
+ -${Font_Bold}${Font_Green}$Str_PACKAGEINFO_InstallMode${Font_Color_Reset} $Install_Mode${Font_Reset}"
 	
 	if [ "$List_Errors" != "" ]; then echo -e "
   ${Font_Bold}${Font_Red}- $Str_ABORT_Errors${Font_Color_Reset}${Font_Reset} $List_Errors"; fi
@@ -643,33 +648,33 @@ if [ $MODE_SILENT == false ]; then
 $Header
  ${Font_Bold}${Font_Cyan}$Str_PRINTINSTALLSETTINGS_Head (${Font_Yellow}$Install_Mode${Font_Cyan}):${Font_Color_Reset}${Font_Reset}
 
- -${Font_Bold}${Font_DarkGreen}$Str_PRINTINSTALLSETTINGS_Temp_Dir${Font_Color_Reset}${Font_Reset} $Temp_Dir
+ -${Font_Bold}${Font_Green}$Str_PRINTINSTALLSETTINGS_Temp_Dir${Font_Color_Reset}${Font_Reset} $Temp_Dir
  
- -${Font_Bold}${Font_DarkGreen}$Str_PRINTINSTALLSETTINGS_App_Inst_Dir
+ -${Font_Bold}${Font_Green}$Str_PRINTINSTALLSETTINGS_App_Inst_Dir
    ${Font_Color_Reset}${Font_Reset}$Output_Install_Dir
 
- -${Font_Bold}${Font_DarkGreen}$Str_PRINTINSTALLSETTINGS_Menu_Dirs${Font_Color_Reset}${Font_Reset}
+ -${Font_Bold}${Font_Green}$Str_PRINTINSTALLSETTINGS_Menu_Dirs${Font_Color_Reset}${Font_Reset}
    $Output_Menu_Files
    $Output_Menu_DDir
    $Output_Menu_Apps
 
- -${Font_Bold}${Font_DarkGreen}$Str_PRINTINSTALLSETTINGS_Bin_Dir${Font_Color_Reset}${Font_Reset}
+ -${Font_Bold}${Font_Green}$Str_PRINTINSTALLSETTINGS_Bin_Dir${Font_Color_Reset}${Font_Reset}
    $Output_Bin_Dir"
 		
 		if [ $Install_Helpers == true ]; then
 			if [ $Current_DE == "XFCE" ]; then
 				echo -e "
- -${Font_Bold}${Font_DarkGreen}$Str_PRINTINSTALLSETTINGS_Helpers_Dir${Font_Color_Reset}${Font_Reset}
+ -${Font_Bold}${Font_Green}$Str_PRINTINSTALLSETTINGS_Helpers_Dir${Font_Color_Reset}${Font_Reset}
    $Output_Helpers_Dir"; fi; fi
 
 		if [ $Install_Desktop_Icons == true ]; then
 			echo -e "
- -${Font_Bold}${Font_DarkGreen}$Str_PRINTINSTALLSETTINGS_Desktop_Dir${Font_Color_Reset}${Font_Reset}
+ -${Font_Bold}${Font_Green}$Str_PRINTINSTALLSETTINGS_Desktop_Dir${Font_Color_Reset}${Font_Reset}
    $Output_Desktop_Dir"; fi
 
 		if [ $Install_User_Data == true ]; then
 			echo -e "
- -$Str_ATTENTION! ${Font_Bold}${Font_DarkGreen}$Str_PRINTINSTALLSETTINGS_Copy_uData_To${Font_Color_Reset}${Font_Reset} $Output_User_Home
+ -$Str_ATTENTION! ${Font_Bold}${Font_Green}$Str_PRINTINSTALLSETTINGS_Copy_uData_To${Font_Color_Reset}${Font_Reset} $Output_User_Home
    $Str_PRINTINSTALLSETTINGS_Copy_uData_To2
    $Str_PRINTINSTALLSETTINGS_Copy_uData_To3
     $Str_PRINTINSTALLSETTINGS_Copy_uData_To4"; fi
