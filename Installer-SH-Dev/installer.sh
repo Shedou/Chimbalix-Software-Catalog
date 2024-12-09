@@ -10,6 +10,7 @@ function _MAIN() {
 	_INSTALLER_SETTINGS
 	_CHECK_SYSTEM
 	_INIT_FONT_STYLES
+	_CLEAR_BACKGROUND # Double Clear Crutch for Old GNOME...
 	_SET_LOCALE
 	_PACKAGE_SETTINGS
 	_INIT_GLOBAL_PATHS
@@ -321,8 +322,11 @@ function _CLEAR_BACKGROUND() {
 	#setterm -background black -clear
 	#setterm -foreground white -clear
 	clear
+	clear
 	echo -ne '\e]11;black\e\\'
+	echo -ne "${Font_Black_BG}" # Crutch for GNOME...
 	echo -ne '\e]10;white\e\\'
+	echo -ne "${Font_White}" # Crutch for GNOME...
 }
 
 function _CLEAR_TEMP() {
@@ -421,55 +425,70 @@ function _CHECK_SYSTEM_VERSION() {
 }
 
 function _CHECK_SYSTEM_DE() {
-	local check_system_de_raw=""
+	local check_de_raw=""
+	local check_de_err="0"
 	
-	if   [ $XDG_CURRENT_DESKTOP ]; then local check_system_de_raw="$(echo "$XDG_CURRENT_DESKTOP" | cut -d: -f 1)"
-	elif [ $XDG_SESSION_DESKTOP ]; then local check_system_de_raw="$XDG_SESSION_DESKTOP"
-	elif [ $DESKTOP_SESSION ];     then local check_system_de_raw="$DESKTOP_SESSION"
-	elif [ $GDMSESSION ];          then local check_system_de_raw="$GDMSESSION"
-	fi
+	if   [ $XDG_CURRENT_DESKTOP ]; then local check_de_raw="$(echo "$XDG_CURRENT_DESKTOP" | cut -d: -f 1)"
+	elif [ $XDG_SESSION_DESKTOP ]; then _WARNING "XDG_CURRENT_DESKTOP" "Not found..."; local check_de_raw="$XDG_SESSION_DESKTOP"
+	elif [ $DESKTOP_SESSION ];     then _WARNING "XDG_SESSION_DESKTOP" "Not found..."; local check_de_raw="$DESKTOP_SESSION"
+	else _WARNING "DESKTOP_SESSION" "Not found..."; fi
 	
 	# Normalize
-	### XFCE - LXDE - LXQT - SWAY - OPENBOX - CINNAMON - MATE - BUDGIE - GNOME - KDE
-	if [ "$check_system_de_raw" == "plasma" ];  then local check_system_de_raw="KDE"; fi
+	### COSMIC - GNOME - KDE - LXDE - LXQT - MATE - RAZOR - ROX - TDE - UNITY - XFCE - EDE - CINNAMON - PANTHEON - DDE - ENDLESS - LEGACY - BUDGIE - OPENBOX - SWAY
+	if [ "$check_de_raw" == "COSMIC" ];            then local check_de_raw="COSMIC" # COSMIC Desktop
+	elif [ "$check_de_raw" == "GNOME" ];           then local check_de_raw="GNOME"  # GNOME Desktop
+	elif [ "$check_de_raw" == "GNOME-Classic" ];   then local check_de_raw="GNOME"  # GNOME Classic Desktop
+	elif [ "$check_de_raw" == "GNOME-Flashback" ]; then local check_de_raw="GNOME"  # GNOME Flashback Desktop
+	elif [ "$check_de_raw" == "KDE" ];      then local check_de_raw="KDE"      # KDE Desktop
+	elif [ "$check_de_raw" == "LXDE" ];     then local check_de_raw="LXDE"     # LXDE Desktop
+	elif [ "$check_de_raw" == "LXQt" ];     then local check_de_raw="LXQT"     # LXQt Desktop
+	elif [ "$check_de_raw" == "MATE" ];     then local check_de_raw="MATE"     # MATE Desktop
+	elif [ "$check_de_raw" == "Razor" ];    then local check_de_raw="RAZOR"    # Razor-qt Desktop
+	elif [ "$check_de_raw" == "ROX" ];      then local check_de_raw="ROX"      # ROX Desktop
+	elif [ "$check_de_raw" == "TDE" ];      then local check_de_raw="TDE"      # Trinity Desktop
+	elif [ "$check_de_raw" == "Unity" ];    then local check_de_raw="UNITY"    # Unity Shell
+	elif [ "$check_de_raw" == "XFCE" ];     then local check_de_raw="XFCE"     # XFCE Desktop
+	elif [ "$check_de_raw" == "EDE" ];      then local check_de_raw="EDE"      # EDE Desktop
+	elif [ "$check_de_raw" == "Cinnamon" ]; then local check_de_raw="CINNAMON" # Cinnamon Desktop
+	elif [ "$check_de_raw" == "Pantheon" ]; then local check_de_raw="PANTHEON" # Pantheon Desktop
+	elif [ "$check_de_raw" == "DDE" ];      then local check_de_raw="DDE"      # Deepin Desktop
+	elif [ "$check_de_raw" == "Endless" ];  then local check_de_raw="ENDLESS"  # Endless OS desktop
+	elif [ "$check_de_raw" == "Old" ];      then local check_de_raw="LEGACY"   # Legacy menu systems
+	elif [ "$check_de_raw" == "plasma" ];   then local check_de_raw="KDE" ### Extra names
+	elif [ "$check_de_raw" == "xfce" ];     then local check_de_raw="XFCE"
+	elif [ "$check_de_raw" == "xubuntu" ];  then local check_de_raw="XFCE"
+	elif [ "$check_de_raw" == "lxde" ];     then local check_de_raw="LXDE"
+	elif [ "$check_de_raw" == "mate" ];     then local check_de_raw="MATE"
+	elif [ "$check_de_raw" == "ubuntu" ];   then local check_de_raw="GNOME"
+	elif [ "$check_de_raw" == "lxqt" ];     then local check_de_raw="LXQT"
+	elif [ "$check_de_raw" == "Lubuntu" ];  then local check_de_raw="LXQT"
+	elif [ "$check_de_raw" == "cinnamon" ];       then local check_de_raw="CINNAMON"
+	elif [ "$check_de_raw" == "X-Cinnamon" ];     then local check_de_raw="CINNAMON"
+	elif [ "$check_de_raw" == "budgie-desktop" ]; then local check_de_raw="BUDGIE"
+	elif [ "$check_de_raw" == "Budgie" ];         then local check_de_raw="BUDGIE"
+	elif [ "$check_de_raw" == "openbox" ];        then local check_de_raw="OPENBOX"
+	elif [ "$check_de_raw" == "sway" ];           then local check_de_raw="SWAY"
+	else local check_de_err="1"; fi
 	
-	if [ "$check_system_de_raw" == "xfce" ];    then local check_system_de_raw="XFCE"; fi
-	if [ "$check_system_de_raw" == "xubuntu" ]; then local check_system_de_raw="XFCE"; fi
-	
-	if [ "$check_system_de_raw" == "lxde" ];   then local check_system_de_raw="LXDE"; fi
-	if [ "$check_system_de_raw" == "mate" ];   then local check_system_de_raw="MATE"; fi
-	if [ "$check_system_de_raw" == "ubuntu" ]; then local check_system_de_raw="GNOME"; fi
-	
-	if [ "$check_system_de_raw" == "lxqt" ];    then local check_system_de_raw="LXQT"; fi
-	if [ "$check_system_de_raw" == "LXQt" ];    then local check_system_de_raw="LXQT"; fi
-	if [ "$check_system_de_raw" == "Lubuntu" ]; then local check_system_de_raw="LXQT"; fi
-	
-	if [ "$check_system_de_raw" == "cinnamon" ];   then local check_system_de_raw="CINNAMON"; fi
-	if [ "$check_system_de_raw" == "X-Cinnamon" ]; then local check_system_de_raw="CINNAMON"; fi
-	
-	if [ "$check_system_de_raw" == "budgie-desktop" ]; then local check_system_de_raw="BUDGIE"; fi
-	if [ "$check_system_de_raw" == "Budgie" ];         then local check_system_de_raw="BUDGIE"; fi
-	
-	if [ "$check_system_de_raw" == "openbox" ]; then local check_system_de_raw="OPENBOX"; fi
-	if [ "$check_system_de_raw" == "sway" ];    then local check_system_de_raw="SWAY"; fi
+	if [ "$check_de_err" == "1" ]; then
+		_WARNING "DE Check" "The distribution did not provide correct information via the \"XDG\" variables..."
+		
+		if xfce4-session --version &>/dev/null;    then local check_de_raw="XFCE"
+		elif plasmashell --version &>/dev/null;    then local check_de_raw="KDE"
+		elif plasma-desktop --version &>/dev/null; then local check_de_raw="KDE"
+		elif gnome-shell --version &>/dev/null;    then local check_de_raw="GNOME"
+		fi
+fi
 	
 	# Extra checks
-	if [ "$check_system_de_raw" == "OPENBOX" ]; then _WARNING "Weird DE (Openbox)" "This DE may not follow XDG specifications!\n    The installer is not designed to work with the specific structure of the OpenBox menu."; fi
-	if [ "$check_system_de_raw" == "SWAY" ];    then _WARNING "Weird DE (Sway)" "What the hell..."; fi
-	if [ "$check_system_de_raw" == "LXQT" ];    then _WARNING "Weird DE (LXQt)" "Re-login to the system if new shortcuts do not appear in the menu!"; fi
-	if [ "$check_system_de_raw" == "BUDGIE" ];  then _WARNING "Weird DE (Budgie)" "New shortcuts may not appear in the menu..."; fi
-	if [ "$check_system_de_raw" == "GNOME" ];   then _WARNING "Weird DE (GNOME)" "The menu doesn't match XDG specifications very well..."; fi
+	if [ "$check_de_raw" == "OPENBOX" ]; then _WARNING "Weird DE (Openbox)" "This DE may not follow XDG specifications!\n    The installer is not designed to work with the specific structure of the OpenBox menu."; fi
+	if [ "$check_de_raw" == "SWAY" ];    then _WARNING "Weird DE (Sway)" "What the hell..."; fi
+	if [ "$check_de_raw" == "LXQT" ];    then _WARNING "Weird DE (LXQt)" "Re-login to the system if new shortcuts do not appear in the menu!"; fi
+	if [ "$check_de_raw" == "BUDGIE" ];  then _WARNING "Weird DE (Budgie)" "New shortcuts may not appear in the menu..."; fi
+	if [ "$check_de_raw" == "GNOME" ];   then _WARNING "Weird DE (GNOME)" "The menu doesn't match XDG specifications very well...\n    Re-login to the system if new shortcuts do not appear in the menu!"; fi
 	
-	if [ "$check_system_de_raw" == "" ];   then
-		_WARNING "Weird DE info" "The system does not specify the name of the current working environment..."
-		local check_system_de_raw="NOTSPECIFIED"
-		if xfce4-session --version; then local check_system_de_raw="XFCE"
-		elif plasmashell --version; then local check_system_de_raw="KDE"
-		elif gnome-shell --version; then local check_system_de_raw="GNOME"
-		fi
-	fi
 	
-	Current_DE="$check_system_de_raw"
+	Current_DE="$check_de_raw"
 }
 
 function _CHECK_SYSTEM() {
