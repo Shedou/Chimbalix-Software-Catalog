@@ -89,7 +89,7 @@ fi
 Menu_Directory_Name="Example Application 2.0"   #=> MENU_DIRECTORY_NAME
 Menu_Directory_Icon="icon.png"                  #=> MENU_DIRECTORY_ICON
 
-Program_Executable_File="program/example-application"   #=> PROGRAM_EXECUTABLE_FILE
+Program_Executable_File="example-application"           #=> PROGRAM_EXECUTABLE_FILE
 Program_Name_In_Menu="Example Application 2.0"          #=> PROGRAM_NAME_IN_MENU
 Program_Icon_In_Menu="icon.png"                         #=> PROGRAM_ICON_IN_MENU
 Program_Exe_Run_In_Terminal="true"                      #=> PROGRAM_EXE_RUN_IN_TERMINAL
