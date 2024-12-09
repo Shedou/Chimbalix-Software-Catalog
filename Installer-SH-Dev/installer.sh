@@ -37,7 +37,7 @@ function _INSTALLER_SETTINGS() {
 	Install_User_Data=false       # Copy other data to the user's home directory: "true" / "false". Do not use this function unless necessary!
 	Install_Helpers=false         # XFCE Only! Adds "Default Applications" associations, please prepare files in "installer-data/system_files/helpers/" before using.
 	
-	Debug_Test_Colors=true        # Test colors (for debugging purposes)
+	Debug_Test_Colors=false       # Test colors (for debugging purposes)
 	Font_Styles_RGB=false         # Disabled for compatibility with older distributions, can be enabled manually.
 }
 
@@ -1283,7 +1283,7 @@ function _SET_LOCALE() {
 	if [ $MODE_SILENT == true ]; then Locale_Display="-silent"
 	else
 		if [ -e "$Locale_File" ]; then
-			if [ $(grep Locale_Version "$Locale_File") == 'Locale_Version="1.9"' ]; then
+			if [ $(grep Locale_Version "$Locale_File") == 'Locale_Version="2.0"' ]; then
 				Locale_Use_Default=false
 				Locale_Display="$Language"
 				source "$Locale_File"
