@@ -30,7 +30,7 @@ Font_Cyan='\e[38;5;51m'; Font_Cyan_BG='\e[48;5;51m'
 ## ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ##
 
 Current_DE="$XDG_SESSION_DESKTOP"
-Header="${F_Red}${Font_Bold} -=: Software Uninstaller Script (Installer-SH) :=-${Font_Reset}${Font_Reset_Color}\n"
+Header="${Font_Red}${Font_Bold} -=: Software Uninstaller Script (Installer-SH) :=-${Font_Reset}${Font_Reset_Color}\n"
 printf '\033[8;30;110t' # Resize terminal Window
 
 # Welcome message
@@ -47,7 +47,7 @@ function _remove {
 			if rm -rf "$file"; then
 				echo -ne " - ok.\n"
 			else
-				echo -ne "\n ${F_Yellow}${Font_Bold}Need root rights... Try with sudo.${Font_Reset}${Font_Reset_Color}\n"
+				echo -ne "\n ${Font_Yellow}${Font_Bold}Need root rights... Try with sudo.${Font_Reset}${Font_Reset_Color}\n"
 				if sudo rm -rf "$file"; then if_sudo=true; fi
 			fi
 		else 
@@ -64,7 +64,7 @@ FilesToDelete=(
 
 # Display info and wait confirmation
 echo -e "\
- ${Font_Bold}${F_Yellow}Attention!${Font_Reset_Color}${Font_Reset} Make sure that you do not have any important data in the program directory!
+ ${Font_Bold}${Font_Yellow}Attention!${Font_Reset_Color}${Font_Reset} Make sure that you do not have any important data in the program directory!
  
  ${Font_Bold}The listed files and directories will be deleted if they are present in the system!${Font_Reset}"
 
@@ -79,7 +79,7 @@ read Confirm
 if [ "$Confirm" == "y" ] || [ "$Confirm" == "yes" ]; then
 	for i in "${!FilesToDelete[@]}"; do _remove "${FilesToDelete[$i]}"; done
 	if [ "$Current_DE" == "xfce" ]; then xfce4-panel -r &> /dev/null; fi
-	echo -e "\n ${Font_Bold}${F_Green}Uninstallation completed.${Font_Reset_Color}${Font_Reset}\n"
+	echo -e "\n ${Font_Bold}${Font_Green}Uninstallation completed.${Font_Reset_Color}${Font_Reset}\n"
 fi
 
 echo " Press Enter to exit or close this window."
