@@ -9,6 +9,7 @@ function _MAIN() {
 	_INIT_GLOBAL_VARIABLES
 	_INSTALLER_SETTINGS
 	_CHECK_SYSTEM
+	_INIT_FONT_STYLES
 	_SET_LOCALE
 	_PACKAGE_SETTINGS
 	_INIT_GLOBAL_PATHS
@@ -36,6 +37,7 @@ function _INSTALLER_SETTINGS() {
 	Install_Helpers=false         # XFCE Only! Adds "Default Applications" associations, please prepare files in "installer-data/system_files/helpers/" before using.
 	
 	Debug_Test_Colors=true        # Test colors (for debugging purposes)
+	Font_Styles_Fallback=false    # For compatibility with older distributions, it is enabled automatically when needed, but can be enabled manually.
 }
 
 function _PACKAGE_SETTINGS() {
@@ -133,17 +135,7 @@ function _TEST_COLORS() {
  ${Font_Black}${Font_Red_BG} Red_BG  ${Font_Green_BG} Green_BG  ${Font_Yellow_BG} Yellow_BG  ${Font_Blue_BG} Blue_BG  ${Font_Magenta_BG} Magenta_BG  ${Font_Cyan_BG} Cyan_BG  ${Font_BG_Reset}${Font_Color_Reset}"
 }
 
-######### ---------------- #########
-######### ---------------- #########
-######### ---------------- #########
-######### ---------------- #########
-######### Global variables #########
-
-function _INIT_GLOBAL_VARIABLES() {
-	### --------------------------- ###
-	### Do not edit variables here! ###
-	### --------------------------- ###
-	
+function _INIT_FONT_STYLES() {
 	### Font styles: "${Font_Bold} BLACK TEXT ${Font_Reset} normal text."
 	# '\e[38;2;128;128;255m'
 	#     fg m  R   G   B
@@ -159,40 +151,59 @@ function _INIT_GLOBAL_VARIABLES() {
 	Font_Color_Reset='\e[38;5;255m'
 	Font_BG_Reset='\e[48;5;16m'
 	
-	Font_Black='\e[38;5;233m'
-	Font_Black_BG='\e[48;5;233m'
-	Font_DarkGray='\e[38;5;240m'
-	Font_DarkGray_BG='\e[48;5;240m'
-	Font_Gray='\e[38;5;248m'
-	Font_Gray_BG='\e[48;5;248m'
-	Font_White='\e[38;5;255m'
-	Font_White_BG='\e[48;5;255m'
+	Font_Black='\e[38;5;233m'; Font_Black_BG='\e[48;5;233m'
+	Font_DarkGray='\e[38;5;240m'; Font_DarkGray_BG='\e[48;5;240m'
+	Font_Gray='\e[38;5;248m'; Font_Gray_BG='\e[48;5;248m'
+	Font_White='\e[38;5;255m'; Font_White_BG='\e[48;5;255m'
 	
-	Font_DarkRed='\e[38;2;200;0;0m'
-	Font_DarkRed_BG='\e[48;2;200;0;0m'
-	Font_DarkGreen='\e[38;2;0;180;0m'
-	Font_DarkGreen_BG='\e[48;2;0;180;0m'
-	Font_DarkYellow='\e[38;2;180;146;0m'
-	Font_DarkYellow_BG='\e[48;2;180;146;0m'
-	Font_DarkBlue='\e[38;2;96;96;200m'
-	Font_DarkBlue_BG='\e[48;2;96;96;200m'
-	Font_DarkMagenta='\e[38;2;200;0;200m'
-	Font_DarkMagenta_BG='\e[48;2;200;0;200m'
-	Font_DarkCyan='\e[38;2;40;180;160m'
-	Font_DarkCyan_BG='\e[48;2;40;180;160m'
+	if [ "$Font_Styles_Fallback" == false ]; then
+		Font_DarkRed='\e[38;2;200;0;0m'; Font_DarkRed_BG='\e[48;2;200;0;0m'
+		Font_DarkGreen='\e[38;2;0;180;0m'; Font_DarkGreen_BG='\e[48;2;0;180;0m'
+		Font_DarkYellow='\e[38;2;180;146;0m'; Font_DarkYellow_BG='\e[48;2;180;146;0m'
+		Font_DarkBlue='\e[38;2;96;96;200m'; Font_DarkBlue_BG='\e[48;2;96;96;200m'
+		Font_DarkMagenta='\e[38;2;200;0;200m'; Font_DarkMagenta_BG='\e[48;2;200;0;200m'
+		Font_DarkCyan='\e[38;2;40;180;160m'; Font_DarkCyan_BG='\e[48;2;40;180;160m'
+		
+		Font_Red='\e[38;2;255;96;96m'; Font_Red_BG='\e[48;2;255;96;96m'
+		Font_Green='\e[38;2;128;255;128m'; Font_Green_BG='\e[48;2;128;255;128m'
+		Font_Yellow='\e[38;2;245;245;0m'; Font_Yellow_BG='\e[48;2;245;245;0m'
+		Font_Blue='\e[38;2;128;128;255m'; Font_Blue_BG='\e[48;2;128;128;255m'
+		Font_Magenta='\e[38;2;255;48;255m'; Font_Magenta_BG='\e[48;2;255;48;255m'
+		Font_Cyan='\e[38;2;90;255;240m'; Font_Cyan_BG='\e[48;2;90;255;240m'
+	else # For compatibility with older distributions...
+		Font_DarkRed='\e[38;2;200;0;0m'; Font_DarkRed_BG='\e[48;2;200;0;0m'
+		Font_DarkGreen='\e[38;2;0;180;0m'; Font_DarkGreen_BG='\e[48;2;0;180;0m'
+		Font_DarkYellow='\e[38;2;180;146;0m'; Font_DarkYellow_BG='\e[48;2;180;146;0m'
+		Font_DarkBlue='\e[38;2;96;96;200m'; Font_DarkBlue_BG='\e[48;2;96;96;200m'
+		Font_DarkMagenta='\e[38;2;200;0;200m'; Font_DarkMagenta_BG='\e[48;2;200;0;200m'
+		Font_DarkCyan='\e[38;2;40;180;160m'; Font_DarkCyan_BG='\e[48;2;40;180;160m'
+		
+		Font_Red='\e[38;2;255;96;96m'; Font_Red_BG='\e[48;2;255;96;96m'
+		Font_Green='\e[38;2;128;255;128m'; Font_Green_BG='\e[48;2;128;255;128m'
+		Font_Yellow='\e[38;2;245;245;0m'; Font_Yellow_BG='\e[48;2;245;245;0m'
+		Font_Blue='\e[38;2;128;128;255m'; Font_Blue_BG='\e[48;2;128;128;255m'
+		Font_Magenta='\e[38;2;255;48;255m'; Font_Magenta_BG='\e[48;2;255;48;255m'
+		Font_Cyan='\e[38;2;90;255;240m'; Font_Cyan_BG='\e[48;2;90;255;240m'
+	fi
+}
+
+######### ---------------- #########
+######### ---------------- #########
+######### ---------------- #########
+######### ---------------- #########
+######### Global variables #########
+
+function _INIT_GLOBAL_VARIABLES() {
+	### --------------------------- ###
+	### Do not edit variables here! ###
+	### --------------------------- ###
 	
-	Font_Red='\e[38;2;255;96;96m'
-	Font_Red_BG='\e[48;2;255;96;96m'
-	Font_Green='\e[38;2;128;255;128m'
-	Font_Green_BG='\e[48;2;128;255;128m'
-	Font_Yellow='\e[38;2;245;245;0m'
-	Font_Yellow_BG='\e[48;2;245;245;0m'
-	Font_Blue='\e[38;2;128;128;255m'
-	Font_Blue_BG='\e[48;2;128;128;255m'
-	Font_Magenta='\e[38;2;255;48;255m'
-	Font_Magenta_BG='\e[48;2;255;48;255m'
-	Font_Cyan='\e[38;2;90;255;240m'
-	Font_Cyan_BG='\e[48;2;90;255;240m'
+	Font_Bold=""; Font_Dim=""; Font_Reset=""; Font_Color_Reset=''; Font_BG_Reset=''
+	Font_Black=''; Font_Black_BG=''; Font_DarkGray=''; Font_DarkGray_BG=''; Font_Gray=''; Font_Gray_BG=''; Font_White=''; Font_White_BG=''
+	Font_DarkRed=''; Font_DarkRed_BG=''; Font_DarkGreen=''; Font_DarkGreen_BG=''; Font_DarkYellow=''; Font_DarkYellow_BG=''; Font_DarkBlue=''; Font_DarkBlue_BG=''
+	Font_DarkMagenta=''; Font_DarkMagenta_BG=''; Font_DarkCyan=''; Font_DarkCyan_BG=''
+	Font_Red=''; Font_Red_BG=''; Font_Green=''; Font_Green_BG=''; Font_Yellow=''; Font_Yellow_BG=''; Font_Blue=''; Font_Blue_BG=''
+	Font_Magenta=''; Font_Magenta_BG=''; Font_Cyan=''; Font_Cyan_BG=''
 	
 	all_ok=true
 	Locale_Use_Default=true # don't change!
