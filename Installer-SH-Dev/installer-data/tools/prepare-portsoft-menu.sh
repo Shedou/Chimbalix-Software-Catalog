@@ -105,7 +105,7 @@ function _BASE_PREPARE_FILES() {
 	if ! [[ -x "$Tool_SevenZip_bin" ]]; then chmod +x "$Tool_SevenZip_bin"; fi
 	
 	if ! "$Tool_SevenZip_bin" x "$Archive_Base_Data" -o"$Base_Temp_Dir/" &> /dev/null; then
-		_ABORT "$Str_PREPAREINPUTFILES_Err_Unpack (_PREPARE_INPUT_FILES). $Str_PREPAREINPUTFILES_Err_Unpack2"
+		_ABORT "$Str_PREPAREINPUTFILES_Err_Unpack (_BASE_PREPARE_FILES). $Str_PREPAREINPUTFILES_Err_Unpack2"
 	fi
 	
 	_BASE_PREPARE_INPUT_FILES_GREP "BASE_PATH_TO_SHARE_DDIR" "$Output_Menu_DDir"
