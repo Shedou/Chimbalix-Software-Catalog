@@ -9,9 +9,10 @@ function _MAIN() {
 	_INIT_GLOBAL_VARIABLES
 	_INSTALLER_SETTINGS
 	_CHECK_SYSTEM
+	_SET_LOCALE
+	_CHECK_SYSTEM_DE
 	_INIT_FONT_STYLES
 	_CLEAR_BACKGROUND # Double Clear Crutch for Old GNOME...
-	_SET_LOCALE
 	_PACKAGE_SETTINGS
 	_INIT_GLOBAL_PATHS
 	_CECK_EXECUTE_RIGHTS
@@ -224,14 +225,6 @@ function _INIT_GLOBAL_VARIABLES() {
 	Path_To_Script="$( dirname "$(readlink -f "$0")")"
 	Path_Installer_Data="$Path_To_Script/installer-data"
 	
-	if [ "$Tools_Architecture" == "x86" ]; then
-		Tool_SevenZip_bin="$Path_Installer_Data/tools/7zip/7zzs-x86"
-	else
-		Tool_SevenZip_bin="$Path_Installer_Data/tools/7zip/7zzs"; fi
-	
-	Tool_Gio_Trust_Xfce="$Path_Installer_Data/tools/gio-trust-xfce.sh"
-	Tool_Prepare_Base="$Path_Installer_Data/tools/prepare-portsoft-menu.sh"
-	
 	List_Errors=""    # _ERROR "Title" "Message."
 	List_Warnings=""  # _WARNING "Title" "Message."
 	
@@ -248,6 +241,15 @@ function _INIT_GLOBAL_PATHS() {
 	### --------------------------- ###
 	### Do not edit variables here! ###
 	### --------------------------- ###
+	
+	if [ "$Tools_Architecture" == "x86" ]; then
+		Tool_SevenZip_bin="$Path_Installer_Data/tools/7zip/7zzs-x86"
+	else
+		Tool_SevenZip_bin="$Path_Installer_Data/tools/7zip/7zzs"
+	fi
+	
+	Tool_Gio_Trust_Xfce="$Path_Installer_Data/tools/gio-trust-xfce.sh"
+	Tool_Prepare_Base="$Path_Installer_Data/tools/prepare-portsoft-menu.sh"
 	
 	Archive_Program_Files="$Path_Installer_Data/program_files.7z"
 	Archive_System_Files="$Path_Installer_Data/system_files.7z"
@@ -495,9 +497,6 @@ function _CHECK_SYSTEM() {
 	_CHECK_SYSTEM_VERSION
 	
 	Current_Architecture="$(uname -m)"
-	
-	# Check DE
-	_CHECK_SYSTEM_DE
 	
 	# Normalize Arch
 	if [ "$Current_Architecture" == "i686" ]; then Current_Architecture="x86"; fi
