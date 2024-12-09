@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
-# Script version 1.7
+# Script version 2.0
 # LICENSE for this script is at the end of this file
 ## ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ##
 ## ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ----------------------- ##
-Path_To_Script="$( dirname "$(readlink -f "$0")")" # Current installer script directory.
-User_Dir=~ # Current User home directory.
-arg1="$1"
+Path_To_Script="$( dirname "$(readlink -f "$0")")" # Current script directory.
+
 # Font styles: "${Font_Bold} BLACK TEXT ${Font_Reset} normal text."
 Font_Bold="\e[1m"
 Font_Reset="\e[22m"
@@ -33,8 +32,15 @@ Current_DE="$XDG_SESSION_DESKTOP"
 Header="${Font_Red}${Font_Bold} -=: Software Uninstaller Script (Installer-SH) :=-${Font_Reset}${Font_Reset_Color}\n"
 printf '\033[8;30;110t' # Resize terminal Window
 
+function _CLEAR_BACKGROUND() {
+	clear; clear
+	echo -ne '\e]11;black\e\\'; echo -ne '\e]10;white\e\\'
+	echo -ne '\e[48;5;232m';    echo -ne '\e[38;5;255m' # Crutch for GNOME...
+}
+
 # Welcome message
-clear
+_CLEAR_BACKGROUND
+_CLEAR_BACKGROUND
 echo -e "$Header"
 
 if_sudo=false
