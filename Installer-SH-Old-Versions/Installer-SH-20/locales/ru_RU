@@ -11,9 +11,9 @@ Info_Description="\
      - Хранит установочные файлы в архиве 7-zip (хорошее сжатие и быстрая распаковка).
   2) Проверьте текущий файл \"installer.sh\", чтобы настроить установочный пакет."
 
-Str_ERROR="${Bold}${F_Red}ОШИБКА${F}${rBD}"
-Str_ATTENTION="${Bold}${F_Yellow}ВНИМАНИЕ${F}${rBD}"
-Str_WARNING="${Bold}${F_Yellow}ПРЕДУПРЕЖДЕНИЕ${F}${rBD}"
+Str_ERROR="${Font_Bold}${Font_Red}ОШИБКА${Font_Reset_Color}${Font_Reset}"
+Str_ATTENTION="${Font_Bold}${Font_Yellow}ВНИМАНИЕ${Font_Reset_Color}${Font_Reset}"
+Str_WARNING="${Font_Bold}${Font_Yellow}ПРЕДУПРЕЖДЕНИЕ${Font_Reset_Color}${Font_Reset}"
 
 Str_Interrupted_By_User="Прервано пользователем"
 Str_Complete_Install="Процесс установки успешно завершен."
