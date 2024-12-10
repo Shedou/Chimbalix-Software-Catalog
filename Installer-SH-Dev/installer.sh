@@ -36,8 +36,17 @@ function _INSTALLER_SETTINGS() {
 	
 	Install_Mode="User"           # "System" / "User", In "User" mode, root rights are not required.
 	Install_Desktop_Icons=true    # Place icons on the desktop (only for current user).
-	Install_User_Data=false       # Copy other data to the user's home directory: "true" / "false". Do not use this function unless necessary!
 	Install_Helpers=false         # XFCE Only! Adds "Default Applications" associations, please prepare files in "installer-data/system_files/helpers/" before using.
+	
+	# Copy data to the "userdata" directory.
+	#  For example:
+	#   Install path:  /home/USER/.local/portsoft/script/example-application-20
+	#   UserData path: /home/USER/.local/portsoft/script/example-application-20/userdata
+	#
+	# This can help avoid application version conflicts, but requires special preparation.
+	# Do not use for applications installed in "System" mode!
+	# Please see the example before using this function - "installer-data/program_files/run-force-userdata.sh", and configure the system files accordingly.
+	Install_User_Data=true
 	
 	Debug_Test_Colors=false       # Test colors (for debugging purposes)
 	Font_Styles_RGB=false         # Disabled for compatibility with older distributions, can be enabled manually.
@@ -113,7 +122,7 @@ Additional_Categories="chi-other;Utility;Education;" #=> ADDITIONAL_CATEGORIES
  # Archives MD5 Hash
 Archive_MD5_Program_Files_Hash=""
 Archive_MD5_System_Files_Hash=""
-Archive_MD5_User_Files_Hash="" # Not used if "Install_User_Data=false"
+Archive_MD5_User_Data_Hash="" # Not used if "Install_User_Data=false"
 
  # Header
 Header="${Font_DarkYellow}${Font_Bold} -=: Universal Software Installer Script for Chimbalix (Installer-SH v2.0) - Lang: $Locale_Display :=-${Font_Reset}${Font_Reset_Color}\n"
@@ -253,9 +262,9 @@ function _INIT_GLOBAL_PATHS() {
 	
 	Archive_Program_Files="$Path_Installer_Data/program_files.7z"
 	Archive_System_Files="$Path_Installer_Data/system_files.7z"
-	Archive_User_Files="$Path_Installer_Data/user_files.7z"
-	if [ ! -e "$Archive_User_Files" ] && [ $Install_User_Data == true ]; then
-		Install_User_Data=false; _WARNING "_INIT_GLOBAL_PATHS" "Archive_User_Files not found, Install_User_Data is disabled.\n   Please correct the settings according to the application."; fi # Extra check
+	Archive_User_Data="$Path_Installer_Data/user_files.7z"
+	if [ ! -e "$Archive_User_Data" ] && [ $Install_User_Data == true ]; then
+		Install_User_Data=false; _WARNING "_INIT_GLOBAL_PATHS" "Archive_User_Data not found, Install_User_Data is disabled.\n   Please correct the settings according to the application."; fi # Extra check
 	
 	# Application installation directory.
 	Out_PortSoft_System="/portsoft"
@@ -293,7 +302,7 @@ function _INIT_GLOBAL_PATHS() {
 	
 	# The "PATH_TO_FOLDER" variable points to the application installation directory without the trailing slash (Output_Install_Dir), for example "/portsoft/x86_64/example_application".
 	Output_Install_Dir="/tmp/ish"; Output_Bin_Dir="/tmp/ish"; Output_Helpers_Dir="/tmp/ish"; Output_Desktop_Dir="$Out_User_Desktop_Dir"
-	Output_Menu_Files="/tmp/ish"; Output_Menu_DDir="/tmp/ish"; Output_Menu_Apps="/tmp/ish"; Output_User_Home="$User_Home"
+	Output_Menu_Files="/tmp/ish"; Output_Menu_DDir="/tmp/ish"; Output_Menu_Apps="/tmp/ish"; Output_User_Data="$Out_Install_Dir_User/userdata"
 	Output_PortSoft="/tmp/ish"
 	
 	if [ "$Install_Mode" == "System" ]; then
@@ -595,8 +604,8 @@ function _CHECK_MD5_COMPARE() {
 	if [ "$MD5_System_Files_Hash" != "$Archive_MD5_System_Files_Hash" ]; then MD5_SystemFiles_Error=true; fi
 	
 	if [ $Install_User_Data == true ]; then
-		MD5_User_Files_Hash=`md5sum "$Archive_User_Files" | awk '{print $1}'`
-		if [ "$MD5_User_Files_Hash" != "$Archive_MD5_User_Files_Hash" ]; then MD5_UserFiles_Error=false; fi
+		MD5_User_Data_Hash=`md5sum "$Archive_User_Data" | awk '{print $1}'`
+		if [ "$MD5_User_Data_Hash" != "$Archive_MD5_User_Data_Hash" ]; then MD5_UserFiles_Error=true; fi
 	fi
 	
 	if [ $MD5_ProgramFiles_Error == true ] || [ $MD5_SystemFiles_Error == true ] || [ $MD5_UserFiles_Error == true ]; then MD5_Warning=true; fi
@@ -626,8 +635,8 @@ $Header
 		if [ $MD5_UserFiles_Error == true ]; then
 			echo -e "\
 
-   ${Font_Bold}$Str_CHECKMD5PRINT_Expected_uHash${Font_Reset} \"$Archive_MD5_User_Files_Hash\"
-   ${Font_Bold}$Str_CHECKMD5PRINT_Real_uHash${Font_Reset}     \"$MD5_User_Files_Hash\""; fi
+   ${Font_Bold}$Str_CHECKMD5PRINT_Expected_uHash${Font_Reset} \"$Archive_MD5_User_Data_Hash\"
+   ${Font_Bold}$Str_CHECKMD5PRINT_Real_uHash${Font_Reset}     \"$MD5_User_Data_Hash\""; fi
 		echo -e "\n  $Str_CHECKMD5PRINT_yes_To_Continue"
 		read errors_confirm
     	if [ "$errors_confirm" == "y" ] || [ "$errors_confirm" == "yes" ]; then all_ok=true
@@ -639,7 +648,7 @@ $Header
    ${Font_Bold}$Str_CHECKMD5PRINT_Real_pHash${Font_Reset}  \"$MD5_Program_Files_Hash\"
    ${Font_Bold}$Str_CHECKMD5PRINT_Real_sHash${Font_Reset}   \"$MD5_System_Files_Hash\""
 		if [ $Install_User_Data == true ]; then echo -e "\
-   ${Font_Bold}$Str_CHECKMD5PRINT_Real_uHash${Font_Reset}     \"$MD5_User_Files_Hash\""; fi
+   ${Font_Bold}$Str_CHECKMD5PRINT_Real_uHash${Font_Reset}     \"$MD5_User_Data_Hash\""; fi
 		echo -e "${Font_Reset_Color}
   ${Font_Bold}$Str_CHECKMD5PRINT_Enter_To_Continue${Font_Reset}"
 		read pause
@@ -709,9 +718,10 @@ $Header
 
 		if [ $Install_User_Data == true ]; then
 			echo -e "
- -$Str_ATTENTION! ${Font_Bold}${Font_Green}$Str_PRINTINSTALLSETTINGS_Copy_uData_To${Font_Reset_Color}${Font_Reset} $Output_User_Home
-   $Str_PRINTINSTALLSETTINGS_Copy_uData_To2
-   $Str_PRINTINSTALLSETTINGS_Copy_uData_To3
+ -$Str_ATTENTION! ${Font_Bold}${Font_Green}$Str_PRINTINSTALLSETTINGS_Copy_uData_To${Font_Reset_Color}${Font_Reset}
+   $Output_User_Data
+    $Str_PRINTINSTALLSETTINGS_Copy_uData_To2
+    $Str_PRINTINSTALLSETTINGS_Copy_uData_To3
     $Str_PRINTINSTALLSETTINGS_Copy_uData_To4"; fi
 	
 		if [ "$Install_Mode" == "System" ]; then
@@ -744,11 +754,11 @@ _CECK_EXECUTE_RIGHTS() {
 		if ! chmod +x "$Tool_SevenZip_bin"; then _ABORT "chmod Tool_SevenZip_bin error."; fi
 	fi
 	
-	if [ $Current_DE == "XFCE" ]; then
-		if ! [[ -x "$Tool_Gio_Trust_Xfce" ]]; then
-			if ! chmod +x "$Tool_Gio_Trust_Xfce"; then _ABORT "chmod Tool_Gio_Trust_Xfce error."; fi
-		fi
-	fi
+	#if [ $Current_DE == "XFCE" ]; then
+	#	if ! [[ -x "$Tool_Gio_Trust_Xfce" ]]; then
+	#		if ! chmod +x "$Tool_Gio_Trust_Xfce"; then _ABORT "chmod Tool_Gio_Trust_Xfce error."; fi
+	#	fi
+	#fi
 }
 
 ######### Check execute rights #########
@@ -879,7 +889,9 @@ function _INSTALL_USER_DATA() {
 	if [ $Install_User_Data == true ]; then
 		if [ $MODE_SILENT == false ]; then echo " $Str_INSTALLAPP_Copy_uFiles"; fi
 		
-		if ! "$Tool_SevenZip_bin" x -aoa "$Archive_User_Files" -o"$Output_User_Home/" &> /dev/null; then
+		if [ ! -e "$Output_User_Data" ]; then mkdir -p "$Output_User_Data"; fi
+		
+		if ! "$Tool_SevenZip_bin" x -aoa "$Archive_User_Data" -o"$Output_User_Data/" &> /dev/null; then
 			_ERROR "_INSTALL_USER_DATA" "$Str_INSTALLAPP_Copy_uFiles_Err"; fi
 	fi
 	if [ $MODE_DEBUG == true ]; then echo "_INSTALL_APP - all_ok = $all_ok"; read pause; fi
@@ -936,8 +948,9 @@ function _INSTALL_DESKTOP_ICONS() {
 		cp -rf "$Input_Desktop_Dir/." "$Output_Desktop_Dir"
 		
 		# Trust Desktop files
-		if [ "$Current_DE" == "XFCE" ]; then
-			_INSTALL_DESKTOP_ICONS_TRUST_XFCE; fi
+		#if [ "$Current_DE" == "XFCE" ]; then
+		#	_INSTALL_DESKTOP_ICONS_TRUST_XFCE; fi
+		
 	else _ERROR "_INSTALL_DESKTOP_ICONS" "Input_Desktop_Dir not found."; fi
 }
 
@@ -1056,7 +1069,10 @@ $Header
 			_INSTALL_DESKTOP_ICONS; fi
 		
 		# Copy user data
-		if [ $Install_User_Data == true ]; then _INSTALL_USER_DATA; fi
+		if [ $Install_User_Data == true ]; then
+			_WARNING "Install_User_Data" "In \"System\" mode this does not work!"
+			#_INSTALL_USER_DATA
+		fi
 		
 		all_ok=true
 		
@@ -1256,9 +1272,9 @@ function _SET_LOCALE_DEFAULT() {
 	Str_PRINTINSTALLSETTINGS_Menu_Dirs="Menu files will be installed to:"
 	Str_PRINTINSTALLSETTINGS_Bin_Dir="Bin files will be installed to:"
 	Str_PRINTINSTALLSETTINGS_Copy_uData_To="User data will be installed in:"
-	Str_PRINTINSTALLSETTINGS_Copy_uData_To2="This feature is not recommended to use, but some applications require it, so be careful."
-	Str_PRINTINSTALLSETTINGS_Copy_uData_To3="To disable this feature, change the variable \"Install_User_Data=false\"."
-	Str_PRINTINSTALLSETTINGS_Copy_uData_To4="(if the function is required, disabling it may break the program)"
+	Str_PRINTINSTALLSETTINGS_Copy_uData_To2="This is an experimental feature."
+	Str_PRINTINSTALLSETTINGS_Copy_uData_To3="This avoids conflicts between different versions of the application."
+	Str_PRINTINSTALLSETTINGS_Copy_uData_To4="This is not intended for applications that are installed in system mode."
 	Str_PRINTINSTALLSETTINGS_System_Mode="Use \"System\" mode only when installing software for all users!"
 	Str_PRINTINSTALLSETTINGS_System_Mode2="Root rights are required to perform the installation!"
 	Str_PRINTINSTALLSETTINGS_Before_Install="Please close all important applications before installation."
