@@ -12,7 +12,7 @@ Name=PROGRAM_NAME_IN_MENU - Force userdata!
 Comment=This is the second shortcut from the example, it is partly prepared manually.
 GenericName=
 
-Icon=PATH_TO_FOLDER/second-PROGRAM_ICON_IN_MENU
+Icon=PATH_TO_FOLDER/run-force-userdata-icon.png
 Exec=PATH_TO_FOLDER/run-force-userdata.sh 'Forced userdata folder!'
 TryExec=PATH_TO_FOLDER/run-force-userdata.sh
 Path=PATH_TO_FOLDER/program

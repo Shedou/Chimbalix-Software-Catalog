@@ -12,10 +12,10 @@ Name=PROGRAM_NAME_IN_MENU - Open userdata Folder!
 Comment=This is the second shortcut from the example, it is partly prepared manually.
 GenericName=
 
-Icon=PATH_TO_FOLDER/second-PROGRAM_ICON_IN_MENU
+Icon=PATH_TO_FOLDER/open-userdata-folder-icon.png
 Exec=PATH_TO_FOLDER/open-userdata-folder.sh
 TryExec=PATH_TO_FOLDER/open-userdata-folder.sh
-Path=PATH_TO_FOLDER/userdata
+Path=PATH_TO_FOLDER
 #StartupWMClass=
 
 Terminal=PROGRAM_EXE_RUN_IN_TERMINAL
