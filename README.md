@@ -11,6 +11,8 @@ Stable versions of Installer-SH can be found in the Installer-SH-Old-Versions di
 
 ## Universal Software Packages (Chimbalix 24.2+ and other Linux)
 
+[Arduino IDE v2.2.1 - x86_64 - (ISH v2.0)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/arduino221_v2)
+
 [Mozilla Firefox v128.4.0 ESR - x86_64 / x86 - (ISH v1.9)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/firefox12840esr)
 
 [Mozilla Firefox v132.0.2 - x86_64 / x86 - (ISH v1.9)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/firefox13202)
