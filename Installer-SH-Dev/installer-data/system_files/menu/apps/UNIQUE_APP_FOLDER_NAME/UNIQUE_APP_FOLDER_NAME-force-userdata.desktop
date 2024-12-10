@@ -8,8 +8,8 @@ Encoding=UTF-8
 NoDisplay=false
 Hidden=false
 
-Name=PROGRAM_NAME_IN_MENU - Force userdata!
-Comment=This is the second shortcut from the example, it is partly prepared manually.
+Name=PROGRAM_NAME_IN_MENU - Force UserData!
+Comment=
 GenericName=
 
 Icon=PATH_TO_FOLDER/run-force-userdata-icon.png

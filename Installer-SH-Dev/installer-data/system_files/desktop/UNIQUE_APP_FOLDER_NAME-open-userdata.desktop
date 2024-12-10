@@ -8,8 +8,8 @@ Encoding=UTF-8
 NoDisplay=false
 Hidden=false
 
-Name=PROGRAM_NAME_IN_MENU - Open userdata Folder!
-Comment=This is the second shortcut from the example, it is partly prepared manually.
+Name=PROGRAM_NAME_IN_MENU - Open UserData Folder!
+Comment=
 GenericName=
 
 Icon=PATH_TO_FOLDER/open-userdata-folder-icon.png
