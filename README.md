@@ -1,13 +1,12 @@
 # Chimbalix-Software-Catalog [![Github Releases](https://img.shields.io/github/downloads/Shedou/Chimbalix-Software-Catalog/total.svg)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases)
 
+## Installer-SH
+
+Attention! Installer-SH development has been moved to a separate repository [Installer-SH](https://github.com/Shedou/Installer-SH), stable and archive versions have been moved to the repository [Installer-SH-Archive](https://github.com/Shedou/Installer-SH-Archive).
+
 ## Menu:
 - Home
 - [Image Editors - Krita, Inkscape and others...](Image-Editors.md)
-
-## Installer-SH
-The Installer-SH-Dev directory contains the main script and tools (including examples) for preparing standalone installation packages, and is under active development.
-
-Stable versions of Installer-SH can be found in the Installer-SH-Old-Versions directory.
 
 ## Universal Software Packages (Chimbalix 24.2+ and other Linux)
 

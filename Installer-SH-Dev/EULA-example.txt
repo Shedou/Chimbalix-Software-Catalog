@@ -1,3 +1,0 @@
-Do not install the application if you do not agree with the terms!
-
-Example EULA
