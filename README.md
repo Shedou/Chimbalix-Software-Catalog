@@ -10,6 +10,8 @@ Attention! Installer-SH development has been moved to a separate repository [Ins
 
 ## Universal Software Packages (Chimbalix 24.2+ and other Linux)
 
+[GIMP v2.10.25 - x86_64 - (ISH v2.0)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/gimp21025)
+
 [Arduino IDE v2.2.1 - x86_64 - (ISH v2.0)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/arduino221_v2)
 
 [Mozilla Firefox v128.4.0 ESR - x86_64 / x86 - (ISH v1.9)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/firefox12840esr)
