@@ -31,13 +31,13 @@ Attention! Installer-SH development has been moved to a separate repository [Ins
 
 [RawTherapee v5.11 - (ISH v1.5)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/rawtherapee511)
 
+[Apache NetBeans 22 - (ISH v1.5a)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/apache_netbeans22)
+
 [Blender v4.2.0 - (ISH v1.4)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/blender420)
 
 [Blender v3.6.7 - (ISH v1.4)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/blender367)
 
 [kdenlive v24.05.2 - (ISH v1.4)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/kdenlive24052)
-
-[Apache NetBeans 22 - (ISH v1.5a)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/apache_netbeans22)
 
 [Chimbalix Tweaker v1.0a - (ISH v1.4)](https://github.com/Shedou/Chimbalix-Tweaker/releases/tag/ctweaker_v10a)
 
