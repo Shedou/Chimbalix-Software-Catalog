@@ -6,6 +6,8 @@ Attention! Installer-SH development has been moved to a separate repository [Ins
 
 ## Universal Software Packages (Chimbalix 24.2+ and other Linux)
 
+[Stable Diffusion web UI Neuro Linux v3 - (ISH v2.1)](https://github.com/Shedou/Neuro/releases/SD_WEBUI_Linux_v3)
+
 [Blender v4.3.2 - (ISH v2.1)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/blender432)
 
 [GIMP v2.10.25 - x86_64 - (ISH v2.0)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/gimp21025)\
