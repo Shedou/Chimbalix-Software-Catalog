@@ -6,6 +6,8 @@ Attention! Installer-SH development has been moved to a separate repository [Ins
 
 ## Universal Software Packages (Chimbalix 24.2+ and other Linux)
 
+[krita v5.2.9 - x86_64 - (ISH v2.3)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/krita529)
+
 [y-cruncher v0.8.6.9545 - (ISH v2.2)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/ycruncher086)\
 [qBittorrent v5.1.0 - x86_64 - (ISH v2.2)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/qbittorrent510)\
 [Audacity v3.7.3 x64 - 20.04 - (ISH v2.2)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/audacity373)
