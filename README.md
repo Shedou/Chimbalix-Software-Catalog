@@ -4,14 +4,13 @@
 
 Attention! Installer-SH development has been moved to a separate repository [Installer-SH](https://github.com/Shedou/Installer-SH), stable and archive versions have been moved to the repository [Installer-SH-Archive](https://github.com/Shedou/Installer-SH-Archive).
 
-## Universal Software Packages (Chimbalix 24.2+ and other Linux)
+## Universal Software Packages (Chimbalix 24.4+ and other Linux)
 
 [Krita v5.2.9 - x86_64 - (ISH v2.3)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/krita529)
 
 [y-cruncher v0.8.6.9545 - (ISH v2.2)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/ycruncher086)\
 [qBittorrent v5.1.0 - x86_64 - (ISH v2.2)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/qbittorrent510)\
 [Audacity v3.7.3 x64 - 20.04 - (ISH v2.2)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/audacity373)
-
 [0 A.D. v0.27.0 - (ISH v2.2)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/0ad0270)
 
 [Stable Diffusion web UI Neuro Linux v3 - (ISH v2.1)](https://github.com/Shedou/Neuro/releases/SD_WEBUI_Linux_v3)\
