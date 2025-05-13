@@ -6,6 +6,8 @@ Attention! Installer-SH development has been moved to a separate repository [Ins
 
 ## Universal Software Packages (Chimbalix 24.4+ and other Linux)
 
+[Cinelerra GG 25.04.30 - x86_64 - (ISH v2.3)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/cin_gg_250430)\
+[Cinelerra v7.3 / v10 - x86_64 - (ISH v2.3)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/cin73_cin100)\
 [Krita v5.2.9 - x86_64 - (ISH v2.3)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/krita529)
 
 [y-cruncher v0.8.6.9545 - (ISH v2.2)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/ycruncher086)\
