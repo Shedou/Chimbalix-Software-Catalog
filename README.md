@@ -6,6 +6,7 @@ Attention! Installer-SH development has been moved to a separate repository [Ins
 
 ## Universal Software Packages (Chimbalix 24.4+ and other Linux)
 
+[OBS-Studio 31.0.0-308-cl - x86_64 - (ISH v2.4-Dev)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/obs3000_308_cl)\
 [OBS-Studio 31.0.3-2 (archimage 4.3 variant) - x86_64 - (ISH v2.4-Dev)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/obs3103_aim43)
 
 [Cinelerra GG 25.04.30 - x86_64 - (ISH v2.3)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/cin_gg_250430)\
