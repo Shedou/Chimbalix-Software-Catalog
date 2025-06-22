@@ -6,6 +6,8 @@ Attention! Installer-SH development has been moved to a separate repository [Ins
 
 ## Universal Software Packages (Chimbalix 24.4+ and other Linux)
 
+[Kdenlive - 25.04.2 - x86_64 - (ISH v2.4)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/kdenlive25042)
+
 [OBS-Studio 31.0.0-308-cl - x86_64 - (ISH v2.4-Dev)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/obs3000_308_cl)\
 [OBS-Studio 31.0.3-2 (archimage 4.3 variant) - x86_64 - (ISH v2.4-Dev)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/obs3103_aim43)
 
