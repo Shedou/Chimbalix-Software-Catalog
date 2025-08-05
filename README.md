@@ -6,6 +6,8 @@ Attention! Installer-SH development has been moved to a separate repository [Ins
 
 ## Universal Software Packages (Chimbalix 24.4+ and other Linux)
 
+[RawTherapee - 5.4 ... 5.12 - x86_64 - (ISH v2.5D)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/rawtherapee54_512)
+
 [XnView MP - 1.9.2 - Linux - x64 - (ISH v2.4)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/xnviewmp192)\
 [Kdenlive - 16.12.2 ... 24.12.3 - x86_64 - (ISH v2.4)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/kdenlive16_24)\
 [Kdenlive - 25.04.2 - x86_64 - (ISH v2.4)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/kdenlive25042)
