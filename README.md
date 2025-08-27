@@ -5,6 +5,7 @@
 Attention! Installer-SH development has been moved to a separate repository [Installer-SH](https://github.com/Shedou/Installer-SH), stable and archive versions have been moved to the repository [Installer-SH-Archive](https://github.com/Shedou/Installer-SH-Archive).
 
 ## Universal Software Packages (Chimbalix 24 and other Linux)
+Attention! The compatibility of the program with Linux distributions may differ from the compatibility of the installation package!
 
 [FramePack Neuro - (ISH v2.5)](https://github.com/Shedou/Neuro/releases/tag/framepack_neuro)\
 [RawTherapee - 5.4 ... 5.12 - x86_64 - (ISH v2.5D)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/rawtherapee54_512)
