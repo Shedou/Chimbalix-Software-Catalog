@@ -4,7 +4,7 @@
 
 Attention! Installer-SH development has been moved to a separate repository [Installer-SH](https://github.com/Shedou/Installer-SH), stable and archive versions have been moved to the repository [Installer-SH-Archive](https://github.com/Shedou/Installer-SH-Archive).
 
-## Universal Software Packages
+## Universal Software Packages (Linux)
 Attention! The compatibility of the program with Linux distributions may differ from the compatibility of the installation package!
 
 [FramePack Neuro - (ISH v2.5)](https://github.com/Shedou/Neuro/releases/tag/framepack_neuro)\
