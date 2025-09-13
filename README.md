@@ -7,6 +7,7 @@ Attention! Installer-SH development has been moved to a separate repository [Ins
 ## Universal Software Packages (Linux)
 Attention! The compatibility of the program with Linux distributions may differ from the compatibility of the installation package!
 
+[Godot Engine v4.4.1 Double Precision - (ISH v2.5)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/godot441_dp)\
 [FramePack Neuro - (ISH v2.5)](https://github.com/Shedou/Neuro/releases/tag/framepack_neuro)\
 [RawTherapee - 5.4 ... 5.12 - x86_64 - (ISH v2.5D)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/rawtherapee54_512)
 
