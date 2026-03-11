@@ -4,9 +4,13 @@
 
 Attention! Installer-SH development has been moved to a separate repository [Installer-SH](https://github.com/Shedou/Installer-SH), stable and archive versions have been moved to the repository [Installer-SH-Archive](https://github.com/Shedou/Installer-SH-Archive).
 
+## Universal Software Packages (FreeBSD)
+Attention! The compatibility of the program with FreeBSD distributions may differ from the compatibility of the installation package!
+
+[ChimbaBench v2.6 - x64 - FreeBSD - (ISH v2.6D)](https://github.com/Shedou/ChimbaBench/releases/tag/v26bsd)
+
 ## Universal Software Packages (Linux)
 Attention! The compatibility of the program with Linux distributions may differ from the compatibility of the installation package!
-
 
 [Mozilla Firefox v144 - x86_64 - (ISH v2.5)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/firefox144)\
 [Godot Engine v4.4.1 Double Precision - (ISH v2.5)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/godot441_dp)\
