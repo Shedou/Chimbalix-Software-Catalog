@@ -2,7 +2,7 @@
 
 ## Installer-SH
 
-Attention! Installer-SH development has been moved to a separate repository [Installer-SH](https://github.com/Shedou/Installer-SH), stable and archive versions have been moved to the repository [Installer-SH-Archive](https://github.com/Shedou/Installer-SH-Archive).
+Attention! Installer-SH development has been moved to a separate repository [Installer-SH](https://github.com/Shedou/Installer-SH).
 
 ## Universal Software Packages (FreeBSD)
 Attention! The compatibility of the program with FreeBSD distributions may differ from the compatibility of the installation package!
