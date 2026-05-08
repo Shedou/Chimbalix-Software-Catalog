@@ -12,6 +12,8 @@ Attention! The compatibility of the program with FreeBSD distributions may diffe
 ## Universal Software Packages (Linux)
 Attention! The compatibility of the program with Linux distributions may differ from the compatibility of the installation package!
 
+[2048.c - v1.0.3 - x64 - Linux - (ISH v2.7-Dev)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/2048c103)
+
 [Mozilla Firefox v144 - x86_64 - (ISH v2.5)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/firefox144)\
 [Godot Engine v4.4.1 Double Precision - (ISH v2.5)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/godot441_dp)\
 [FramePack Neuro - (ISH v2.5)](https://github.com/Shedou/Neuro/releases/tag/framepack_neuro)\
