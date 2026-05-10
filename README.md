@@ -4,6 +4,10 @@
 
 Attention! Installer-SH development has been moved to a separate repository [Installer-SH](https://github.com/Shedou/Installer-SH).
 
+## Multi-Platform Software Packages (Linux & FreeBSD)
+
+[2048.c - v1.0.3-mp - x64 - Linux and FreeBSD - (ISH v2.7-Dev)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/2048c103mp)
+
 ## Universal Software Packages (FreeBSD)
 Attention! The compatibility of the program with FreeBSD distributions may differ from the compatibility of the installation package!
 
