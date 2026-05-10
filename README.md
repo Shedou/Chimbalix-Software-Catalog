@@ -7,6 +7,7 @@ Attention! Installer-SH development has been moved to a separate repository [Ins
 ## Universal Software Packages (FreeBSD)
 Attention! The compatibility of the program with FreeBSD distributions may differ from the compatibility of the installation package!
 
+[2048.c - v1.0.3 - x64 - FreeBSD - (ISH v2.7-Dev)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/2048c103bsd)\
 [ChimbaBench v2.6 - x64 - FreeBSD - (ISH v2.6D)](https://github.com/Shedou/ChimbaBench/releases/tag/v26bsd)
 
 ## Universal Software Packages (Linux)
