@@ -18,6 +18,8 @@ Attention! The compatibility of the program with FreeBSD distributions may diffe
 ## Universal Software Packages (Linux)
 Attention! The compatibility of the program with Linux distributions may differ from the compatibility of the installation package!
 
+[Nudoku v8.0.0 - x86 / x86_64 - (ISH v2.9)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/nudoku800)
+
 [Krita Collection v3.0.94 ... v6.0.0 - x86_64 - (ISH v2.8)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/krita3456collection)
 
 [2048.c - v1.0.3 - x64 - Linux - (ISH v2.7-Dev)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/2048c103)
