@@ -18,6 +18,7 @@ Attention! The compatibility of the program with FreeBSD distributions may diffe
 ## Universal Software Packages (Linux)
 Attention! The compatibility of the program with Linux distributions may differ from the compatibility of the installation package!
 
+[OBS Studio v32.1.2-7-anylinux - x86_64 - Linux - (ISH v2.9)](https://github.com/Shedou/Chimbalix-Software-Catalog/tag/obs3212)\
 [Xonotic v0.8.6 - x86_64 - Linux - (ISH v2.9)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/xonotic086)\
 [Nudoku v8.0.0 - x86 / x86_64 - (ISH v2.9)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/nudoku800)
 
