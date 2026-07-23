@@ -4,61 +4,68 @@
 
 Attention! Installer-SH development has been moved to a separate repository [Installer-SH](https://github.com/Shedou/Installer-SH).
 
-## Multi-Platform Software Packages (Linux & FreeBSD)
+## Games
 
-[2048.c - v1.0.3-mpa - x32/x64 - Linux and FreeBSD - (ISH v2.8)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/2048c103mpa)\
-[2048.c - v1.0.3-mp - x64 - Linux and FreeBSD - (ISH v2.7-Dev)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/2048c103mp)
-
-## Universal Software Packages (FreeBSD)
-Attention! The compatibility of the program with FreeBSD distributions may differ from the compatibility of the installation package!
-
-[2048.c - v1.0.3 - x64 - FreeBSD - (ISH v2.7-Dev)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/2048c103bsd)\
-[ChimbaBench v2.6 - x64 - FreeBSD - (ISH v2.6D)](https://github.com/Shedou/ChimbaBench/releases/tag/v26bsd)
-
-## Universal Software Packages (Linux)
-Attention! The compatibility of the program with Linux distributions may differ from the compatibility of the installation package!
-
-[OBS Studio v32.1.2-7-anylinux - x86_64 - Linux - (ISH v2.9)](https://github.com/Shedou/Chimbalix-Software-Catalog/tag/obs3212)\
 [Xonotic v0.8.6 - x86_64 - Linux - (ISH v2.9)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/xonotic086)\
-[Nudoku v8.0.0 - x86 / x86_64 - (ISH v2.9)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/nudoku800)
-
-[Krita Collection v3.0.94 ... v6.0.0 - x86_64 - (ISH v2.8)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/krita3456collection)
-
+[0 A.D. v0.27.0 - (ISH v2.2)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/0ad0270)\
+[Nudoku v8.0.0 - x86 / x86_64 - (ISH v2.9)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/nudoku800)\
+[2048.c - v1.0.3-mpa - x32/x64 - Linux and FreeBSD - (ISH v2.8)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/2048c103mpa)\
+[2048.c - v1.0.3-mp - x64 - Linux and FreeBSD - (ISH v2.7-Dev)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/2048c103mp)\
+[2048.c - v1.0.3 - x64 - FreeBSD - (ISH v2.7-Dev)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/2048c103bsd)\
 [2048.c - v1.0.3 - x64 - Linux - (ISH v2.7-Dev)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/2048c103)
 
-[Mozilla Firefox v144 - x86_64 - (ISH v2.5)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/firefox144)\
-[Godot Engine v4.4.1 Double Precision - (ISH v2.5)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/godot441_dp)\
+## AI
+
 [FramePack Neuro - (ISH v2.5)](https://github.com/Shedou/Neuro/releases/tag/framepack_neuro)\
-[RawTherapee - 5.4 ... 5.12 - x86_64 - (ISH v2.5D)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/rawtherapee54_512)
+[Stable Diffusion web UI Neuro Linux v3 - (ISH v2.1)](https://github.com/Shedou/Neuro/releases/SD_WEBUI_Linux_v3)
 
-[XnView MP - 1.9.2 - Linux - x64 - (ISH v2.4)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/xnviewmp192)\
-[Kdenlive - 16.12.2 ... 24.12.3 - x86_64 - (ISH v2.4)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/kdenlive16_24)\
-[Kdenlive - 25.04.2 - x86_64 - (ISH v2.4)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/kdenlive25042)
+## Image Editors and viewers
 
+[Krita Collection v3.0.94 ... v6.0.0 - x86_64 - (ISH v2.8)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/krita3456collection)\
+[Krita v5.2.9 - x86_64 - (ISH v2.3)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/krita529)\
+[GIMP v2.10.25 - x86_64 - (ISH v2.0)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/gimp21025)\
+[RawTherapee - 5.4 ... 5.12 - x86_64 - (ISH v2.5D)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/rawtherapee54_512)\
+[XnView MP - 1.9.2 - Linux - x64 - (ISH v2.4)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/xnviewmp192)
+
+## Recording and streaming
+
+[OBS Studio v32.1.2-7-anylinux - x86_64 - Linux - (ISH v2.9)](https://github.com/Shedou/Chimbalix-Software-Catalog/tag/obs3212)\
 [OBS-Studio 31.0.0-308-cl - x86_64 - (ISH v2.4-Dev)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/obs3000_308_cl)\
 [OBS-Studio 31.0.3-2 (archimage 4.3 variant) - x86_64 - (ISH v2.4-Dev)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/obs3103_aim43)
 
+## Video Editors
+
+[Kdenlive - 16.12.2 ... 24.12.3 - x86_64 - (ISH v2.4)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/kdenlive16_24)\
+[Kdenlive - 25.04.2 - x86_64 - (ISH v2.4)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/kdenlive25042)\
 [Cinelerra GG 25.04.30 - x86_64 - (ISH v2.3)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/cin_gg_250430)\
-[Cinelerra v7.3 / v10 - x86_64 - (ISH v2.3)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/cin73_cin100)\
-[Krita v5.2.9 - x86_64 - (ISH v2.3)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/krita529)
+[Cinelerra v7.3 / v10 - x86_64 - (ISH v2.3)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/cin73_cin100)
 
-[y-cruncher v0.8.6.9545 - (ISH v2.2)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/ycruncher086)\
-[qBittorrent v5.1.0 - x86_64 - (ISH v2.2)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/qbittorrent510)\
-[Audacity v3.7.3 x64 - 20.04 - (ISH v2.2)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/audacity373)\
-[0 A.D. v0.27.0 - (ISH v2.2)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/0ad0270)
+## Audio Editors
 
-[Stable Diffusion web UI Neuro Linux v3 - (ISH v2.1)](https://github.com/Shedou/Neuro/releases/SD_WEBUI_Linux_v3)\
-[Blender v4.3.2 - (ISH v2.1)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/blender432)
+[Audacity v3.7.3 x64 - 20.04 - (ISH v2.2)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/audacity373)
 
-[GIMP v2.10.25 - x86_64 - (ISH v2.0)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/gimp21025)\
+## 3D modelling
+
+[Blender v4.3.2 - (ISH v2.1)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/blender432)\
+[Blender v4.3.0 Beta - (ISH v1.8)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/blender430b)
+
+## Web Software
+
+[Mozilla Firefox v144 - x86_64 - (ISH v2.5)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/firefox144)\
+[Mozilla Firefox v128.4.0 ESR - x86_64 / x86 - (ISH v1.9)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/firefox12840esr)\
+[Mozilla Firefox v132.0.2 - x86_64 / x86 - (ISH v1.9)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/firefox13202)\
+[qBittorrent v5.1.0 - x86_64 - (ISH v2.2)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/qbittorrent510)
+
+## Development
+
+[Godot Engine v4.4.1 Double Precision - (ISH v2.5)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/godot441_dp)\
 [Arduino IDE v2.2.1 - x86_64 - (ISH v2.0)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/arduino221_v2)
 
-[Mozilla Firefox v128.4.0 ESR - x86_64 / x86 - (ISH v1.9)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/firefox12840esr)\
-[Mozilla Firefox v132.0.2 - x86_64 / x86 - (ISH v1.9)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/firefox13202)
+## Benchmarks ant tools
 
-[Blender v4.3.0 Beta - (ISH v1.8)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/blender430b)\
-[ChimbaBench v2.6 x64 Linux Installer-SH Version - (ISH v1.8)](https://github.com/Shedou/ChimbaBench/releases/c26ish)
-
+[ChimbaBench v2.6 - x64 - FreeBSD - (ISH v2.6D)](https://github.com/Shedou/ChimbaBench/releases/tag/v26bsd)\
+[ChimbaBench v2.6 x64 Linux Installer-SH Version - (ISH v1.8)](https://github.com/Shedou/ChimbaBench/releases/c26ish)\
+[y-cruncher v0.8.6.9545 - (ISH v2.2)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/ycruncher086)
 
 ## Old Software packages for Chimbalix 24.2+
 
