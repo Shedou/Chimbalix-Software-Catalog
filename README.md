@@ -67,7 +67,7 @@ Attention! Installer-SH development has been moved to a separate repository [Ins
 [ChimbaBench v2.6 x64 Linux Installer-SH Version - (ISH v1.8)](https://github.com/Shedou/ChimbaBench/releases/c26ish)\
 [y-cruncher v0.8.6.9545 - Linux - (ISH v2.2)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/ycruncher086)
 
-## Old Software packages for Chimbalix 24.2+
+## (HISTORY) Old Software packages for Chimbalix 24.2+
 
 [Mozilla Firefox v131.0.3 - (ISH v1.7)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/firefox13103)
 
