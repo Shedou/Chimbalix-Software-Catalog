@@ -4,15 +4,19 @@
 
 Attention! Installer-SH development has been moved to a separate repository [Installer-SH](https://github.com/Shedou/Installer-SH).
 
+Sorting occurs by categories, within categories the priority is by program name, after which it is sorted by Installer-SH version (the newer the ISH version, the better).
+
+The catalog includes programs for both Linux and FreeBSD platforms. This catalog also lists multi-platform and multi-architecture installation packages, as Installer-SH is capable of creating such packages.
+
 ## Games
 
 [Xonotic v0.8.6 - x86_64 - Linux - (ISH v2.9)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/xonotic086)\
-[0 A.D. v0.27.0 - x86_64 - Linux - (ISH v2.2)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/0ad0270)\
 [Nudoku v8.0.0 - x86 / x86_64 - Linux - (ISH v2.9)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/nudoku800)\
 [2048.c - v1.0.3-mpa - x32/x64 - Linux and FreeBSD - (ISH v2.8)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/2048c103mpa)\
 [2048.c - v1.0.3-mp - x64 - Linux and FreeBSD - (ISH v2.7-Dev)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/2048c103mp)\
 [2048.c - v1.0.3 - x64 - FreeBSD - (ISH v2.7-Dev)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/2048c103bsd)\
-[2048.c - v1.0.3 - x64 - Linux - (ISH v2.7-Dev)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/2048c103)
+[2048.c - v1.0.3 - x64 - Linux - (ISH v2.7-Dev)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/2048c103)\
+[0 A.D. v0.27.0 - x86_64 - Linux - (ISH v2.2)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/0ad0270)
 
 ## AI
 
@@ -35,8 +39,8 @@ Attention! Installer-SH development has been moved to a separate repository [Ins
 
 ## Video Editors
 
-[Kdenlive - 16.12.2 ... 24.12.3 - x86_64 - Linux - (ISH v2.4)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/kdenlive16_24)\
 [Kdenlive - 25.04.2 - x86_64 - Linux - (ISH v2.4)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/kdenlive25042)\
+[Kdenlive - 16.12.2 ... 24.12.3 - x86_64 - Linux - (ISH v2.4)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/kdenlive16_24)\
 [Cinelerra GG 25.04.30 - x86_64 - Linux - (ISH v2.3)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/cin_gg_250430)\
 [Cinelerra v7.3 / v10 - x86_64 - Linux - (ISH v2.3)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/cin73_cin100)
 
