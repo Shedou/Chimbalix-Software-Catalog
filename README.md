@@ -8,6 +8,8 @@ Sorting occurs by categories, within categories the priority is by program name,
 
 The catalog includes programs for both Linux and FreeBSD platforms. This catalog also lists multi-platform and multi-architecture installation packages, as Installer-SH is capable of creating such packages.
 
+This repository also helps in the development of a software distribution format called Installer-SH. Therefore, the structure and naming patterns may change over time.
+
 ## Games
 
 [Xonotic v0.8.6 - x86_64 - Linux - (ISH v2.9)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/xonotic086)\
