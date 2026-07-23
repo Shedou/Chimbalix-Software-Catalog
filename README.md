@@ -4,6 +4,8 @@
 
 Attention! Installer-SH development has been moved to a separate repository [Installer-SH](https://github.com/Shedou/Installer-SH).
 
+## Catalog
+
 Sorting occurs by categories, within categories the priority is by program name, after which it is sorted by Installer-SH version (the newer the ISH version, the better).
 
 The catalog includes programs for both Linux and FreeBSD platforms. This catalog also lists multi-platform and multi-architecture installation packages, as Installer-SH is capable of creating such packages.
