@@ -37,7 +37,7 @@ This repository also helps in the development of a software distribution format 
 
 ## Recording and streaming
 
-[OBS Studio v32.1.2-7-anylinux - x86_64 - Linux - (ISH v2.9)](https://github.com/Shedou/Chimbalix-Software-Catalog/tag/obs3212)\
+[OBS Studio v32.1.2-7-anylinux - x86_64 - Linux - (ISH v2.9)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/obs3212)\
 [OBS-Studio 31.0.0-308-cl - x86_64 - Linux - (ISH v2.4-Dev)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/obs3000_308_cl)\
 [OBS-Studio 31.0.3-2 (archimage 4.3 variant) - x86_64 - Linux - (ISH v2.4-Dev)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/obs3103_aim43)
 
