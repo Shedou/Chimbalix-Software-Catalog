@@ -12,6 +12,10 @@ The catalog includes programs for both Linux and FreeBSD platforms. This catalog
 
 This repository also helps in the development of a software distribution format called Installer-SH. Therefore, the structure and naming patterns may change over time.
 
+## Office
+
+[LibreOffice 26.2.5 - x86_64 - Linux - (ISH v2.9)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/libreoffice2625)
+
 ## Games
 
 [Xonotic v0.8.6 - x86_64 - Linux - (ISH v2.9)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/xonotic086)\
