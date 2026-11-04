@@ -42,7 +42,7 @@ This repository also helps in the development of a software distribution format 
 ## Recording and streaming
 
 [OBS Studio v32.1.2-7-anylinux - x86_64 - Linux - (ISH v2.9)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/obs3212)\
-[OBS-Studio 31.0.0-308-cl - x86_64 - Linux - (ISH v2.4-Dev)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/obs3000_308_cl)\
+[OBS-Studio 31.0.0-308-cl1 - x86_64 - Linux - (ISH v2.9)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/obs3100cl1)\
 [OBS-Studio 31.0.3-2 (archimage 4.3 variant) - x86_64 - Linux - (ISH v2.4-Dev)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/obs3103_aim43)
 
 ## Video Editors
@@ -78,6 +78,12 @@ This repository also helps in the development of a software distribution format 
 [ChimbaBench v2.6 - x64 - FreeBSD - (ISH v2.6D)](https://github.com/Shedou/ChimbaBench/releases/tag/v26bsd)\
 [ChimbaBench v2.6 x64 Linux Installer-SH Version - (ISH v1.8)](https://github.com/Shedou/ChimbaBench/releases/c26ish)\
 [y-cruncher v0.8.6.9545 - Linux - (ISH v2.2)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/ycruncher086)
+
+## (HISTORY) Old Universal Software packages
+
+This section contains programs that have been repackaged into newer versions of the Installer-SH format.
+
+[OBS-Studio 31.0.0-308-cl - x86_64 - Linux - (ISH v2.4-Dev)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/obs3000_308_cl)
 
 ## (HISTORY) Old Software packages for Chimbalix 24.2+
 
