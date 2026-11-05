@@ -12,6 +12,10 @@ The catalog includes programs for both Linux and FreeBSD platforms. This catalog
 
 This repository also helps in the development of a software distribution format called Installer-SH. Therefore, the structure and naming patterns may change over time.
 
+## Accessories
+
+[Double Commander - 1.2.10 (gtk2) - x86_64/x86 - Linux - (ISH v2.9)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/doublecmd1210gtk2)
+
 ## Office
 
 [LibreOffice 26.2.5 - x86_64 - Linux - (ISH v2.9)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/libreoffice2625)
@@ -73,7 +77,7 @@ This repository also helps in the development of a software distribution format 
 [Godot Engine v4.4.1 Double Precision - Linux - (ISH v2.5)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/godot441_dp)\
 [Arduino IDE v2.2.1 - x86_64 - Linux - (ISH v2.0)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/arduino221_v2)
 
-## Benchmarks ant tools
+## Benchmarks and tools
 
 [ChimbaBench v2.6 - x64 - FreeBSD - (ISH v2.6D)](https://github.com/Shedou/ChimbaBench/releases/tag/v26bsd)\
 [ChimbaBench v2.6 x64 Linux Installer-SH Version - (ISH v1.8)](https://github.com/Shedou/ChimbaBench/releases/c26ish)\
