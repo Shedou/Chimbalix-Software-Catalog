@@ -79,6 +79,7 @@ This repository also helps in the development of a software distribution format 
 
 ## Benchmarks and tools
 
+[CPU-X - 5.4.1 - x86_64 - Linux - (ISH v2.9)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/tag/cpux541)\
 [ChimbaBench v2.6 - x64 - FreeBSD - (ISH v2.6D)](https://github.com/Shedou/ChimbaBench/releases/tag/v26bsd)\
 [ChimbaBench v2.6 x64 Linux Installer-SH Version - (ISH v1.8)](https://github.com/Shedou/ChimbaBench/releases/c26ish)\
 [y-cruncher v0.8.6.9545 - Linux - (ISH v2.2)](https://github.com/Shedou/Chimbalix-Software-Catalog/releases/ycruncher086)
